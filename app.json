@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "선박확인체계 베타",
+    "slug": "Ship_identification",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.png",
+    "splash": {
+      "image": "./assets/img/empty.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.Ship_Identification.Ship_Identification",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD_uVclhpTJzL7IahitPMgWneBoYGXss3g"
+        }
+      },
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
