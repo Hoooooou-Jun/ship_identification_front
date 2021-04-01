@@ -1,21 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Alert, Dimensions, TouchableHighlight, Linking } from 'react-native';
+import { Alert, Dimensions, TouchableHighlight, Linking, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 import * as base from 'native-base';
-import { TextInput } from 'react-native-paper';
 import Constants from 'expo-constants';
+import { Font } from 'expo-font';
+
 import { requestLogin } from '../../utils/userInfoRequest/';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { requestDomain } from '../../utils/domain';
 import { requestVersion } from '../../utils/additionalInfoRequest';
-import { Font } from 'expo-font';
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.2
 const SIZE_TITLE = Dimensions.get('screen').width * 0.1
 const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.035
+
+const SIZE_LOAD_TITLE = Dimensions.get('screen').width * 0.06
+const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.03
+const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.2
 
 export default class Login extends Component{
 	constructor(props){
@@ -26,6 +30,8 @@ export default class Login extends Component{
 			device_id: '',
 			version: 'v1.0.0',
 			is_version_right : true,
+
+			loadingVisible: false,
 		}
 		this.executeLogin = this.executeLogin.bind(this);
 		this.loadFont = this.loadFont(this);
@@ -50,7 +56,7 @@ export default class Login extends Component{
 			'Nanum_Title': require('../../../assets/fonts/Nanum_Title.ttf'),
 		});
 	}
-	executeLogin(){
+	async executeLogin(){
 		if(this.state.srvno == ''){
 			Alert.alert(
 				'선박확인체계 알림',
@@ -64,8 +70,10 @@ export default class Login extends Component{
 			)
 		}
 		else{
-			requestLogin(this.state.srvno, this.state.password, this.state.device_id).then((response) => {
+			this.setState({loadingVisible: true})
+			await requestLogin(this.state.srvno, this.state.password, this.state.device_id).then((response) => {
 				if(response.status == 200){
+					this.setState({loadingVisible: false})
 					AsyncStorage.setItem('token', response.data['data']['token'])
 					Alert.alert(
 						'선박확인체계 알림',
@@ -77,6 +85,7 @@ export default class Login extends Component{
 					console.log('failed')
 				}
 			}).catch((error) =>{
+				this.setState({loadingVisible: false})
 				const msg = error.response.data.message
 				console.log(msg)
 				if(msg == 'Unauthenticated user'){
@@ -145,7 +154,16 @@ export default class Login extends Component{
 		return(
 			<base.Container>
 				<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-				
+				<Modal transparent={true} visible={this.state.loadingVisible}>
+					<base.Form style={{alignItems: 'center', justifyContent: 'center', flex: 1,}}>
+						<base.Form style={{width: 300, height: 300, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 20,
+							justifyContent: 'center', alignItems: 'center'}}>
+								<base.Text style={{color: 'white', fontSize: SIZE_LOAD_TITLE, margin: 10}}>선박확인체계 알림</base.Text>
+								<base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>데이터를 불러오고 있습니다</base.Text>
+								<base.Spinner color='white' size={SIZE_LOAD_LOGO} style={{margin: 10}}/>
+						</base.Form>
+					</base.Form>
+				</Modal>
 				<base.Form style={{flex: 3, width: '100%', borderRadius: 20, backgroundColor: 'white', elevation: 6}}>
 
 					<base.Form style={{flex: 2, justifyContent: 'center', alignSelf: 'center', alignItems: 'center', flexDirection: 'row', }}>
