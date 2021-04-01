@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Dimensions, Alert } from 'react-native';
+import { Dimensions, Alert, Modal } from 'react-native';
 import * as base from 'native-base'
 import styles from './styles';
 import { Picker } from '@react-native-picker/picker';
@@ -10,6 +10,10 @@ import { requestSignup } from '../../utils/userInfoRequest/'
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
+
+const SIZE_LOAD_TITLE = Dimensions.get('screen').width * 0.06
+const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.03
+const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.2
 
 const alertMessage =
 	  ' 1. 숫자, 문자, 특수문자를 혼합하여 9자리 이상으로 조합\n' +
@@ -32,14 +36,18 @@ export default class Signup extends Component{
 			device_id : '',
 			
 			birthday: '',
+
+			loadingVisible: false,
 		}
 		this.executeSignup = this.executeSignup.bind(this);
 	}
 	componentDidMount(){ this.setState({device_id: Constants.deviceId}) }
 	executeSignup(){
+		this.setState({loadingVisible: true})
 		requestSignup(this.state.srvno, this.state.password, this.state.name, this.state.rank, this.state.position, this.state.unit, this.state.phone, this.state.device_id)
 		.then((response) => {
 			if(response.status == 200){
+				this.setState({loadingVisible: false})
 				Alert.alert(
 					'선박확인체계 알림',
 					this.state.name + '님 환영합니다',
@@ -50,6 +58,7 @@ export default class Signup extends Component{
 				console.log('fail')
 			}
 		}).catch((error) =>{
+			this.setState({loadingVisible: false})
 			const msg = error.response.data.message
 			console.log(msg)
 			if(msg == 'Already exist serviceNum'){
@@ -97,6 +106,16 @@ export default class Signup extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
+					<Modal transparent={true} visible={this.state.loadingVisible}>
+						<base.Form style={{alignItems: 'center', justifyContent: 'center', flex: 1,}}>
+							<base.Form style={{width: 300, height: 300, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 20,
+								justifyContent: 'center', alignItems: 'center'}}>
+									<base.Text style={{color: 'white', fontSize: SIZE_LOAD_TITLE, margin: 10}}>선박확인체계 알림</base.Text>
+									<base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>데이터를 불러오고 있습니다</base.Text>
+									<base.Spinner color='white' size={SIZE_LOAD_LOGO} style={{margin: 10}}/>
+							</base.Form>
+						</base.Form>
+					</Modal>
 					<base.Form style={{padding: 20,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>회원가입</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10}}>아래의 정보를 입력해주세요</base.Text>
