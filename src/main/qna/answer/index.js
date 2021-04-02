@@ -5,6 +5,8 @@ import * as base from 'native-base';
 import { getToken } from '../../../utils/getToken';
 import { requestQuestion } from '../../../utils/additionalInfoRequest';
 import { requestAnswer } from '../../../utils/additionalInfoRequest';
+import Loading from '../../../utils/loading';
+
 export default class Answer extends Component{
 	constructor(props) {
 		super(props);
@@ -15,6 +17,8 @@ export default class Answer extends Component{
 
 			answer: '',
 			date_a: '',
+
+			loadingVisible: true,
 		};
 		this.getAnswer = this.getAnswer(this);
 		this.getQuestion = this.getQuestion(this);
@@ -28,6 +32,7 @@ export default class Answer extends Component{
 						title: response.data.data.title,
 						date_q: response.data.data.date,
 						content: response.data.data.content,
+						loadingVisible: false,
 					})
 				}
 				else{
@@ -79,6 +84,7 @@ export default class Answer extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content padder>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Form>
                         <base.Card>
                             <base.CardItem header bordered>

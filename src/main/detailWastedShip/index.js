@@ -13,11 +13,14 @@ import { deleteWastedShip } from '../../utils/shipInfoRequest';
 import { AntDesign } from '@expo/vector-icons'; 
 import { requestPermission } from '../../utils/userInfoRequest';
 
+import Loading from '../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.035
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.015
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_IMG = Dimensions.get('screen').height * 0.35
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
+
 export default class DetailWastedShip extends Component{
 	constructor(props) {
 		super(props);
@@ -33,6 +36,9 @@ export default class DetailWastedShip extends Component{
 			region: '',
 
 			data: [],
+			loadingVisible_shipDetail: true,
+			loadingVisible_shipGallery: true,
+			loadingVisible: false,
 		};
 		this.showWastedShipDetail = this.showWastedShipDetail(this);
 		this.showWastedShipGallery = this.showWastedShipGallery(this);
@@ -40,12 +46,15 @@ export default class DetailWastedShip extends Component{
 		this.updateShipInfo = this.updateShipInfo.bind(this);
 	}
 	updateShipInfo(){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			requestPermission(token).then((response) => {
 				if(response.data.data.user_level > 1){
+					this.setState({loadingVisible: false})
 					this.props.navigation.navigate('UpdateWastedShip',{id: this.state.id})
 				}
 				else{
+					this.setState({loadingVisible: false})
 					Alert.alert(
 						'선박확인체계 알림',
 						'선박 정보 수정 권한이 없습니다',
@@ -61,12 +70,13 @@ export default class DetailWastedShip extends Component{
 			[{
 				text: "네",
 				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
 					requestPermission(token).then((response) => {
-						console.log(response.data.data.user_level)
 						if(response.data.data.user_level > 1){
 							const id = this.props.navigation.getParam('id');
 							deleteWastedShip(token, id).then((response) => {
 								if(response.status == 200){
+									this.setState({loadingVisible: false})
 									Alert.alert(
 										'선박확인체계 알림',
 										this.state.id + ' 유기선박 정보가 삭제되었습니다',
@@ -76,6 +86,7 @@ export default class DetailWastedShip extends Component{
 							})
 						}
 						else{
+							this.setState({loadingVisible: false})
 							Alert.alert(
 								'선박확인체계 알림',
 								'선박 정보 삭제 권한이 없습니다',
@@ -104,6 +115,8 @@ export default class DetailWastedShip extends Component{
 					register: ship.data.data.register,
 					regit_date: ship.data.data.regit_date,
 					img_cnt: ship.data.data.img_cnt,
+
+					loadingVisible_shipDetail: false,
 				})
 			})
         })
@@ -113,20 +126,15 @@ export default class DetailWastedShip extends Component{
 			const id = this.props.navigation.getParam('id');
 			requestWastedShipGallery(token, id).then((response) => {
 				if(response.status == 200){
-					this.setState({ data: this.state.data.concat(response.data.data),})
+					this.setState({
+						data: this.state.data.concat(response.data.data),
+						loadingVisible_shipGallery: false,
+					})
 				}
 			})
         })
 	}
 	render(){
-		if(this.state.img == ''){
-            return(
-                <base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-					<base.Text style ={{fontSize: 30}}>데이터 가져오는 중</base.Text>
-					<base.Spinner color='blue' />
-				</base.Form>
-            )
-        }
 		let WastedShipGallery
 		if(this.state.data.length){ WastedShipGallery =
 			<base.Form>
@@ -157,6 +165,7 @@ export default class DetailWastedShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
+					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
 					<base.Form style={{width: '100%' ,height: SIZE_IMG,}}>
 						<Image resizeMode='cover' source={{uri: requestDomain + this.state.img,}} style={{width: '100%', height: '100%',}}/>
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,

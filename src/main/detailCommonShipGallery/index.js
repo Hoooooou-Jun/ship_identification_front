@@ -8,6 +8,7 @@ import { getToken } from '../../utils/getToken';
 import { requestCommonShipGallery } from '../../utils/shipInfoRequest';
 import ShowPlusDetail from './showPlusDetail';
 import { requestDomain } from '../../utils/domain';
+import Loading from '../../utils/loading';
 export default class DetailCommonShipGallery extends Component{
 	constructor(props) {
 		super(props);
@@ -15,6 +16,7 @@ export default class DetailCommonShipGallery extends Component{
 			id: '',
 			name: '',
 			data: [],
+			loadingVisible: true,
 		};
 		this.showCommonShipGallery = this.showCommonShipGallery(this);
 	}
@@ -26,7 +28,10 @@ export default class DetailCommonShipGallery extends Component{
 			})
 			requestCommonShipGallery(token, this.state.id).then((response) => {
 				if(response.status == 200){
-					this.setState({ data: this.state.data.concat(response.data.data),})
+					this.setState({
+						data: this.state.data.concat(response.data.data),
+						loadingVisible: false,
+					})
 				}
 			})
         })
@@ -34,17 +39,17 @@ export default class DetailCommonShipGallery extends Component{
 	render(){
 		return(
 			<base.Container>
-				<base.Header style={{backgroundColor: '#006eee'}}>
+				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
 						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='arrow-back'/>
+							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
 					<base.Right>
-						<base.Title style={{fontFamily:'Nanum_Title', fontSize: 20}}>{this.state.name} 추가사진 정보</base.Title>
 					</base.Right>
 				</base.Header>
 				<base.Content>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Form style={{width: '100%', justifyContent: 'center'}}>
 						<base.Button block onPress={()=>this.props.navigation.navigate('RegisterCommonShipImages',{id: this.state.id, name: this.state.name})} style={{backgroundColor: '#006eee', margin: 10,}}>
 							<base.Text style={{fontFamily: 'Nanum'}}>선박사진 추가등록하기</base.Text>

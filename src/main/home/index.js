@@ -5,11 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as base from 'native-base';
 import { Linking, Image, Alert, Dimensions, FlatList, TouchableHighlight } from 'react-native';
 import * as Font from 'expo-font';
+
 import { getToken } from '../../utils/getToken';
 import { requestUserData } from '../../utils/userInfoRequest';
 import { requestLogout } from '../../utils/userInfoRequest';
 import { requestNoticeList } from '../../utils/additionalInfoRequest';
-import { requestDomain } from '../../utils/domain';
+
+import Loading from '../../utils/loading';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.0225
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
@@ -17,6 +19,7 @@ const SIZE_FOOTER = Dimensions.get('screen').height * 0.015
 const SIZE_ICON = Dimensions.get('screen').height * 0.0375
 const SIZE_LOGO = Dimensions.get('screen').height * 0.1
 const SIZE_LAYOUT = Dimensions.get('screen').width * 0.2
+
 export default class Home extends Component{
 	constructor(props) {
 		super(props);
@@ -30,14 +33,13 @@ export default class Home extends Component{
 			phone : '',
 			device_id : '',
 
-			currentDays: null,
-			currentTime: null,
-			currentDay: null,
-
 			data: [],
 
 			flatlistIndex: 0,
 			flatlistSize: 0,
+
+			loadingVisible_userData: false,
+			loadingVisible_noticeData: false,
 		}
 		this.daysArray = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'];
 		this.getUserData = this.getUserData(this);
@@ -132,31 +134,36 @@ export default class Home extends Component{
 		})
 	}
 	getUserData(){
+		this.setState({loadingVisible_userData: true})
 		getToken().then((token) => {
 			requestUserData(token).then((response) => {
-            if(response.status == 200){
-				this.setState({
-					name : response.data.data.name,
-					rank : response.data.data.rank,
-					position : response.data.data.position,
-					unit : response.data.data.unit,
-					phone : response.data.data.phone,
-					device_id : response.data.data.device_id,
-				})
-            }
-            else{
-                console.log('fail')
-            }
-		})
+				if(response.status == 200){
+					this.setState({
+						name : response.data.data.name,
+						rank : response.data.data.rank,
+						position : response.data.data.position,
+						unit : response.data.data.unit,
+						phone : response.data.data.phone,
+						device_id : response.data.data.device_id,
+
+						loadingVisible_userData: false,
+					})
+				}
+				else{
+					console.log('fail')
+				}
+			})
         })
 	}
 	getNoticeList(){
+		this.setState({loadingVisible_noticeData: true})
 		getToken().then((token) => {
 			requestNoticeList(token).then((response) =>{
 				if(response.status == 200){
 					this.setState({
 						data: this.state.data.concat(response.data.data),
 						flatlistSize: response.data.data.length,
+						loadingVisible_noticeData: false,
 					})
 					console.log(this.state.data.length)
 				}
@@ -167,10 +174,16 @@ export default class Home extends Component{
 		})
 	}
 	executeLogout() {
+		this.setState({loadingVisible: true})
         getToken().then((token)=>{
             requestLogout(token).then( async (response) => {
                 if(response.status == 200){
+					this.setState({loadingVisible: false})
                     await AsyncStorage.removeItem('token')
+					Alert.alert(
+						'선박확인체계 알림',
+						'정상적으로 로그아웃 되었습니다',
+					)
                     this.props.navigation.navigate('Login')
                 }
             })
@@ -191,6 +204,7 @@ export default class Home extends Component{
 		return(
             <base.Container>
                 <base.Content contentContainerStyle={{alignItems: 'center', justifyContent:'center', flex: 1,}}>
+					<Loading visible={this.state.loadingVisible_userData || this.state.loadingVisible_noticeData}/>
 					<base.Form style={{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center'}}>
 						<base.Form style={{alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color:'black', fontSize: 20}}>{this.state.currentDays} {this.state.currentDay} {this.state.currentTime} </base.Text>
@@ -280,7 +294,7 @@ export default class Home extends Component{
 								<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
 									<base.Icon name='ios-pulse' style={{fontSize: SIZE_ICON, color: '#006eee',}}/>
 								</base.Form>
-								<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>인공지능검색
+								<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>AI검색
 								</base.Text>
 							</base.CardItem>
 							<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('SearchMap')}>

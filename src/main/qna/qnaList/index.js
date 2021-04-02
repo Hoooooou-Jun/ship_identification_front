@@ -6,6 +6,8 @@ import { getToken } from '../../../utils/getToken';
 import { requestQuestionList } from '../../../utils/additionalInfoRequest';
 import ShowQuestion from './showQuestion';
 
+import Loading from '../../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
@@ -15,6 +17,7 @@ export default class QNAList extends Component{
 		super(props);
 		this.state = {
 			data: [],
+			loadingVisible: true,
         };
 		this.getQuestionList = this.getQuestionList(this);
 	}
@@ -23,7 +26,8 @@ export default class QNAList extends Component{
 			requestQuestionList(token).then((response) =>{
 				if(response.status == 200){
 					this.setState({
-						data: this.state.data.concat(response.data.data)
+						data: this.state.data.concat(response.data.data),
+						loadingVisible: false,
 					})
 				}
 				else{
@@ -46,6 +50,7 @@ export default class QNAList extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Form style={{padding: 20,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>질의응답</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE,}}>궁금하신 점이 있다면 문의해주세요</base.Text>

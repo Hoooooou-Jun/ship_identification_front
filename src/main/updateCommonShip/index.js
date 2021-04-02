@@ -7,6 +7,7 @@ import { ValueInput } from './valueInput';
 import { Picker } from '@react-native-picker/picker';
 import { getToken } from '../../utils/getToken';
 import { requestCommonShipDetail } from '../../utils/shipInfoRequest';
+import Loading from '../../utils/loading';
 
 export default class UpdateCommonShip extends Component{
 	constructor(props) {
@@ -17,6 +18,7 @@ export default class UpdateCommonShip extends Component{
 			is_ais: false, is_vpass: false, is_vhf: false, is_ff: false,
 
 			tmp_name: '', tmp_code: '', tmp_tons: '', tmp_size: '', tmp_region: '',
+			loadingVisible: true,
 		};
 		this.showCommonShipDetail = this.showCommonShipDetail(this);
 	
@@ -36,7 +38,6 @@ export default class UpdateCommonShip extends Component{
 			const id = this.props.navigation.getParam('id');
 			requestCommonShipDetail(token, id).then((response) =>{
 				if(response.status == 200){
-					console.log(response.data.data)
 					this.setState({
 						id: id,
 						name: response.data.data.name,
@@ -51,6 +52,7 @@ export default class UpdateCommonShip extends Component{
 						tons: response.data.data.tons,
 						size: response.data.data.size,
 						regit_date: response.data.data.regit_date,
+						loadingVisible: false,
 					})
 				}
 				else{
@@ -60,12 +62,14 @@ export default class UpdateCommonShip extends Component{
         })
 	}
 	updateDetail(){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			const id = this.props.navigation.getParam('id');
 			updateCommonShipDetail(token, this.state.id, this.state.name, this.state.types, this.state.code,
 				this.state.tons, this.state.size, this.state.is_ais, this.state.is_vhf, this.state.is_vpass,
 				this.state.is_ff, this.state.region, '정보없음').then((response) =>{
 				if(response.status == 200){
+					this.setState({loadingVisible: false})
 					Alert.alert(
 						'선박확인체계 알림',
 						'선박 정보가 수정되었습니다',
@@ -92,6 +96,7 @@ export default class UpdateCommonShip extends Component{
 						</base.Right>
 					</base.Header>
 					<base.Content padder>
+						<Loading visible={this.state.loadingVisible}/>
 						<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 10}}>선박정보수정</base.Text>
 						<base.Form>
 							<base.Form style={{marginVertical: 15}}>

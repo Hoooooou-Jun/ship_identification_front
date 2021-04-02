@@ -1,12 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Image, View, Text, Dimensions } from 'react-native';
+import { Image, Dimensions } from 'react-native';
 import * as base from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestUserData } from '../../utils/userInfoRequest';
 import styles from './styles';
+
 const SIZE_LOGO = Dimensions.get('screen').height * 0.3
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
+
+import Loading from '../../utils/loading';
 
 export default class MyAccount extends Component{
 	constructor(props) {
@@ -20,13 +23,14 @@ export default class MyAccount extends Component{
 			unit : '',
 			phone : '',
 			device_id : '',
+
+			loadingVisible: true,
 		}
 		this.getUserData = this.getUserData(this);
 	}
 	getUserData(){
 		getToken().then((token) => {
 			requestUserData(token).then((response) => {
-				console.log(response.data.data)
             if(response.status == 200){
 				this.setState({
 					srvno: response.data.data.srvno,
@@ -36,6 +40,8 @@ export default class MyAccount extends Component{
 					unit : response.data.data.unit,
 					phone : response.data.data.phone,
 					device_id : response.data.data.device_id,
+
+					loadingVisible: false,
 				})
             }
             else{
@@ -45,14 +51,6 @@ export default class MyAccount extends Component{
         })
 	}
 	render(){
-		if(this.state.name == ''){
-            return(
-                <View style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-				    <Text style ={{fontSize: 30}}>데이터 가져오는 중</Text>
-				    <base.Spinner color='blue' />
-                </View>
-            )
-        }
 		return(
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
@@ -65,6 +63,7 @@ export default class MyAccount extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content padder>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Form style={{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center', margin: 10}}>
 						<base.Form style={{backgroundColor:'white', borderRadius: SIZE_LOGO / 2, justifyContent: 'center', alignItems: 'center', width: SIZE_LOGO, height: SIZE_LOGO, elevation: 6}}>
 							<Image source={require('../../../assets/img/logo_Army.jpg')} style={{width: SIZE_LOGO / 3 * 2, height: SIZE_LOGO / 3 * 2}}/>

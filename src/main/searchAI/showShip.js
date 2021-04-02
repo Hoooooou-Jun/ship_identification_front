@@ -3,18 +3,12 @@ import { Image, TouchableHighlight, Dimensions } from 'react-native';
 import * as base from 'native-base';
 import { requestDomain } from '../../utils/domain';
 
-import { StackedBarChart } from 'react-native-svg-charts';
-
-
 const SIZE_TITLE = Dimensions.get('screen').height * 0.025
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.015
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_PERCENT = Dimensions.get('screen').height * 0.02
 const SIZE_IMG = Dimensions.get('screen').height * 0.35
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
-
-const colors = ['#006eee', '#81d4fa']
-const keys = [ 'value', 'remainder',]
 
 export default class ShowShip extends Component{
 	constructor(props) {
@@ -23,7 +17,6 @@ export default class ShowShip extends Component{
 	}
 	render() {
 		let kinds
-		console.log(this.props.ship)
 		if(this.props.kinds){ kinds =
 			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: 400, margin: 5, height: '100%'}}>
 				<base.Form sytle={{flex: 1, width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center',}}>

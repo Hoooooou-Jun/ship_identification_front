@@ -6,9 +6,8 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { getToken } from '../../utils/getToken';
 import { requestAIResult } from '../../utils/shipInfoRequest';
-import { requestDomain } from '../../utils/domain';
-import { StackedBarChart } from 'react-native-svg-charts';
 import ShowShip from './showShip';
+import Loading from '../../utils/loading';
 var BUTTONS = [
   { text: "카메라로 등록하기", icon: "ios-camera", iconColor: "#2c8ef4" },
   { text: "갤러리에서 등록하기", icon: "ios-images", iconColor: "#f42ced" },
@@ -24,8 +23,8 @@ export default class SearchAI extends Component{
 	constructor(props) {
 		super(props);
 		this.state = {
-			img: '0',
-			base64: '0',
+			img: '',
+			base64: '',
 			data: [],
 			percentage: [],
 			functionOn: false,
@@ -33,6 +32,8 @@ export default class SearchAI extends Component{
 			clicked: '',
 
 			kinds: [], // true: CommonShip, false: WastedShip
+
+			loadingVisible: false,
 		};
 		this.pickPhoto = this.pickPhoto.bind(this);
 		this.pickImage = this.pickImage.bind(this);
@@ -89,6 +90,7 @@ export default class SearchAI extends Component{
 				functionOn: true,
 				percentage: [],
 				data: [],
+				loadingVisible: true,
 			})
 			getToken().then((token) =>{
 				requestAIResult(token, this.state.base64).then((response) => {
@@ -96,6 +98,7 @@ export default class SearchAI extends Component{
 						kinds: response.data.data.kinds,
 						percentage: response.data.data.percent,
 						data: response.data.data.result,
+						loadingVisible: false,
 					})
 				}) 
 			})
@@ -170,8 +173,9 @@ export default class SearchAI extends Component{
 						</base.Right>
 					</base.Header>
 					<base.Content contentContainerStyle={{alignItems: 'center', justifyContent:'center', flex: 1,}}>
+						<Loading visible={this.state.loadingVisible}/>
 						<base.Form style={{width: '100%', alignItems: 'flex-start'}}>
-							<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 20}}>인공지능 검색</base.Text>
+							<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 20}}>AI 검색</base.Text>
 						</base.Form>
 						<base.Form style={{flex: 1, width: '100%',height: '100%', borderBottomWidth: 1, borderColor: '#DDD', flexDirection: 'column',}}>
 							<Image source={{uri:this.state.img}} style={{ flex: 1, width: '100%', height: '100%'}}/>

@@ -7,8 +7,7 @@ import { getToken } from '../../utils/getToken';
 import { requestCommonShipList } from '../../utils/shipInfoRequest';
 import ShowShip from '../listCommonShip/showShip';
 import { AntDesign } from '@expo/vector-icons'; 
-import Dots from 'react-native-dots-pagination';
-
+import Loading from '../../utils/loading';
 const SIZE_TITLE = Dimensions.get('screen').height * 0.0225
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_FOOTER = Dimensions.get('screen').height * 0.015
@@ -20,6 +19,7 @@ export default class ListCommonShip extends Component{
 			data: [],
 			index: 1,
 			cnt: 0,
+			loadingVisible: true,
 		};
 		this.showCommonShipList = this.showCommonShipList(this);
 
@@ -68,6 +68,7 @@ export default class ListCommonShip extends Component{
 				this.setState({
 					cnt: response.data.data.count,
 					data: this.state.data.concat(response.data.data.data),
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -77,12 +78,14 @@ export default class ListCommonShip extends Component{
         })
 	}
 	updateCommonShipList(idx){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			requestCommonShipList(token, idx).then((response) => {
 			if(response.status == 200){
 				this.setState({
 					index: idx,
 					data: response.data.data.data,
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -93,14 +96,6 @@ export default class ListCommonShip extends Component{
 		this.refs.listRef.scrollToOffset({x: 0, y: 0, animated: true})
 	}
 	render(){
-		if(this.state.data == []){
-            return(
-                <base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-					<base.Text style ={{fontSize: 30}}>데이터 가져오는 중</base.Text>
-					<base.Spinner color='blue' />
-				</base.Form>
-            )
-        }
 		return(
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
@@ -116,6 +111,7 @@ export default class ListCommonShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
+					<Loading visible={this.state.loadingVisible}/>
 					<FlatList
 						ref="listRef"
 						sytle={{flex:1}}

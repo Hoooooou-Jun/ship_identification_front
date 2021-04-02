@@ -5,6 +5,8 @@ import * as base from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestNoticeList } from '../../utils/additionalInfoRequest';
 
+import Loading from '../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
@@ -14,6 +16,7 @@ export default class NoticeList extends Component{
 		super(props);
 		this.state = {
             data: [],
+            loadingVisible: true,
         };
 		this.getNoticeList = this.getNoticeList(this);
 	}
@@ -22,7 +25,8 @@ export default class NoticeList extends Component{
 			requestNoticeList(token).then((response) =>{
 				if(response.status == 200){
 					this.setState({
-						data: this.state.data.concat(response.data.data)
+						data: this.state.data.concat(response.data.data),
+                        loadingVisible: false,
 					})
 				}
 				else{
@@ -44,6 +48,7 @@ export default class NoticeList extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content>
+				    <Loading visible={this.state.loadingVisible}/>
 					<base.Form style={{padding: 20,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>공지사항</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE,}}>신규 및 업데이트 소식을 알려드립니다!</base.Text>

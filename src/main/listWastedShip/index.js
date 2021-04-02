@@ -7,8 +7,7 @@ import { getToken } from '../../utils/getToken';
 import { requestWastedShipList } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
 import AntDesign from '@expo/vector-icons/AntDesign'
-
-import Dots from 'react-native-dots-pagination';
+import Loading from '../../utils/loading';
 
 export default class ListWastedShip extends Component{
 	constructor(props) {
@@ -17,6 +16,7 @@ export default class ListWastedShip extends Component{
 			data: [],
 			index: 1,
 			cnt: 0,
+			loadingVisible: true,
 		};
 		this.showWastedShipList = this.showWastedShipList(this);
 
@@ -65,6 +65,7 @@ export default class ListWastedShip extends Component{
 				this.setState({
 					cnt: response.data.data.count,
 					data: this.state.data.concat(response.data.data.data),
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -75,12 +76,14 @@ export default class ListWastedShip extends Component{
 		
 	}
 	updateWastedShipList(idx){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			requestWastedShipList(token, idx).then((response) => {
 			if(response.status == 200){
 				this.setState({
 					index: idx,
 					data: response.data.data.data,
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -114,6 +117,7 @@ export default class ListWastedShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
+					<Loading visible={this.state.loadingVisible}/>
 					<FlatList
 						ref="listRef"
 						sytle={{flex:1}}

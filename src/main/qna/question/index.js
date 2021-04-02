@@ -4,6 +4,7 @@ import { Image, Alert, Dimensions} from 'react-native';
 import * as base from 'native-base';
 import { getToken } from '../../../utils/getToken';
 import { registerQuestion } from '../../../utils/additionalInfoRequest';
+import Loading from '../../../utils/loading';
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
@@ -14,13 +15,16 @@ export default class Question extends Component{
 		this.state = {
 			title: '',
 			content: '',
+			loadingVisible: false,
 		};
 		this.executeRegister = this.executeRegister.bind(this);
 	}
 	executeRegister(){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			registerQuestion(token, this.state.title, this.state.content).then((response) =>{
 				if(response.status == 200){
+					this.setState({loadingVisible: false})
 					console.log('Question Register Success')
 					Alert.alert(
 						'선박확인체계 알림',
@@ -47,6 +51,7 @@ export default class Question extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content>
+				<Loading visible={this.state.loadingVisible}/>
 				<base.Form style={{padding: 20,}}>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>문의하기</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE,}}>궁금하신 점이 있다면 문의해주세요</base.Text>

@@ -5,7 +5,8 @@ import { FlatList } from 'react-native';
 import { getToken } from '../../utils/getToken';
 import { searchCommonShip, searchWastedShip } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
-import AntDesign from '@expo/vector-icons/AntDesign'
+import AntDesign from '@expo/vector-icons/AntDesign';
+import Loading from '../../utils/loading';
 export default class SearchResult extends Component{
 	constructor(props) {
 		super(props);
@@ -22,6 +23,7 @@ export default class SearchResult extends Component{
 			is_ais: false, is_vpass: false, is_vhf: false, is_ff: false,
 
 			latitude: '0', longitude: '0', info: '',
+			loadingVisible: true,
 		};
 		this.showResult = this.showResult(this);
 		this.getDetail = this.getDetail.bind(this);
@@ -101,6 +103,7 @@ export default class SearchResult extends Component{
 						cnt: response.data.data.count,
 						len: response.data.data.data.length,
 						data: this.state.data.concat(response.data.data.data),
+						loadingVisible: false,
 					})
 				}
 				else{ console.log('fail') }
@@ -113,6 +116,7 @@ export default class SearchResult extends Component{
 						cnt: response.data.data.count,
 						len: response.data.data.data.length,
 						data: this.state.data.concat(response.data.data.data),
+						loadingVisible: false,
 					})
 				}
 				else{ console.log('fail') }
@@ -121,6 +125,7 @@ export default class SearchResult extends Component{
         })
 	}
 	updateSearchCommonShip(idx){
+		this.setState({loadingVisible: true,})
 		getToken().then((token) => {
 			searchCommonShip(token, idx, this.state.name, this.state.types, this.state.code, this.state.tons,
 				this.state.size, this.state.is_ais, this.state.is_vpass, this.state.is_vhf, this.state.is_ff, this.state.region).then((response) => {
@@ -128,6 +133,7 @@ export default class SearchResult extends Component{
 				this.setState({
 					index: idx,
 					data: response.data.data.data,
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -138,13 +144,14 @@ export default class SearchResult extends Component{
 		this.refs.listRef.scrollToOffset({x: 0, y: 0, animated: true})
 	}
 	updateSearchWastedShip(idx){
-		this.refs.listRef.scrollToOffset({x: 0, y: 0, animated: true})
+		this.setState({loadingVisible: true,})
 		getToken().then((token) => {
 			searchWastedShip(token, idx, this.state.id, this.state.region, this.state.types, this.state.info).then((response) => {
 			if(response.status == 200){
 				this.setState({
 					index: idx,
 					data: response.data.data.data,
+					loadingVisible: false,
 				})
 			}
 			else{
@@ -162,57 +169,49 @@ export default class SearchResult extends Component{
 	}
 	
 	render(){
-		if(!this.state.data.length){
-            return(
-                <base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-					<base.Text style ={{fontSize: 30}}>데이터 가져오는 중</base.Text>
-					<base.Spinner color='blue' />
-				</base.Form>
-            )
-        }
-        else {
-			return(
-				<base.Root>
-					<base.Container>
-						<base.Header style={{backgroundColor: 'white'}}>
-							<base.Left>
-								<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
-									<base.Icon name='arrow-back' style={{color: 'black', fontSize: 25}}/>
-								</base.Button>
-							</base.Left>
-							<base.Right>
-							</base.Right>
-						</base.Header>
-						<base.Content>
-							<FlatList
-								sytle={{flex:1}}
-								ref="listRef"
-								data={this.state.data}
-								renderItem={({item}) => <ShowShip ship={item} flag={this.state.flag} onPress={()=>this.getDetail(item.id)}/>}
-								ListFooterComponent={
-									<base.Form style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50, marginTop: 10}}>
-										<base.Button style={{flex: 1, backgroundColor: 'white', width: 60, justifyContent: 'center'}} onPress={()=>this.firstPage()}>
-											<AntDesign name="banckward" size={20} color="#292929"/>
-										</base.Button>
-										<base.Button style={{flex: 1, backgroundColor: 'white', marginLeft: 20, width: 60, justifyContent: 'center'}} onPress={()=>this.previousPage()}>
-											<AntDesign name="caretleft" size={20} color="#292929"/>
-										</base.Button>
-										<base.Form style={{flex: 1, flexDirection: 'column', alignItems: 'center',}}>
-											<base.Text>{this.state.index} / {this.state.cnt}</base.Text>
-										</base.Form>
-										<base.Button style={{flex: 1, backgroundColor: 'white', marginRight: 20, width: 60, justifyContent: 'center'}} onPress={()=>this.nextPage()}>
-											<AntDesign name="caretright" size={20} color="#292929"/>
-										</base.Button>
-										<base.Button style={{flex: 1, backgroundColor: 'white', width: 60, justifyContent: 'center'}} onPress={()=>this.lastPage()}>
-											<AntDesign name="forward" size={20} color="#292929"/>
-										</base.Button>
+		return(
+			
+			<base.Root>
+				<base.Container>
+					<base.Header style={{backgroundColor: 'white'}}>
+						<base.Left>
+							<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
+								<base.Icon name='arrow-back' style={{color: 'black', fontSize: 25}}/>
+							</base.Button>
+						</base.Left>
+						<base.Right>
+						</base.Right>
+					</base.Header>
+					<base.Content>
+						<Loading visible={this.state.loadingVisible}/>
+						<FlatList
+							sytle={{flex:1}}
+							ref="listRef"
+							data={this.state.data}
+							renderItem={({item}) => <ShowShip ship={item} flag={this.state.flag} onPress={()=>this.getDetail(item.id)}/>}
+							ListFooterComponent={
+								<base.Form style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', height: 50, marginTop: 10}}>
+									<base.Button style={{flex: 1, backgroundColor: 'white', width: 60, justifyContent: 'center'}} onPress={()=>this.firstPage()}>
+										<AntDesign name="banckward" size={20} color="#292929"/>
+									</base.Button>
+									<base.Button style={{flex: 1, backgroundColor: 'white', marginLeft: 20, width: 60, justifyContent: 'center'}} onPress={()=>this.previousPage()}>
+										<AntDesign name="caretleft" size={20} color="#292929"/>
+									</base.Button>
+									<base.Form style={{flex: 1, flexDirection: 'column', alignItems: 'center',}}>
+										<base.Text>{this.state.index} / {this.state.cnt}</base.Text>
 									</base.Form>
-								}
-							/>
-						</base.Content>
-					</base.Container>
-				</base.Root>
-			);
-		}
+									<base.Button style={{flex: 1, backgroundColor: 'white', marginRight: 20, width: 60, justifyContent: 'center'}} onPress={()=>this.nextPage()}>
+										<AntDesign name="caretright" size={20} color="#292929"/>
+									</base.Button>
+									<base.Button style={{flex: 1, backgroundColor: 'white', width: 60, justifyContent: 'center'}} onPress={()=>this.lastPage()}>
+										<AntDesign name="forward" size={20} color="#292929"/>
+									</base.Button>
+								</base.Form>
+							}
+						/>
+					</base.Content>
+				</base.Container>
+			</base.Root>
+		);
 	}
 }
