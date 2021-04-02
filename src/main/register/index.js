@@ -238,6 +238,7 @@ export default class Register extends Component{
 				</base.Form>
 				<base.Form style={{flex: 1, height: 300, padding: 10}}>
 					<MapView
+						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
 						style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
 						initialRegion={{
@@ -332,6 +333,7 @@ export default class Register extends Component{
 
 				<base.Form style={{flex: 1, height: 300, padding: 10}}>
 					<MapView
+						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
 						style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
 						initialRegion={{
@@ -377,7 +379,6 @@ export default class Register extends Component{
 			</base.Form>
 		)
 	}
-	
 	getLocation = async () => {
 		try {
 			await Location.requestPermissionsAsync();
@@ -402,6 +403,7 @@ export default class Register extends Component{
 							'선박확인체계 알림',
 							'일반선박 정보가 등록되었습니다',
 						)	
+						this.props.navigation.popToTop()
 					}
 				})
 			else if (this.state.flag == 'Wasted') registerWastedShip(token, this.state.base64, this.state.types,
@@ -412,10 +414,10 @@ export default class Register extends Component{
 							'선박확인체계 알림',
 							'유기선박 정보가 등록되었습니다',
 						)	
+						this.props.navigation.popToTop()
 					}
 				})
 		})
-		this.props.navigation.popToTop()
 	}
 	
 	render(){

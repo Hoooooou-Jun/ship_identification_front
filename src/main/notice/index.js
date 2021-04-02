@@ -4,6 +4,9 @@ import { Image, Alert, FlatList, TouchableHighlight } from 'react-native';
 import * as base from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestNotice } from '../../utils/additionalInfoRequest';
+
+import Loading from '../../utils/loading';
+
 export default class Notice extends Component{
 	constructor(props) {
 		super(props);
@@ -12,6 +15,8 @@ export default class Notice extends Component{
             date: '',
             title: '',
             types: false,
+
+            loadingVisible: true,
         };
         this.getNotice = this.getNotice(this);
 	}
@@ -25,6 +30,7 @@ export default class Notice extends Component{
                         date: response.data.data.date,
                         title: response.data.data.title,
                         types: response.data.data.types,
+                        loadingVisible: false,
                     })
 				}
 				else{
@@ -46,6 +52,7 @@ export default class Notice extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content padder>
+				    <Loading visible={this.state.loadingVisible}/>
                     <base.Form>
                         <base.Card>
                             <base.CardItem header bordered>

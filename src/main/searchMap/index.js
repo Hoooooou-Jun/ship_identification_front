@@ -4,10 +4,11 @@ import { View, Text, Alert } from 'react-native';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Svg, Image } from 'react-native-svg';
 import { getToken } from '../../utils/getToken';
 import { requestShipLocation } from '../../utils/shipInfoRequest';
-export default class SearchMap extends Component{ // only use for Wasted Boat
+
+import Loading from '../../utils/loading';
+export default class SearchMap extends Component{
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -16,6 +17,9 @@ export default class SearchMap extends Component{ // only use for Wasted Boat
 			
 			commonShipData: [],
 			wastedShipData: [],
+
+			loadingVisible_location: true,
+			loadingVisible_data: true,
 		};
 		this.requestLocation = this.requestLocation(this);
 		this.getLocation = this.getLocation(this);
@@ -27,15 +31,16 @@ export default class SearchMap extends Component{ // only use for Wasted Boat
 		getToken().then((token) => {
 			requestShipLocation(token).then((response) =>{
 				if(response.status == 200){ // request success
-					this.setState({commonShipData: response.data.data.normal})
-					this.setState({wastedShipData: response.data.data.waste})
+					this.setState({
+						commonShipData: response.data.data.normal,
+						wastedShipData: response.data.data.waste,
+						loadingVisible_data: false
+					})
 				}
 				else{
                 	console.log('fail')
             	}
-			}).catch((error) => { // request fail
-					console.log(error.message)
-				})
+			})
         })
 	}
 
@@ -66,22 +71,19 @@ export default class SearchMap extends Component{ // only use for Wasted Boat
 			await Location.requestPermissionsAsync();
 			const location = await Location.getCurrentPositionAsync();
 			console.log(location)
-			this.setState({latitude: location.coords['latitude'], longitude: location.coords['longitude']})
+			this.setState({
+				latitude: location.coords['latitude'],
+				longitude: location.coords['longitude'],
+				loadingVisible_location: false,
+			})
 		} catch (error) {
 			console.log(error)
 			Alert.alert("Can't find you.", "Please Try Again!")
+			this.setState({loadingVisible_location: false})
 		}
 	}
 	
 	render(){
-		if(this.state.data == '' || this.state.latitude == '' || this.state.longitude == ''){
-            return(
-                <View style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-				    <Text style ={{fontSize: 30}}>데이터 가져오는 중</Text>
-				    <base.Spinner color='blue' />
-                </View>
-            )
-        }
 		const requestMarker = (data , flag) => {
 			return data.map((ship) => {
 				if(flag == 'Normal'){
@@ -143,6 +145,7 @@ export default class SearchMap extends Component{ // only use for Wasted Boat
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
+					<Loading visible={this.state.loadingVisible_data || this.state.loadingVisible_location}/>
 					<base.Form style={{flex: 1,}}>
 						<MapView
 							ref = {(ref) => this.mapView=ref}

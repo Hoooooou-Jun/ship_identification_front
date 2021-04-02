@@ -7,6 +7,7 @@ import { Picker } from '@react-native-picker/picker';
 import { getToken } from '../../utils/getToken';
 import { requestWastedShipDetail } from '../../utils/shipInfoRequest';
 import { updateWastedShipDetail, } from '../../utils/shipInfoRequest';
+import Loading from '../../utils/loading';
 
 export default class UpdateWastedShip extends Component{
 	constructor(props) {
@@ -16,6 +17,7 @@ export default class UpdateWastedShip extends Component{
 			region: '', port: '',
 
 			tmp_info: '',
+			loadingVisible: true,
 		};
 		this.showWastedShipDetail = this.showWastedShipDetail(this);
 	
@@ -34,6 +36,7 @@ export default class UpdateWastedShip extends Component{
 						types: response.data.data.types,
 						region: response.data.data.region, 
 						port: response.data.data.port,
+						loadingVisible: false,
 					})
 				}
 				else{
@@ -43,6 +46,7 @@ export default class UpdateWastedShip extends Component{
         })
 	}
 	updateDetail(){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			const id = this.props.navigation.getParam('id');
 			const info = (this.state.tmp_info == '' ? this.state.info : this.state.tmp_info)
@@ -50,6 +54,7 @@ export default class UpdateWastedShip extends Component{
 				this.state.latitude, this.state.longitude,
 				this.state.types, this.state.region).then((response) =>{
 				if(response.status == 200){
+					this.setState({loadingVisible: false})
 					Alert.alert(
 						'선박확인체계 알림',
 						'선박 정보가 수정되었습니다',
@@ -76,6 +81,7 @@ export default class UpdateWastedShip extends Component{
 						</base.Right>
 					</base.Header>
 					<base.Content padder>
+						<Loading visible={this.state.loadingVisible}/>
 						<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 10}}>선박정보수정</base.Text>
 						<base.Form>
 						

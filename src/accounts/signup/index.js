@@ -7,6 +7,8 @@ import { Picker } from '@react-native-picker/picker';
 import Constants from 'expo-constants';
 import { requestSignup } from '../../utils/userInfoRequest/'
 
+import Loading from '../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
@@ -41,7 +43,11 @@ export default class Signup extends Component{
 		}
 		this.executeSignup = this.executeSignup.bind(this);
 	}
-	componentDidMount(){ this.setState({device_id: Constants.deviceId}) }
+	componentDidMount(){
+		this.setState({loadingVisible: true})
+		this.setState({device_id: Constants.deviceId})
+		this.setState({loadingVisible: false})
+	}
 	executeSignup(){
 		this.setState({loadingVisible: true})
 		requestSignup(this.state.srvno, this.state.password, this.state.name, this.state.rank, this.state.position, this.state.unit, this.state.phone, this.state.device_id)
@@ -106,16 +112,7 @@ export default class Signup extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
-					<Modal transparent={true} visible={this.state.loadingVisible}>
-						<base.Form style={{alignItems: 'center', justifyContent: 'center', flex: 1,}}>
-							<base.Form style={{width: 300, height: 300, backgroundColor: 'rgba(0,0,0,0.5)', borderRadius: 20,
-								justifyContent: 'center', alignItems: 'center'}}>
-									<base.Text style={{color: 'white', fontSize: SIZE_LOAD_TITLE, margin: 10}}>선박확인체계 알림</base.Text>
-									<base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>데이터를 불러오고 있습니다</base.Text>
-									<base.Spinner color='white' size={SIZE_LOAD_LOGO} style={{margin: 10}}/>
-							</base.Form>
-						</base.Form>
-					</Modal>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Form style={{padding: 20,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>회원가입</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10}}>아래의 정보를 입력해주세요</base.Text>
@@ -123,9 +120,9 @@ export default class Signup extends Component{
 
 					<base.Form style={{padding: 10, marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>아이디(군번)</base.Text>
+							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>아이디</base.Text>
 							<base.Input
-								placeholder="'-'를 포함한 아이디(군번)을 입력하세요"
+								placeholder="'-'를 포함한 아이디을 입력하세요"
 								onChangeText={(srvno) => this.setState({srvno})}
 								style={{fontFamily:'Nanum',}}
 								placeholderStyle={{fontFamily:'Nanum'}}

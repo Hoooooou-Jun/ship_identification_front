@@ -2,14 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-
-import Intro from './src/intro/';
 
 import Login from './src/accounts/login';
 import Lost from './src/accounts/lost';
 import Signup from './src/accounts/signup';
-import AccessRights from './src/accounts/accessRight';
 
 import Home from './src/main/home';
 import Register from './src/main/register';
@@ -34,12 +30,9 @@ import QNAList from './src/main/qna/qnaList';
 import Question from './src/main/qna/question';
 import Answer from './src/main/qna/answer';
 
-import OptionHome from './src/option/optionHome';
-import ErrorReport from './src/option/errorReport';
-import MyAccount from './src/option/myAccount';
-
 import ImgViewer from './src/main/imgViewer';
 
+import MyAccount from './src/main/myAccount';
 const homeStackNav = createStackNavigator(
 	{
     Home: {screen: Home, navigationOptions: {headerShown: false}},
@@ -67,21 +60,11 @@ const homeStackNav = createStackNavigator(
 	Answer: {screen: Answer, navigationOptions: { headerShown: false }},
 
 	ImgViewer: {screen: ImgViewer, navigationOptions: { headerShown: false }},
+	
+	MyAccount: {screen: MyAccount, navigationOptions: { headerShown: false }},
   },{
     initialRouteName: 'Home'
   }
-);
-
-const Drawer = createDrawerNavigator(
-	{
-		homeStackNav: homeStackNav,
-		ErrorReport: {screen: ErrorReport, navigationOptions: { headerShown: false }},
-		MyAccount: {screen: MyAccount, navigationOptions: { headerShown: false }},
-	},{
-		drawerPosition: 'left',
-    	contentComponent: OptionHome,
-		defaultNavigationOptions: { drawerLockMode: "locked-closed", }
-	}
 );
 
 const loginStackNav = createStackNavigator(
@@ -89,7 +72,6 @@ const loginStackNav = createStackNavigator(
 		Login: {screen: Login, navigationOptions: { headerShown: false }},
 		Lost: {screen: Lost, navigationOptions: { headerShown: false }},
 		Signup: {screen: Signup, navigationOptions: { headerShown: false }},
-		AccessRights: {screen: AccessRights, navigationOptions: { headerShown: false }},
 	},{
 		initialRouteName: 'Login'
 	}
@@ -97,9 +79,8 @@ const loginStackNav = createStackNavigator(
 
 const Root = createSwitchNavigator(
 	{
-		// Intro: {screen: Intro, navigationOptions: { headerShown: false }},
     	loginStackNav,
-		Drawer,
+		homeStackNav,
 	}
 );
 const AppContainer = createAppContainer(Root);

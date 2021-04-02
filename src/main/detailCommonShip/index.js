@@ -12,6 +12,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { requestPermission } from '../../utils/userInfoRequest';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import Loading from '../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.035
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.0175
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
@@ -29,10 +31,12 @@ export default class DetailCommonShip extends Component{
 			is_ais: false, is_vpass: false, is_vhf: false, is_ff: false,
 			is_train: false,
 			img_cnt: 0,
-			data: [],
 			latitude: '',
 			longitude: '',
-			active: false,
+			data: [],
+			loadingVisible_shipDetail: true,
+			loadingVisible_shipGallery: true,
+			loadingVisible: false,
 		};
 		this.showCommonShipDetail = this.showCommonShipDetail(this);
 		this.showCommonShipGallery = this.showCommonShipGallery(this);
@@ -40,12 +44,15 @@ export default class DetailCommonShip extends Component{
 		this.deleteShipInfo = this.deleteShipInfo.bind(this);
 	}
 	updateShipInfo(){
+		this.setState({loadingVisible: true})
 		getToken().then((token) => {
 			requestPermission(token).then((response) => {
 				if(response.data.data.user_level > 1){
+					this.setState({loadingVisible: false})
 					this.props.navigation.navigate('UpdateCommonShip',{id: this.state.id})
 				}
 				else{
+					this.setState({loadingVisible: false})
 					Alert.alert(
 						'선박확인체계 알림',
 						'선박 정보 수정 권한이 없습니다',
@@ -61,12 +68,13 @@ export default class DetailCommonShip extends Component{
 			[{
 				text: "네",
 				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
 					requestPermission(token).then((response) => {
-						console.log(response.data.data.user_level)
 						if(response.data.data.user_level > 1){
 							const id = this.props.navigation.getParam('id');
 							deleteCommonShip(token, id).then((response) => {
 								if(response.status == 200){
+									this.setState({loadingVisible: false})
 									Alert.alert(
 										'선박확인체계 알림',
 										this.state.name + ' 선박 정보가 삭제되었습니다',
@@ -76,6 +84,7 @@ export default class DetailCommonShip extends Component{
 							})
 						}
 						else{
+							this.setState({loadingVisible: false})
 							Alert.alert(
 								'선박확인체계 알림',
 								'선박 정보 삭제 권한이 없습니다',
@@ -89,7 +98,7 @@ export default class DetailCommonShip extends Component{
 			}]
 		);
 	}
-	showCommonShipDetail(){	
+	showCommonShipDetail(){
 		getToken().then((token) => {
 			const id = this.props.navigation.getParam('id');
 			requestCommonShipDetail(token, id).then((response) => {
@@ -114,6 +123,8 @@ export default class DetailCommonShip extends Component{
 						img_cnt: response.data.data.img_cnt,
 						latitude: response.data.data.lat,
 						longitude: response.data.data.lon,
+
+						loadingVisible_shipDetail: false,
 					})
 				}
 				else{
@@ -127,20 +138,15 @@ export default class DetailCommonShip extends Component{
 			const id = this.props.navigation.getParam('id');
 			requestCommonShipGallery(token, id).then((response) => {
 				if(response.status == 200){
-					this.setState({ data: this.state.data.concat(response.data.data),})
+					this.setState({
+						data: this.state.data.concat(response.data.data),
+						loadingVisible_shipGallery: false,
+					})
 				}
 			})
         })
 	}
 	render(){
-		if(this.state.img == ''){
-            return(
-                <base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-					<base.Text style ={{fontSize: 30}}>데이터 가져오는 중</base.Text>
-					<base.Spinner color='blue' />
-				</base.Form>
-            )
-        }
 		let CommonShipGallery
 		if(this.state.data.length){ CommonShipGallery =
 			<base.Form>
@@ -184,6 +190,7 @@ export default class DetailCommonShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
+					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
 					<base.Form style={{width: '100%', height: SIZE_IMG,}}>
 						<Image resizeMode='cover' source={{uri: requestDomain + this.state.img,}} style={{width: '100%', height: '100%',}}/>
 						{Train_Btn}

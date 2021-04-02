@@ -73,7 +73,7 @@ export const requestCommonShipList = (token, index) =>
 }})
 
 export const requestCommonShipDetail = (token, id) => 
-    request.get('/Ships/ship/normal/' + id, {
+    request.get('/Ships/ship/normal/' + id + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -166,7 +166,7 @@ export const requestWastedShipList = (token, index) =>
 }})
 
 export const requestWastedShipDetail = (token, id) => 
-    request.get('/Ships/ship/waste/' + id, {
+    request.get('/Ships/ship/waste/' + id + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -174,7 +174,7 @@ export const requestWastedShipDetail = (token, id) =>
 }})
 
 export const requestWastedShipGallery = (token, id) => 
-    request.get('/Ships/image/waste/list/' + id, {
+    request.get('/Ships/image/waste/list/' + id + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -208,7 +208,7 @@ export const requestAIResult = (token, base64) =>
 
 // MAP
 export const requestShipLocation = (token) =>
-    request.get('Ships/ship/location', {
+    request.get('Ships/ship/location/', {
     headers: {
         'AUTHORIZATION': 'jwt ' + token,
         'Accept': 'application/json',

@@ -9,7 +9,7 @@ export const requestNoticeList = (token) =>
 }})
 
 export const requestNotice = (token, index) => 
-    request.get('/Posts/notice/' + index, {
+    request.get('/Posts/notice/' + index + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -25,7 +25,7 @@ export const requestQuestionList = (token) =>
 }})
 
 export const requestQuestion = (token, index) => 
-    request.get('/Posts/question/' + index, {
+    request.get('/Posts/question/' + index + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -43,7 +43,7 @@ export const registerQuestion = (token, title, content) =>
 }})
 
 export const requestAnswer = (token, index) => 
-    request.get('/Posts/answer/' + index, {
+    request.get('/Posts/answer/' + index + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',

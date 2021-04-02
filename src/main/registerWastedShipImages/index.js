@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { SliderBox } from "react-native-image-slider-box";
 import { registerWastedShipImages } from '../../utils/shipInfoRequest';
+import Loading from '../../utils/loading';
 var BUTTONS = [
   { text: "카메라로 등록하기", icon: "ios-camera", iconColor: "grey",},
   { text: "갤러리에서 등록하기", icon: "ios-images", iconColor: "grey" },
@@ -24,6 +25,7 @@ export default class RegisterWastedShipImages extends Component{
 			images: [],
 			base64: [],
 			clicked: '',
+			loadingVisible: false,
 		};
 		this.pickImage = this.pickImage.bind(this);
 		this.pickPhoto = this.pickPhoto.bind(this);
@@ -86,8 +88,10 @@ export default class RegisterWastedShipImages extends Component{
 		}
 		else{
 			getToken().then((token) =>{
+				this.setState({loadingVisible: true})
 				registerWastedShipImages(token, this.state.id, this.state.base64).then((response) => {
 					if(response.status == 200){
+						this.setState({loadingVisible: false})
 						Alert.alert(
 							'선박확인체계 알림',
 							this.state.id + '번 유기선박 사진 ' + this.state.images.length + '장이 추가등록되었습니다',
@@ -118,17 +122,17 @@ export default class RegisterWastedShipImages extends Component{
 		}
 		return(
 			<base.Container>
-				<base.Header style={{backgroundColor: '#006eee'}}>
+				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
 						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='arrow-back'/>
+							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
 					<base.Right>
-						<base.Title style={{fontFamily:'Nanum'}}>{this.state.id}번 유기선박 사진 추가등록</base.Title>
 					</base.Right>
 				</base.Header>
 				<base.Content>
+					<Loading visible={this.state.loadingVisible}/>
 					<base.Root>
 						<base.Form style={{margin: 10,}}>
 							<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', margin: 5}}>선박사진 추가등록</base.Text>
