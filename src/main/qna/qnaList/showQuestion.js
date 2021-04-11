@@ -1,23 +1,24 @@
 import React, { Component } from 'react';
-import { Image, TouchableHighlight } from 'react-native';
+import { TouchableHighlight, Dimensions } from 'react-native';
 import * as base from 'native-base';
+
+const SIZE_QNATITLE = Dimensions.get('screen').height * 0.02
+const SIZE_QNASUBTITLE = Dimensions.get('screen').height * 0.015
 
 export default class ShowQuestion extends Component{
 	constructor(props) {
 		super(props);
-		this.state = {};
 	}
 	render() {
-        console.log(this.props.data)
         let Answer
         if(this.props.data.status){ Answer =
-            <base.Button style={{backgroundColor: 'green', marginRight: 10,}}>
-                <base.Text style={{fontSize : 15}}>답변완료</base.Text>
+            <base.Button style={{backgroundColor: 'green', marginRight: 10, height: '100%'}}>
+                <base.Text style={{fontSize : SIZE_QNATITLE}}>답변완료</base.Text>
             </base.Button>
         }
         else{ Answer =
-            <base.Button style={{backgroundColor: 'red', marginRight: 10,}}>
-                <base.Text style={{fontSize : 15}}>답변대기</base.Text>
+            <base.Button style={{backgroundColor: 'red', marginRight: 10, height: '100%'}}>
+                <base.Text style={{fontSize : SIZE_QNATITLE}}>답변대기</base.Text>
             </base.Button>
         }
 		return(
@@ -25,8 +26,8 @@ export default class ShowQuestion extends Component{
             <base.Card style={{ flexDirection:'row', alignItems: 'center', justifyContent: 'flex-start'}}>
                 {Answer}
                 <base.Form>
-                    <base.Text style={{color: '#006eee', fontSize: 20}}>{this.props.data.title}</base.Text>
-                    <base.Text style={{color: 'grey', fontSize: 15}}>{this.props.data.date}</base.Text>
+                    <base.Text style={{color: '#006eee', fontSize: SIZE_QNATITLE}}>{this.props.data.title}</base.Text>
+                    <base.Text style={{color: 'grey', fontSize: SIZE_QNASUBTITLE}}>{this.props.data.date}</base.Text>
                 </base.Form>
             </base.Card>
         </TouchableHighlight>

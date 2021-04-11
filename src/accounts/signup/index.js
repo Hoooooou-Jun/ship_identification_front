@@ -5,17 +5,16 @@ import * as base from 'native-base'
 import styles from './styles';
 import { Picker } from '@react-native-picker/picker';
 import Constants from 'expo-constants';
-import { requestSignup } from '../../utils/userInfoRequest/'
-
+import { requestSignup } from '../../utils/userInfoRequest/';
+import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';
+import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
 import Loading from '../../utils/loading';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
+const SIZE_IMG_HEIGHT = Dimensions.get('screen').height * 0.35
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
-
-const SIZE_LOAD_TITLE = Dimensions.get('screen').width * 0.06
-const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.03
-const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.2
+const SIZE_SUBFONT = Dimensions.get('screen').height * 0.015
 
 const alertMessage =
 	  ' 1. 숫자, 문자, 특수문자를 혼합하여 9자리 이상으로 조합\n' +
@@ -113,139 +112,111 @@ export default class Signup extends Component{
 				</base.Header>
 				<base.Content>
 					<Loading visible={this.state.loadingVisible}/>
-					<base.Form style={{padding: 20,}}>
+					<base.Form style={{padding: 10,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>회원가입</base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10}}>아래의 정보를 입력해주세요</base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>아래의 정보를 입력해주세요</base.Text>
 					</base.Form>
-
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>아이디</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>아이디</base.Text>
 							<base.Input
-								placeholder="'-'를 포함한 아이디을 입력하세요"
+								placeholder="'-'를 포함한 아이디를 입력하세요"
 								onChangeText={(srvno) => this.setState({srvno})}
-								style={{fontFamily:'Nanum',}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								keyboardType="number-pad"/>
 						</base.Item>
 					</base.Form>
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>비밀번호</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>비밀번호</base.Text>
 							<base.Input
-								placeholder='영문, 숫자, 특수문자를 포함한 비밀번호를 입력하세요'
+								placeholder='영문, 숫자, 특수문자를 포함시키세요'
 								onChangeText={(password) => this.setState({password})}
-								style={{fontFamily:'Nanum'}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								secureTextEntry={ true }
 								/>
 						</base.Item>
 					</base.Form>
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>비밀번호 확인</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>비밀번호 확인</base.Text>
 							<base.Input
 								placeholder='비밀번호 확인'
 								onChangeText={(passwordCheck) => this.setState({passwordCheck})}
-								style={{fontFamily:'Nanum'}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								secureTextEntry={ true }
 								/>
 						</base.Item>
 					</base.Form>
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>이름</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>이름</base.Text>
 							<base.Input
 								placeholder='실명을 입력하세요'
 								onChangeText={(name) => this.setState({name})}
-								style={{fontFamily:'Nanum'}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								/>
 						</base.Item>
 					</base.Form>
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>연락처(휴대폰 번호)</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>연락처 (휴대폰 번호)</base.Text>
 							<base.Input
 								placeholder="'-'를 제외한 11자리를 입력하세요"
 								onChangeText={(phone) => this.setState({phone})}
-								style={{fontFamily:'Nanum'}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								keyboardType="number-pad"
 								/>
 						</base.Item>
 					</base.Form>
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>계급</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>계급</base.Text>
 						<Picker
 							selectedValue={this.state.rank}
 							style={{height: 40, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({rank: itemValue}) }>
-							<Picker.Item label="이병" value="이병" />
-							<Picker.Item label="일병" value="일병" />
-							<Picker.Item label="상병" value="상병" />
-							<Picker.Item label="병장" value="병장" />
-							<Picker.Item label="하사" value="하사" />
-							<Picker.Item label="중사" value="중사" />
-							<Picker.Item label="상사" value="상사" />
-							<Picker.Item label="원사" value="원사" />
-							<Picker.Item label="준위" value="준위" />
-							<Picker.Item label="소위" value="소위" />
-							<Picker.Item label="중위" value="중위" />
-							<Picker.Item label="대위" value="대위" />
-							<Picker.Item label="소령" value="소령" />
-							<Picker.Item label="중령" value="중령" />
-							<Picker.Item label="대령" value="대령" />
-							<Picker.Item label="준장" value="준장" />
-							<Picker.Item label="소장" value="소장" />
-							<Picker.Item label="중장" value="중장" />
-							<Picker.Item label="대장" value="대장" />
+							{ KindsOfRank.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 						</Picker>
 						</base.Item>							
 					</base.Form>
 
 
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>소속부대(제32보병사단)</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>소속부대 (제32보병사단)</base.Text>
 						<Picker
 							selectedValue={this.state.unit}
 							style={{height: 50, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({unit: itemValue}) }>
-							<Picker.Item label="사령부" value="사령부" />
-							<Picker.Item label="직할대" value="직할대" />
-							<Picker.Item label="97여단 1대대" value="97-1" />
-							<Picker.Item label="97여단 2대대" value="97-2" />
-							<Picker.Item label="97여단 3대대" value="97-3" />
-							<Picker.Item label="98여단 1대대" value="98-1" />
-							<Picker.Item label="98여단 2대대" value="98-2" />
-							<Picker.Item label="98여단 3대대" value="98-3" />
-							<Picker.Item label="98여단 4대대" value="98-4" />
-						</Picker>							
+							{ KindsOfUnit.map((data)=>{ return <Picker.Item label={data.label} value={data.value} /> }) }
+						</Picker>				
 						</base.Item>							
-					</base.Form>
+					</base.Form>	
 					
-					<base.Form style={{padding: 10, marginVertical: 15}}>
+					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-							<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>직책</base.Text>
+							<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>직책</base.Text>
 							<base.Input
 								placeholder="직책을 입력해주세요"
 								onChangeText={(position) => this.setState({position})}
-								style={{fontFamily:'Nanum'}}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
 								/>
 						</base.Item>
 					</base.Form>
-					<base.Button rounded onPress={this.executeSignup} style={{flex: 1, backgroundColor: '#006eee', width: '80%',
-						justifyContent: 'center', alignSelf: 'center', height: 60, elevation: 6, marginHorizontal: 10, marginBottom: 20}} >
-						<base.Text style={{fontSize: 15}}>회원가입</base.Text>
+					<base.Button block onPress={this.executeSignup} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+						<base.Text style={{color: 'black'}}>회원가입</base.Text>
 					</base.Button>
 				</base.Content>
 			<StatusBar hidden/>

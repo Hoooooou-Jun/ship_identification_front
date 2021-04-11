@@ -6,10 +6,6 @@ import { requestDomain } from '../../utils/domain';
 const SIZE_IMG = Dimensions.get('screen').width
 
 export default class ShowPlusDetail extends Component{
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		const address = this.props.ship.img
 		const img = requestDomain + address

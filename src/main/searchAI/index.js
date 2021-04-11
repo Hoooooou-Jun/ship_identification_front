@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Dimensions, Image, TouchableHighlight, FlatList } from 'react-native';
+import { Dimensions, Image, FlatList } from 'react-native';
 import * as base from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
@@ -8,6 +8,11 @@ import { getToken } from '../../utils/getToken';
 import { requestAIResult } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
 import Loading from '../../utils/loading';
+
+const SIZE_TITLE = Dimensions.get('screen').height * 0.04
+const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
+const SIZE_IMG_HEIGHT = Dimensions.get('screen').height * 0.35
+
 var BUTTONS = [
   { text: "카메라로 등록하기", icon: "ios-camera", iconColor: "#2c8ef4" },
   { text: "갤러리에서 등록하기", icon: "ios-images", iconColor: "#f42ced" },
@@ -16,15 +21,11 @@ var BUTTONS = [
 var DESTRUCTIVE_INDEX = 2;
 var CANCEL_INDEX = 2;
 
-const colors = ['#006eee', '#81d4fa']
-const keys = [ 'value', 'remainder',]
-
 export default class SearchAI extends Component{ 
 	constructor(props) {
 		super(props);
 		this.state = {
 			img: '',
-			base64: '',
 			data: [],
 			percentage: [],
 			functionOn: false,
@@ -49,35 +50,30 @@ export default class SearchAI extends Component{
 		if(ImagePicker.getCameraPermissionsAsync()) ImagePicker.requestCameraPermissionsAsync()
 		await ImagePicker.launchCameraAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			base64: true,
 			allowsEditing: true,
-			aspect: [1, 1],
 			quality: 1,
 		}).then((result) => {
-			this.setState({img: result.uri})
 			ImageManipulator.manipulateAsync(
 				result.uri,
-				[{resize: {width: 50, height: 50}}],
-				{base64: true, format: ImageManipulator.SaveFormat.JPEG}
-			).then((result) => {this.setState({base64: result.base64})})
-	
+				[{resize: {width: 500, height: 500}}],
+				{format: ImageManipulator.SaveFormat.JPEG}
+			).then((result) => {
+				this.setState({img: result.uri})
+			})
 		})
 	}
 	async pickImage() {
 		await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			base64: true,
 			allowsEditing: true,
-			aspect: [1, 1],
 			quality: 1,
 		}).then((result) => {
-			this.setState({img: result.uri})
 			ImageManipulator.manipulateAsync(
 				result.uri,
-				[{resize: {width: 50, height: 50}}],
-				{base64: true, format: ImageManipulator.SaveFormat.JPEG}
+				[{resize: {width: 500, height: 500}}],
+				{format: ImageManipulator.SaveFormat.JPEG}
 			).then((result) => {
-				this.setState({base64: result.base64})
+				this.setState({img: result.uri})
 			})
 		})
 	}
@@ -93,7 +89,9 @@ export default class SearchAI extends Component{
 				loadingVisible: true,
 			})
 			getToken().then((token) =>{
-				requestAIResult(token, this.state.base64).then((response) => {
+				const formdata = new FormData()	
+				formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: this.state.img})
+				requestAIResult(token, formdata).then((response) => {
 					this.setState({
 						kinds: response.data.data.kinds,
 						percentage: response.data.data.percent,
@@ -172,16 +170,16 @@ export default class SearchAI extends Component{
 						<base.Right>
 						</base.Right>
 					</base.Header>
-					<base.Content contentContainerStyle={{alignItems: 'center', justifyContent:'center', flex: 1,}}>
+					<base.Content contentContainerStyle={{flex: 1,}}>
 						<Loading visible={this.state.loadingVisible}/>
-						<base.Form style={{width: '100%', alignItems: 'flex-start'}}>
-							<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 20}}>AI 검색</base.Text>
+						<base.Form style={{padding: 10,}}>
+							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>AI 검색</base.Text>
+							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>인공지능을 이용하여 촬영한 선박을 검색합니다</base.Text>
 						</base.Form>
 						<base.Form style={{flex: 1, width: '100%',height: '100%', borderBottomWidth: 1, borderColor: '#DDD', flexDirection: 'column',}}>
 							<Image source={{uri:this.state.img}} style={{ flex: 1, width: '100%', height: '100%'}}/>
 							<base.Button rounded
-							style={{position: 'absolute', right: 10, bottom: '5%', backgroundColor: 'white', width: 60, height: 60,
-								shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},}}  
+							style={{position: 'absolute', right: 10, bottom: 10, backgroundColor: 'white', width: 60, height: 60, elevation: 6,}}  
 								onPress={() =>
 									base.ActionSheet.show(
 									{
@@ -196,8 +194,8 @@ export default class SearchAI extends Component{
 							</base.Button>
 						</base.Form>
 						<base.Form style={{flex: 2, width: '100%', height: '100%'}}>
-							<base.Button block onPress={this.getAIResult} style={{backgroundColor: '#006eee', margin: 10}}>
-								<base.Text style={{fontFamily:'Nanum',}}>인공지능 검색</base.Text>
+							<base.Button block onPress={this.getAIResult} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+								<base.Text style={{color: 'black'}}>AI 검색</base.Text>
 							</base.Button>
 							{AIResult}
 						</base.Form>				

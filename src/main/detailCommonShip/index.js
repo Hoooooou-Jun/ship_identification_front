@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Dimensions, FlatList, TouchableHighlight, Image, Alert } from 'react-native';
 import * as base from 'native-base';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { getToken } from '../../utils/getToken';
 import { requestCommonShipDetail } from '../../utils/shipInfoRequest';
 import ShowPlusDetail from './showPlusDetail';
@@ -10,7 +11,6 @@ import { requestCommonShipGallery } from '../../utils/shipInfoRequest';
 import { deleteCommonShip } from '../../utils/shipInfoRequest';
 import { AntDesign } from '@expo/vector-icons'; 
 import { requestPermission } from '../../utils/userInfoRequest';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import Loading from '../../utils/loading';
 
@@ -25,14 +25,16 @@ export default class DetailCommonShip extends Component{
 		super(props);
 		this.state = {
 			id: '',
-			img: '',
+			main_img: '',
+			main_img_id: '',
 			name: '', types: '',
 			code: '',  tons: '', size: '', region: '', register: '',
 			is_ais: false, is_vpass: false, is_vhf: false, is_ff: false,
 			is_train: false,
-			img_cnt: 0,
+			img_cnt: '',
 			latitude: '',
 			longitude: '',
+
 			data: [],
 			loadingVisible_shipDetail: true,
 			loadingVisible_shipGallery: true,
@@ -41,25 +43,73 @@ export default class DetailCommonShip extends Component{
 		this.showCommonShipDetail = this.showCommonShipDetail(this);
 		this.showCommonShipGallery = this.showCommonShipGallery(this);
 		this.updateShipInfo = this.updateShipInfo.bind(this);
+		this.updateShipMImage = this.updateShipMImage.bind(this);
 		this.deleteShipInfo = this.deleteShipInfo.bind(this);
 	}
 	updateShipInfo(){
-		this.setState({loadingVisible: true})
-		getToken().then((token) => {
-			requestPermission(token).then((response) => {
-				if(response.data.data.user_level > 1){
-					this.setState({loadingVisible: false})
-					this.props.navigation.navigate('UpdateCommonShip',{id: this.state.id})
-				}
-				else{
-					this.setState({loadingVisible: false})
-					Alert.alert(
-						'선박확인체계 알림',
-						'선박 정보 수정 권한이 없습니다',
-					)
-				}
-			})
-		})
+		Alert.alert(
+			'선박확인체계 알림',
+			this.state.name + '선박 정보를 수정하시겠습니까?',
+			[{
+				text: "네",
+				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
+					requestPermission(token).then((response) => {
+						if(response.data.data.user_level > 1){
+							this.setState({loadingVisible: false})
+							this.props.navigation.navigate('UpdateCommonShip',{id: this.state.id})
+						}
+						else{
+							this.setState({loadingVisible: false})
+							Alert.alert(
+								'선박확인체계 알림',
+								'선박 정보 수정 권한이 없습니다',
+							)
+						}
+					})
+				})
+				},{
+				text: "아니오",
+				onPress: () => console.log("Cancel Pressed"),
+			}]
+		);
+	}
+	updateShipMImage(){
+		Alert.alert(
+			'선박확인체계 알림',
+			this.state.name + ' 대표사진을 수정하시겠습니까?',
+			[{
+				text: "네",
+				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
+					requestPermission(token).then((response) => {
+						if(response.data.data.user_level > 1){
+							if(this.state.data.length < 2){
+								this.setState({loadingVisible: false})
+								Alert.alert(
+									'선박확인체계 알림',
+									'대표사진을 수정할 사진이 없습니다',
+								)
+							}
+							else{
+								this.setState({loadingVisible: false})
+								this.props.navigation.navigate('UpdateCommonShipMImage',{id: this.state.id, main_img_id: this.state.main_img_id,})
+							}
+						}
+						else{
+							this.setState({loadingVisible: false})
+							Alert.alert(
+								'선박확인체계 알림',
+								'대표사진 수정 권한이 없습니다',
+							)
+						}
+					})
+				})
+				},{
+				text: "아니오",
+				onPress: () => console.log("Cancel Pressed"),
+			}]
+		);
 	}
 	deleteShipInfo(){
 		Alert.alert(
@@ -105,7 +155,8 @@ export default class DetailCommonShip extends Component{
 				if(response.status == 200){
 					this.setState({
 						id: id,
-						img: response.data.data.main_img,
+						main_img: response.data.data.main_img,
+						main_img_id: response.data.data.main_img_id,
 						name: response.data.data.name,
 						code: response.data.data.code,
 						types: response.data.data.types,
@@ -154,7 +205,8 @@ export default class DetailCommonShip extends Component{
 					sytle={{flex:1, height: SIZE_SUBIMG}}
 					data={this.state.data}
 					horizontal={true}
-					renderItem={({item}) => <ShowPlusDetail ship={item} onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img})}/>}
+					renderItem={({item, index}) => <ShowPlusDetail ship={item}
+						onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img, flag: 'Normal', id: item.id, index: index + 1, main_img_id: this.state.main_img_id})}/>}
 					ListFooterComponent={
 						<TouchableHighlight style={{flex: 1,}} onPress={()=>this.props.navigation.navigate('RegisterCommonShipImages',{id: this.state.id, name: this.state.name})}>
 							<base.Card style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, alignItems: 'center', justifyContent: 'center'}}>
@@ -167,14 +219,12 @@ export default class DetailCommonShip extends Component{
 		}
 		let Train_Btn
 		if(this.state.is_train){ Train_Btn =
-			<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'green', borderRadius: 10,
-			shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},}}>
+			<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'green', borderRadius: 10, elevation: 6}}>
 				<base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습완료</base.Text>
 			</base.Button>
 		}
 		else {Train_Btn =
-			<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'red', borderRadius: 10,
-			shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},}}>
+			<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'red', borderRadius: 10,elevation: 6}}>
 				<base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습대기</base.Text>
 			</base.Button>
 		}
@@ -192,7 +242,7 @@ export default class DetailCommonShip extends Component{
 				<base.Content>
 					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
 					<base.Form style={{width: '100%', height: SIZE_IMG,}}>
-						<Image resizeMode='cover' source={{uri: requestDomain + this.state.img,}} style={{width: '100%', height: '100%',}}/>
+						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
 						{Train_Btn}
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
@@ -202,15 +252,19 @@ export default class DetailCommonShip extends Component{
 					{CommonShipGallery}
 					<base.Form style={{width: '100%', flexDirection: 'row', borderBottomWidth: 1, borderColor: 'grey'}}>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-						onPress={()=>this.props.navigation.navigate('DetailCommonShipGallery',{id: this.state.id,})}>
+						onPress={this.updateShipMImage}>
+							<AntDesign name="retweet" size={25} color="black"/>
+						</base.Button>
+						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+						onPress={()=>this.props.navigation.navigate('DetailCommonShipGallery',{id: this.state.id, main_img_id: this.state.main_img_id})}>
 							<AntDesign name="picture" size={25} color="black"/>
 						</base.Button>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-						onPress={()=>this.props.navigation.navigate('UpdateCommonShip',{id: this.state.id})}>
+						onPress={this.updateShipInfo}>
 							<AntDesign name="edit" size={25} color="black"/>
 						</base.Button>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-						onPress={()=>this.props.navigation.navigate('RegisterCommonShipImages',{id: this.state.id,})}>
+						onPress={()=>this.props.navigation.navigate('RegisterCommonShipImages',{id: this.state.id, name: this.state.name})}>
 							<AntDesign name="addfile" size={25} color="black"/>
 						</base.Button>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
@@ -224,52 +278,48 @@ export default class DetailCommonShip extends Component{
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', margin: 10,}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>등록번호</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>등록번호</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.code}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>선박종류</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>선박길이</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박길이</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.size}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>선박무게</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박무게</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.tons}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>위치지역</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>정착항구</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>정착항구</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.port}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>위도</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
 						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>경도</base.Text>
+						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
 						</base.Form>
 						<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
-							<base.Text style={{margin: 10,}}>식별장치</base.Text>
+							<base.Text style={{margin: 10, fontWeight: 'bold'}}>식별장치</base.Text>
 							<base.ListItem style={{width: '100%'}}>
 								<base.CheckBox checked={this.state.is_ais} color="#006eee"/>
 								<base.Body><base.Text>AIS</base.Text></base.Body>
-							</base.ListItem>
-							<base.ListItem style={{width: '100%'}}>
 								<base.CheckBox checked={this.state.is_vpass} color="#006eee"/>
 								<base.Body><base.Text>V-Pass</base.Text></base.Body>
 							</base.ListItem>
 							<base.ListItem style={{width: '100%'}}>
 								<base.CheckBox checked={this.state.is_vhf} color="#006eee"/>
 								<base.Body><base.Text>VHF-DSC</base.Text></base.Body>
-							</base.ListItem>
-							<base.ListItem style={{width: '100%'}}>
 								<base.CheckBox checked={this.state.is_ff} color="#006eee"/>
 								<base.Body><base.Text>FF-GPS</base.Text></base.Body>
 							</base.ListItem>

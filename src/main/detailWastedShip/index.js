@@ -26,10 +26,11 @@ export default class DetailWastedShip extends Component{
 		super(props);
 		this.state = {
 			id: '',
+			main_img: '',
+			main_img_id: '',
 			latitude: '',
 			longitude: '',
 			types: '',
-			img: '',
 			info: '',
 			register: '',
 			regit_date: '',
@@ -42,26 +43,74 @@ export default class DetailWastedShip extends Component{
 		};
 		this.showWastedShipDetail = this.showWastedShipDetail(this);
 		this.showWastedShipGallery = this.showWastedShipGallery(this);
-		this.deleteShipInfo = this.deleteShipInfo.bind(this);
 		this.updateShipInfo = this.updateShipInfo.bind(this);
+		this.updateShipMImage = this.updateShipMImage.bind(this);
+		this.deleteShipInfo = this.deleteShipInfo.bind(this);
 	}
 	updateShipInfo(){
-		this.setState({loadingVisible: true})
-		getToken().then((token) => {
-			requestPermission(token).then((response) => {
-				if(response.data.data.user_level > 1){
-					this.setState({loadingVisible: false})
-					this.props.navigation.navigate('UpdateWastedShip',{id: this.state.id})
-				}
-				else{
-					this.setState({loadingVisible: false})
-					Alert.alert(
-						'선박확인체계 알림',
-						'선박 정보 수정 권한이 없습니다',
-					)
-				}
-			})
-		})
+		Alert.alert(
+			'선박확인체계 알림',
+			this.state.id + '번 유기선박 정보를 수정하시겠습니까?',
+			[{
+				text: "네",
+				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
+					requestPermission(token).then((response) => {
+						if(response.data.data.user_level > 1){
+							this.setState({loadingVisible: false})
+							this.props.navigation.navigate('UpdateWastedShip',{id: this.state.id})
+						}
+						else{
+							this.setState({loadingVisible: false})
+							Alert.alert(
+								'선박확인체계 알림',
+								'선박 정보 수정 권한이 없습니다',
+							)
+						}
+					})
+				})
+				},{
+				text: "아니오",
+				onPress: () => console.log("Cancel Pressed"),
+			}]
+		);
+	}
+	updateShipMImage(){
+		Alert.alert(
+			'선박확인체계 알림',
+			this.state.id + '번 유기선박 대표사진을 수정하시겠습니까?',
+			[{
+				text: "네",
+				onPress: () => getToken().then((token) => {
+					this.setState({loadingVisible: true})
+					requestPermission(token).then((response) => {
+						if(response.data.data.user_level > 1){
+							if(this.state.data.length < 2){
+								this.setState({loadingVisible: false})
+								Alert.alert(
+									'선박확인체계 알림',
+									'대표사진을 수정할 사진이 없습니다',
+								)
+							}
+							else{
+								this.setState({loadingVisible: false})
+								this.props.navigation.navigate('UpdateWastedShipMImage',{id: this.state.id, main_img_id: this.state.main_img_id,})
+							}
+						}
+						else{
+							this.setState({loadingVisible: false})
+							Alert.alert(
+								'선박확인체계 알림',
+								'대표사진 수정 권한이 없습니다',
+							)
+						}
+					})
+				})
+				},{
+				text: "아니오",
+				onPress: () => console.log("Cancel Pressed"),
+			}]
+		);
 	}
 	deleteShipInfo(){
 		Alert.alert(
@@ -108,7 +157,8 @@ export default class DetailWastedShip extends Component{
 					id: ship.data.data.id,
 					latitude: ship.data.data.lat,
 					longitude: ship.data.data.lon,
-					img: ship.data.data.main_img,
+					main_img: ship.data.data.main_img,
+					main_img_id: ship.data.data.main_img_id,
 					info: ship.data.data.info,
 					types: ship.data.data.types,
 					region: ship.data.data.region,
@@ -142,10 +192,11 @@ export default class DetailWastedShip extends Component{
 					sytle={{flex:1, height: 150}}
 					data={this.state.data}
 					horizontal={true}
-					renderItem={({item}) => <ShowPlusDetail ship={item} onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img})}/>}
+					renderItem={({item, index}) => <ShowPlusDetail ship={item}
+						onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img, flag: 'Wasted', id: item.id, index: index + 1})}/>}
 					ListFooterComponent={
 						<TouchableHighlight style={{flex: 1,}} onPress={()=>this.props.navigation.navigate('RegisterWastedShipImages',{id: this.state.id})}>
-							<base.Card style={{width: 150, height: 150, alignItems: 'center', justifyContent: 'center'}}>
+							<base.Card style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, alignItems: 'center', justifyContent: 'center'}}>
 								<base.Icon name='ios-add-circle' style={{color: '#006eee', fontSize: 60}}/>
 							</base.Card>
 						</TouchableHighlight>	
@@ -167,7 +218,7 @@ export default class DetailWastedShip extends Component{
 				<base.Content>
 					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
 					<base.Form style={{width: '100%' ,height: SIZE_IMG,}}>
-						<Image resizeMode='cover' source={{uri: requestDomain + this.state.img,}} style={{width: '100%', height: '100%',}}/>
+						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'white'}}>등록사진 {this.state.img_cnt} 장</base.Text>
@@ -176,7 +227,11 @@ export default class DetailWastedShip extends Component{
 						{WastedShipGallery}
 					<base.Form style={{width: '100%', flexDirection: 'row', borderBottomWidth: 1, borderColor: 'grey'}}>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-						onPress={()=>this.props.navigation.navigate('DetailWastedShipGallery',{id: this.state.id,})}>
+						onPress={this.updateShipMImage}>
+							<AntDesign name="retweet" size={25} color="black"/>
+						</base.Button>
+						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
+						onPress={()=>this.props.navigation.navigate('DetailWastedShipGallery',{id: this.state.id, main_img_id: this.state.main_img_id})}>
 							<AntDesign name="picture" size={25} color="black"/>
 						</base.Button>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
@@ -198,27 +253,27 @@ export default class DetailWastedShip extends Component{
 					</base.Form>
 					<base.Form style={{flex: 1, padding: 10,}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>관리번호</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>관리번호</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.id}</base.Text>
 						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>선박종류</base.Text>
+						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start', fontWeight: 'bold'}}>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>세부정보</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>세부정보</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.info}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>위치지역</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>위도</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
 						</base.Form>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>경도</base.Text>
+							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
 						</base.Form>
 					</base.Form>

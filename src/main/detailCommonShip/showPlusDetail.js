@@ -6,10 +6,6 @@ import { requestDomain } from '../../utils/domain';
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
 
 export default class ShowPlusDetail extends Component{
-	constructor(props) {
-		super(props);
-		this.state = {};
-	}
 	render() {
 		return(
 			<TouchableHighlight style={{flex: 1,}} onPress={this.props.onPress}>

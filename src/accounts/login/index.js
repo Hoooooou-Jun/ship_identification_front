@@ -12,13 +12,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { requestVersion } from '../../utils/additionalInfoRequest';
 
 import Loading from '../../utils/loading';
+import { AppVersion } from '../../utils/version';
 
-const SIZE_ICON = Dimensions.get('screen').height * 0.08
-const SIZE_TITLE = Dimensions.get('screen').width * 0.1
-const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.03
-const SIZE_FOOTER = Dimensions.get('screen').width * 0.035
+const SIZE_ICON = Dimensions.get('screen').height * 0.1
+const SIZE_TITLE = Dimensions.get('screen').width * 0.11
+const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.035
+const SIZE_FOOTER = Dimensions.get('screen').width * 0.03
 
-const SIZE_FONT = Dimensions.get('screen').width * 0.03
+const SIZE_FONT = Dimensions.get('screen').width * 0.035
+
+const SIZE_WARNING = Dimensions.get('screen').width * 0.04
 
 export default class Login extends Component{
 	constructor(props){
@@ -27,7 +30,10 @@ export default class Login extends Component{
 			srvno: '',
 			password: '',
 			device_id: '',
-			version: 'v1.0.0',
+			version: AppVersion,
+			version_server: '',
+
+			server_status: 'running',
 			is_version_right : true,
 
 			loadingVisible_CDM: true,
@@ -40,7 +46,11 @@ export default class Login extends Component{
 	componentDidMount(){
 		requestVersion().then((response) =>{
             if(response.status == 200){
-				this.setState({loadingVisible_CDM: false})
+				this.setState({
+					loadingVisible_CDM: false,
+					version_server: response.data.data.version,
+					server_status: response.data.data.server_status,
+				})
 				if(response.data.data.version == this.state.version){
 					this.setState({is_version_right: true})
 				}
@@ -50,6 +60,7 @@ export default class Login extends Component{
 			}
 		})
 		this.setState({device_id: Constants.deviceId})
+		
 	}
 	async loadFont(){
 		await Font.loadAsync({
@@ -119,7 +130,7 @@ export default class Login extends Component{
 				else if(msg == 'Device mismatch'){
 					Alert.alert(
 						'선박확인체계 알림',
-						'등록되지 않은 단말기입니다',
+						'해당 계정과 일치하지 않은 단말기입니다',
 					)
 				}
 				else if(msg == 'Incorrect password'){
@@ -133,82 +144,131 @@ export default class Login extends Component{
 	}
 	
 	render(){
-		if(!this.state.is_version_right){
-            return(
-                <base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1}}>
-					<base.Form style={{flex: 1, justifyContent: 'center', alignSelf: 'center', alignItems: 'center', flexDirection: 'row', }}>
-						<base.Form style={{paddingTop: 200}}>
-							<base.Form style={{backgroundColor: '#006eee', borderRadius: 20, margin: 5}}>
-								<MaterialCommunityIcons name="sail-boat" size={100} color="white" />
-							</base.Form>
-						</base.Form>
-						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center', paddingTop: 200, margin: 5}}>
-							<base.Text style={{fontSize: 50, color: 'black'}}>선박확인체계</base.Text>
-						</base.Form>
-					</base.Form>
-					<base.Form style={{flex: 1,}}>
-						<base.Text style ={{fontSize: 30}}>최신 업데이트가 필요합니다</base.Text>
-						<base.Button rounded style={{flex: 1, backgroundColor: '#006eee', width: 300, justifyContent: 'center', alignSelf: 'center', height: 60, elevation: 6, margin: 10}}
-							onPress={()=>Linking.openURL('http://211.236.124.151:2162/Ships/download/')}>
-							<base.Text style={{fontSize: 20}}>업데이트 페이지로 이동</base.Text>
-						</base.Button>
-					</base.Form>
-				</base.Form>
-            )
-        }
-		return(
-			<base.Container>
-				<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-				<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login}/>
-				<base.Form style={{flex: 3, width: '100%', borderRadius: 20, backgroundColor: 'white', elevation: 6}}>
-					<base.Form style={{flex: 2, justifyContent: 'center', alignSelf: 'center', alignItems: 'flex-end', flexDirection: 'row', }}>
+		if(this.state.server_status == 'checking'){
+			return(
+				<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}>
+					<base.Form style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
 						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
 							<base.Form style={{backgroundColor: '#006eee', borderRadius: 20, margin: 5}}>
 								<MaterialCommunityIcons name="sail-boat" size={SIZE_ICON} color="white" />
 							</base.Form>
 						</base.Form>
-						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
+						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
 							<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
 							<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification Beta TEST {this.state.version}</base.Text>
 						</base.Form>
 					</base.Form>
-
-					<base.Form style={{flex: 3, padding: 20,}}>
-						<base.Form style={{flex: 2,justifyContent: 'center', alignItems: 'center', }}>
-							<base.Item floatingLabel style={{ marginRight: 10, height: 60,}}>
-							<base.Label style={{fontSize: SIZE_FONT}}>아이디</base.Label>
-								<base.Input keyboardType="number-pad" onChangeText={(srvno) => this.setState({srvno})}></base.Input>
-							</base.Item>
-							<base.Item floatingLabel style={{ marginRight: 10, height: 60,}}>
-								<base.Label style={{fontSize: SIZE_FONT}}>비밀번호</base.Label>
-								<base.Input secureTextEntry={ true } onChangeText={(password) => this.setState({password})}></base.Input>
-							</base.Item>
+					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
+						<base.Text style ={{fontSize: SIZE_WARNING + 10, margin: 10, color: '#006eee'}}>서버 점검 중</base.Text>
+					</base.Form>
+					<base.Form style={{justifyContent: 'center', alignItems: 'flex-start', margin: 10, flexDirection: 'column',}}>
+						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10, fontWeight: 'bold'}}>담당자 연락처</base.Text>
+						<base.Form style={{alignItems: 'flex-end', backgroundColor: 'white', elevation: 6, borderRadius: 20,}}>
+							<base.Text style ={{fontSize: SIZE_WARNING, margin: 10,}}>32보병사단 정보통신대대 상병 최준호</base.Text>
+							<base.Text style ={{fontSize: SIZE_WARNING + 5, margin: 10,}}>010-7710-8539</base.Text>
+							<base.Text style ={{fontSize: SIZE_WARNING, margin: 10,}}>32보병사단 정보통신대대 상병 강주성</base.Text>
+							<base.Text style ={{fontSize: SIZE_WARNING + 5, margin: 10,}}>010-3377-5284</base.Text>
 						</base.Form>
-						<base.Button rounded style={{flex: 1, backgroundColor: '#006eee', width: 300, justifyContent: 'center', alignSelf: 'center', height: SIZE_FONT + 40 , elevation: 6, margin: 10}}
-							onPress={this.executeLogin}>
-							<base.Text style={{fontSize: SIZE_FONT}}>로그인</base.Text>
-						</base.Button>
 					</base.Form>
 				</base.Form>
-				<base.Form style={{flex: 1, flexDirection: 'row', alignItems: 'flex-start',}}>
-					<TouchableHighlight style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 30, width:'100%'}} onPress={()=>this.props.navigation.navigate('Signup')}>
-							<base.Text style={{fontSize: SIZE_FONT}}>회원가입</base.Text>
-					</TouchableHighlight>
-					<TouchableHighlight style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 30, width:'100%'}} onPress={()=>
-									Alert.alert(
-										'선박확인체계 알림',
-										'개발 중인 기능입니다',
-									)	
-								}>
-						<base.Text style={{fontSize: SIZE_FONT}}>비밀번호 초기화</base.Text>
-					</TouchableHighlight>
+			)
+		}
+		else if(!this.state.is_version_right){
+            return(
+				<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}>
+					<base.Form style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
+						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+							<base.Form style={{backgroundColor: '#006eee', borderRadius: 20, margin: 5}}>
+								<MaterialCommunityIcons name="sail-boat" size={SIZE_ICON} color="white" />
+							</base.Form>
+						</base.Form>
+						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+							<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
+						</base.Form>
+					</base.Form>
+					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
+						<base.Form>
+							<base.Text style ={{fontSize: SIZE_WARNING + 10, color: '#006eee'}}>* 현재버전 : {this.state.version}</base.Text>
+						</base.Form>
+						<base.Form>
+							<base.Text style ={{fontSize: SIZE_WARNING + 10, color: '#006eee'}}>* 운용버전 : {this.state.version_server}</base.Text>
+						</base.Form>
+						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10}}>업데이트가 필요합니다</base.Text>
+					</base.Form>
+					<base.Button block onPress={()=>Linking.openURL('http://211.236.124.151:2162/Ships/download/')}
+						style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: '#006eee', elevation: 6,
+						height: SIZE_TITLE + 10, margin: 10}}>
+						<base.Text style={{color: 'white',}}>업데이트 페이지로 이동하기</base.Text>
+					</base.Button>
 				</base.Form>
-				<base.Form style={{height: 50}}>
-					<base.Text style={{color: 'grey', fontSize: SIZE_FOOTER}}>Copyright ⓒ 2021. 32DIVISION. All rights reserved.</base.Text>
-				</base.Form>
-				</base.Content>
-			<StatusBar hidden/>
-			</base.Container>
-		);
+            )
+        }
+		else{
+			return(
+				<base.Container>
+					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+					<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login}/>
+						<base.Form style={{flex: 3, width: '100%', borderRadius: 20, backgroundColor: 'white', elevation: 6,}}>
+							<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+								
+							</base.Form>
+							<base.Form style={{flex: 2, justifyContent: 'center', alignItems: 'center' }}>
+								<base.Form style={{flexDirection: 'row', justifyContent: 'flex-end', height: '100%'}}>
+									<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+										<base.Form style={{backgroundColor: '#006eee', borderRadius: 20, margin: 5}}>
+											<MaterialCommunityIcons name="sail-boat" size={SIZE_ICON} color="white" />
+										</base.Form>
+									</base.Form>
+									<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
+										<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
+										<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification Beta TEST {this.state.version}</base.Text>
+									</base.Form>
+								</base.Form>
+							</base.Form>
+	
+							<base.Form style={{flex: 2, padding: 10, justifyContent: 'center', alignItems: 'center'}}>
+								<base.Form style={{width: '100%', height: '100%'}}>
+									<base.Item floatingLabel style={{ marginRight: 10, height: 60,}}>
+									<base.Label style={{fontSize: SIZE_FONT}}>아이디</base.Label>
+										<base.Input keyboardType="number-pad" onChangeText={(srvno) => this.setState({srvno})}></base.Input>
+									</base.Item>
+									<base.Item floatingLabel style={{ marginRight: 10, height: 60,}}>
+										<base.Label style={{fontSize: SIZE_FONT}}>비밀번호</base.Label>
+										<base.Input secureTextEntry={ true } onChangeText={(password) => this.setState({password})}></base.Input>
+									</base.Item>
+								</base.Form>
+							</base.Form>
+							
+							<base.Form style={{flex: 1, padding: 20,}}>
+								<base.Button block onPress={this.executeLogin} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: '#006eee', elevation: 6,
+									height: SIZE_TITLE + 10}}>
+									<base.Text style={{color: 'white',}}>로그인</base.Text>
+								</base.Button>
+							</base.Form>
+						</base.Form>
+	
+						<base.Form style={{flex: 1, flexDirection: 'column', width: '100%',}}>
+							<base.Form style={{flexDirection: 'row'}}>
+								<base.Button transparent style={{flex: 1, justifyContent: 'center', alignItems: 'center', width:'100%', marginTop: 10}} onPress={()=>this.props.navigation.navigate('Signup')}>
+										<base.Text style={{fontSize: SIZE_FONT, color: 'black'}}>회원가입</base.Text>
+								</base.Button>
+								<base.Button transparent style={{flex: 1, justifyContent: 'center', alignItems: 'center', width:'100%', marginTop: 10}} onPress={()=>
+												Alert.alert(
+													'선박확인체계 알림',
+													'개발 중인 기능입니다',
+												)	
+											}>
+									<base.Text style={{fontSize: SIZE_FONT, color: 'black'}}>비밀번호 초기화</base.Text>
+								</base.Button>
+							</base.Form>
+						</base.Form>
+						<base.Form style={{height: 50}}>
+							<base.Text style={{color: 'grey', fontSize: SIZE_FOOTER}}>Copyright ⓒ 2021. 32DIVISION. All rights reserved.</base.Text>
+						</base.Form>
+					</base.Content>
+				<StatusBar hidden/>
+				</base.Container>
+			);
+		}
 	}
 }

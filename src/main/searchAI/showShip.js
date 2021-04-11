@@ -16,6 +16,7 @@ export default class ShowShip extends Component{
 		this.state = {};
 	}
 	render() {
+		console.log(this.props.ship)
 		let kinds
 		if(this.props.kinds){ kinds =
 			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: 400, margin: 5, height: '100%'}}>

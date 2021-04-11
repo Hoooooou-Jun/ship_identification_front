@@ -1,8 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
+import { Dimensions } from 'react-native';
 import * as base from 'native-base';
-import { ValueInput } from './valueInput';
 import { Picker } from '@react-native-picker/picker';
+import { KindsOfPort } from '../../kindsOfData/kindsOfPort';
+import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
+import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
+
+const SIZE_TITLE = Dimensions.get('screen').height * 0.04
+const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
+const SIZE_FONT = Dimensions.get('screen').height * 0.02
+const SIZE_SUBFONT = Dimensions.get('screen').height * 0.015
 export default class Search extends Component{
 	constructor(props) {
 		super(props);
@@ -34,11 +42,11 @@ export default class Search extends Component{
 			<base.Form>
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박명</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박명</base.Text>
 						<base.Input
 							placeholder="선박명을 입력하세요"
 							onChangeText={(name) => this.setState({name})}
-							style={{fontFamily:'Nanum',}}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 							placeholderStyle={{fontFamily:'Nanum'}}
 							/>
 					</base.Item>
@@ -46,11 +54,11 @@ export default class Search extends Component{
 
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>등록번호</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>등록번호</base.Text>
 						<base.Input
 							placeholder="등록번호 14자리를 입력하세요"
 							onChangeText={(code) => this.setState({code})}
-							style={{fontFamily:'Nanum',}}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 							placeholderStyle={{fontFamily:'Nanum'}}
 							keyboardType="number-pad"/>
 					</base.Item>
@@ -58,92 +66,59 @@ export default class Search extends Component{
 
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박종류</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
 						<Picker
 							selectedValue={this.state.types}
 							style={{height: 50, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({types: itemValue})}>
-							<Picker.Item label="정보없음" value="정보없음"/>
-							<Picker.Item label="어선" value="어선"/>
-							<Picker.Item label="목선" value="목선"/>
-							<Picker.Item label="유선" value="유선"/>
-							<Picker.Item label="어장관리선" value="어선관리선"/>
-							<Picker.Item label="고무보트" value="고무보트"/>
-							<Picker.Item label="모터보트(레저용)" value="모터보트(레저용)"/>
-							<Picker.Item label="모터보트(선내기)" value="모터보트(선내기)"/>
-							<Picker.Item label="모터보트(선외기)" value="모터보트(선외기)"/>
-							<Picker.Item label="수상오토바이" value="수상오토바이"/>
-							<Picker.Item label="세일링 보트" value="세일링 보트"/>
+							{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 						</Picker>							
 					</base.Item>							
 				</base.Form>
 				
 				<base.Form style={{marginHorizontal: 10,}}>
 					<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start', padding: 10}}>식별장치</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start', padding: 10}}>식별장치</base.Text>
 						<base.ListItem style={{width: '100%'}}>
-							<base.CheckBox checked={this.state.is_ais} color="#006eee" onPress={() => this.checkAIS()}/>
-							<base.Body><base.Text>AIS</base.Text></base.Body>
+								<base.CheckBox checked={this.state.is_ais} color="#006eee" onPress={() => this.checkAIS()}/>
+								<base.Body><base.Text style={{fontSize: SIZE_SUBFONT}}>AIS</base.Text></base.Body>
+								<base.CheckBox checked={this.state.is_vpass} color="#006eee" onPress={() => this.checkVPASS()}/>
+								<base.Body><base.Text style={{fontSize: SIZE_SUBFONT}}>V-Pass</base.Text></base.Body>
 						</base.ListItem>
 						<base.ListItem style={{width: '100%'}}>
-							<base.CheckBox checked={this.state.is_vpass} color="#006eee" onPress={() => this.checkVPASS()}/>
-							<base.Body><base.Text>V-Pass</base.Text></base.Body>
-						</base.ListItem>
-						<base.ListItem style={{width: '100%'}}>
-							<base.CheckBox checked={this.state.is_vhf} color="#006eee" onPress={() => this.checkVHF()}/>
-							<base.Body><base.Text>VHF-DSC</base.Text></base.Body>
-						</base.ListItem>
-						<base.ListItem style={{width: '100%'}}>
-							<base.CheckBox checked={this.state.is_ff} color="#006eee" onPress={() => this.checkFF()}/>
-							<base.Body><base.Text>FF-GPS</base.Text></base.Body>
+								<base.CheckBox checked={this.state.is_vhf} color="#006eee" onPress={() => this.checkVHF()}/>
+								<base.Body><base.Text style={{fontSize: SIZE_SUBFONT}}>VHF-DSC</base.Text></base.Body>
+								<base.CheckBox checked={this.state.is_ff} color="#006eee" onPress={() => this.checkFF()}/>
+								<base.Body><base.Text style={{fontSize: SIZE_SUBFONT}}>FF-GPS</base.Text></base.Body>
 						</base.ListItem>
 					</base.Item>
 				</base.Form>
 				
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박길이</base.Text>
-						<base.Input
-							placeholder="선박길이를 숫자만 입력하세요 (단위 : m)"
-							onChangeText={(size) => this.setState({size})}
-							style={{fontFamily:'Nanum',}}
-							placeholderStyle={{fontFamily:'Nanum'}}
-							keyboardType="number-pad"/>
-					</base.Item>
-				</base.Form>
-				
-				<base.Form style={{marginVertical: 15}}>
-					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박무게</base.Text>
-						<base.Input
-							placeholder="선박무게를 숫자만 입력하세요 (단위 : t)"
-							onChangeText={(tons) => this.setState({tons})}
-							style={{fontFamily:'Nanum',}}
-							placeholderStyle={{fontFamily:'Nanum'}}
-							keyboardType="number-pad"/>
-					</base.Item>
-				</base.Form>
-				
-				<base.Form style={{marginVertical: 15}}>
-					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>위치지역</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
 						<Picker
 							selectedValue={this.state.region}
 							style={{height: 50, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({region: itemValue})}>
-							<Picker.Item label="정보없음" value="정보없음"/>
-							<Picker.Item label="당진" value="당진"/>
-							<Picker.Item label="서산" value="서산"/>
-							<Picker.Item label="태안" value="태안"/>
-							<Picker.Item label="홍성" value="홍성"/>
-							<Picker.Item label="보령" value="보령"/>
-							<Picker.Item label="서천" value="서천"/>
+							{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 						</Picker>							
 					</base.Item>							
 				</base.Form>
-				<base.Button rounded onPress={this.searchShip} style={{flex: 1, backgroundColor: '#006eee', width: '100%', alignItems: 'center',
-					justifyContent: 'center', marginVertical: 10, height: 50, elevation: 6, }}>
-					<base.Text style={{fontFamily: 'Nanum'}}>선박검색하기</base.Text>
+
+				<base.Form style={{marginVertical: 15}}>
+					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정착항구</base.Text>
+						<Picker
+							selectedValue={this.state.region}
+							style={{height: 50, width: '100%'}}
+							onValueChange={(itemValue) => this.setState({region: itemValue})}>
+							{ KindsOfPort.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
+						</Picker>							
+					</base.Item>							
+				</base.Form>
+				<base.Button block onPress={this.searchShip} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+					<base.Text style={{color: 'black'}}>검색하기</base.Text>
 				</base.Button>
 			</base.Form>
 		)
@@ -153,67 +128,50 @@ export default class Search extends Component{
 			<base.Form>
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>관리번호</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>관리번호</base.Text>
 						<base.Input
 							placeholder="관리번호를 입력하세요"
 							onChangeText={(id) => this.setState({id})}
-							style={{fontFamily:'Nanum',}}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 							placeholderStyle={{fontFamily:'Nanum'}}
 							keyboardType="number-pad"/>
 					</base.Item>
 				</base.Form>
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>세부사항 키워드</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>세부사항 키워드</base.Text>
 						<base.Input
 							placeholder="세부사항의 키워드를 입력하세요"
 							onChangeText={(info) => this.setState({info})}
-							style={{fontFamily:'Nanum',}}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 							placeholderStyle={{fontFamily:'Nanum'}}
 							/>
 					</base.Item>
 				</base.Form>				
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박종류</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
 						<Picker
 							selectedValue={this.state.types}
 							style={{height: 50, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({types: itemValue}) }>
-							<Picker.Item label="정보없음" value="정보없음"/>
-							<Picker.Item label="어선" value="어선"/>
-							<Picker.Item label="목선" value="목선"/>
-							<Picker.Item label="유선" value="유선"/>
-							<Picker.Item label="어장관리선" value="어선관리선"/>
-							<Picker.Item label="고무보트" value="고무보트"/>
-							<Picker.Item label="모터보트(레저용)" value="모터보트(레저용)"/>
-							<Picker.Item label="모터보트(선내기)" value="모터보트(선내기)"/>
-							<Picker.Item label="모터보트(선외기)" value="모터보트(선외기)"/>
-							<Picker.Item label="수상오토바이" value="수상오토바이"/>
-							<Picker.Item label="세일링 보트" value="세일링 보트"/>
+							{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 						</Picker>							
 					</base.Item>							
 				</base.Form>
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>위치지역</base.Text>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
 						<Picker
 							selectedValue={this.state.region}
 							style={{height: 50, width: '100%'}}
 							onValueChange={(itemValue) => this.setState({region: itemValue}) }>
-							<Picker.Item label="정보없음" value="정보없음"/>
-							<Picker.Item label="당진" value="당진"/>
-							<Picker.Item label="서산" value="서산"/>
-							<Picker.Item label="태안" value="태안"/>
-							<Picker.Item label="홍성" value="홍성"/>
-							<Picker.Item label="보령" value="보령"/>
-							<Picker.Item label="서천" value="서천"/>
+							{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 						</Picker>							
 					</base.Item>							
 				</base.Form>
-				<base.Button rounded onPress={this.searchShip} style={{flex: 1, backgroundColor: '#006eee', width: '100%', alignItems: 'center',
-					justifyContent: 'center', marginVertical: 10, height: 50, elevation: 6, }}>
-					<base.Text>선박검색하기</base.Text>
+				<base.Button block onPress={this.searchShip} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+					<base.Text style={{color: 'black'}}>검색하기</base.Text>
 				</base.Button>
 			</base.Form>
 		)
@@ -255,25 +213,28 @@ export default class Search extends Component{
 		}
 		return(
 			<base.Container>
-				<base.Header style={{backgroundColor: '#006eee'}}>
-					<base.Left>
+				<base.Header style={{backgroundColor: 'white'}}>
+					<base.Left style={{flex: 1,}}>
 						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
-							<base.Icon name='arrow-back'/>
+							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
-					<base.Right>
-					</base.Right>
+					<base.Form style={{flex: 1, alignItems: 'flex-end', justifyContent: 'center',}}>
+						<base.Segment style={{backgroundColor: '#006eee', borderRadius: 10, width: '100%'}}>
+							<base.Button first active={this.state.flag == 'Normal'} onPress={() => this.setState({flag: 'Normal'})}>
+								<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}>일반선박</base.Text>
+							</base.Button>
+							<base.Button last active={this.state.flag == 'Wasted'} onPress={() => this.setState({flag: 'Wasted'})}>
+								<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}>유기선박</base.Text>
+							</base.Button>
+						</base.Segment>
+					</base.Form>
 				</base.Header>
-				<base.Segment style={{backgroundColor: '#006eee', height: 60}}>
-					<base.Button first active={this.state.flag == 'Normal'} style={{width: '40%', justifyContent: 'center'}} onPress={() => this.setState({flag: 'Normal'})}>
-					<base.Text style={{fontFamily:'Nanum', fontSize: 15}}>일반선박 검색</base.Text>
-					</base.Button>
-					<base.Button last active={this.state.flag == 'Wasted'} style={{width: '40%', justifyContent: 'center'}} onPress={() => this.setState({flag: 'Wasted'})}>
-					<base.Text style={{fontFamily:'Nanum', fontSize: 15}}>유기선박 검색</base.Text>
-					</base.Button>
-				</base.Segment>
-				<base.Content padder>
-					<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', margin: 5}}>선박검색</base.Text>
+				<base.Content>
+					<base.Form style={{padding: 10,}}>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>선박검색</base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>검색할 선박의 정보를 입력하세요</base.Text>
+					</base.Form>
 					{detailInput}
 				</base.Content>
 			</base.Container>
