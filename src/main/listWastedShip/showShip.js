@@ -5,8 +5,7 @@ import { requestDomain } from '../../utils/domain';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.025
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
-
-const SIZE_IMG = Dimensions.get('screen').height * 0.15
+const SIZE_IMG = Dimensions.get('screen').height * 0.175
 
 export default class ShowShip extends Component{
 	constructor(props) {
@@ -15,9 +14,7 @@ export default class ShowShip extends Component{
 	}
 	render() {
 		return(
-			<TouchableHighlight onPress={this.props.onPress}
-			style={{ borderRadius: 10, marginTop: 5, marginBottom: 5, borderColor: 'grey',
-			shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},}}>
+			<TouchableHighlight onPress={this.props.onPress} style={{borderRadius: 20, marginHorizontal: 10, marginVertical: 5, borderColor: 'grey', elevation: 6,}}>
 				<base.CardItem cardBody>
 					<base.Left style={{alignItems: 'center',width: SIZE_IMG, height: SIZE_IMG, flex: 2, padding: 10,}}>
 						<Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.main_img, }} style={{width: '100%', height: '100%',}}/>

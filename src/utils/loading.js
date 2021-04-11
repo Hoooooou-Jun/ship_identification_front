@@ -4,7 +4,7 @@ import * as base from 'native-base';
 
 const SIZE_LOAD_TITLE = Dimensions.get('screen').width * 0.06
 const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.03
-const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.2
+const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.175
 
 export default class Loading extends Component{
 	render() {
@@ -16,6 +16,9 @@ export default class Loading extends Component{
                             <base.Text style={{color: 'white', fontSize: SIZE_LOAD_TITLE, margin: 10}}>선박확인체계 알림</base.Text>
                             <base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>데이터를 불러오고 있습니다</base.Text>
                             <base.Spinner color='white' size={SIZE_LOAD_LOGO} style={{margin: 10}}/>
+                            {/* <base.Button transparent style={{justifyContent: 'center', alignSelf: 'center'}} onPress={this.props.onPress}>
+                                <base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE}}>뒤로가기</base.Text>
+                            </base.Button> */}
                     </base.Form>
                 </base.Form>
             </Modal>

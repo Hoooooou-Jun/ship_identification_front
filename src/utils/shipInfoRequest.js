@@ -2,9 +2,8 @@ import { request } from './request'
 
 // Common Ship
 
-export const registerCommonShip = (token, base64, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, latitude, longitude) => 
+export const registerCommonShip = (token, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, latitude, longitude) => 
     request.post('/Ships/ship/normal/create/', {
-			image_data: base64,
 			name: name,
             types: types,
             code: code,
@@ -25,19 +24,24 @@ export const registerCommonShip = (token, base64, name, types, code, tons, size,
             'Content-Type': 'application/json',
 }})
 
-export const registerCommonShipImages = (token, id, base64) => 
-    request.post('/Ships/image/normal/add/', {
-        id: id,
-        image_data: base64, 
-    }, {
+export const registerCommonShipImages = (token, formdata) => 
+    request.post('/Ships/image/normal/', formdata, {
+            headers: {
+                'AUTHORIZATION': 'jwt ' + token,
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+}})
+
+export const deleteCommonShip = (token, index) => 
+    request.delete('/Ships/ship/normal/' + index + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
 }})
 
-export const deleteCommonShip = (token, index) => 
-    request.delete('/Ships/ship/normal/' + index + '/', {
+export const deleteCommonShipImage = (token, id) => 
+    request.delete('/Ships/image/normal/?id=' + id, {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -81,7 +85,7 @@ export const requestCommonShipDetail = (token, id) =>
 }})
 
 export const requestCommonShipGallery = (token, id) => 
-    request.get('/Ships/image/normal/list/' + id, {
+    request.get('/Ships/image/normal/list/' + id + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -89,7 +93,7 @@ export const requestCommonShipGallery = (token, id) =>
 }})
 
 export const updateCommonShipDetail = (token, id, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port) =>
-    request.post('Ships/ship/normal/' + id + '/',{
+    request.post('/Ships/ship/normal/' + id + '/',{
             name: name,
             types: types,
             code: code,
@@ -108,11 +112,20 @@ export const updateCommonShipDetail = (token, id, name, types, code, tons, size,
             'Content-Type': 'application/json',
 }})
 
+export const updateCommonShipMImage = (token, id) =>
+    request.post('/Ships/image/change/normal/',{
+            id: id,
+        },{
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})
+
 // Wasted Ship
 
-export const registerWastedShip = (token, base64, types, latitude, longitude, info, region) => 
+export const registerWastedShip = (token, types, latitude, longitude, info, region) => 
     request.post('/Ships/ship/waste/create/', {
-			image_data: base64,
             types: types,
 			lat: latitude,
 			lon: longitude,
@@ -125,19 +138,24 @@ export const registerWastedShip = (token, base64, types, latitude, longitude, in
             'Content-Type': 'application/json',
 }})
 
-export const registerWastedShipImages = (token, id, base64) => 
-    request.post('/Ships/image/waste/add/', {
-        id: id,
-        image_data: base64, 
-    }, {
+export const registerWastedShipImages = (token, formdata) => 
+    request.post('/Ships/image/waste/', formdata, {
+            headers: {
+                'AUTHORIZATION': 'jwt ' + token,
+                "Content-Type": "multipart/form-data",
+                "Accept": "application/json",
+}})
+
+export const deleteWastedShip = (token, index) => 
+    request.delete('/Ships/ship/waste/' + index + '/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
 }})
 
-export const deleteWastedShip = (token, index) => 
-    request.delete('/Ships/ship/waste/' + index + '/', {
+export const deleteWastedShipImage = (token, id) => 
+    request.delete('/Ships/image/waste/?id=' + id, {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
@@ -181,8 +199,8 @@ export const requestWastedShipGallery = (token, id) =>
             'Content-Type': 'application/json',
 }})
 
-export const updateWastedShipDetail = (token, id, info, latitude, longitude, types, region, port) =>
-    request.post('Ships/ship/waste/' + id + '/',{
+export const updateWastedShipDetail = (token, id, info, latitude, longitude, types, region) =>
+    request.post('/Ships/ship/waste/' + id + '/',{
             info: info,
             lat: latitude,
             lon: longitude,
@@ -194,24 +212,41 @@ export const updateWastedShipDetail = (token, id, info, latitude, longitude, typ
             'Accept': 'application/json',
             'Content-Type': 'application/json',
 }})
-// AI
 
-export const requestAIResult = (token, base64) => 
-    request.post('/Ships/predict/', {
-			image_data: base64,
-		}, {
+export const updateWastedShipMImage = (token, id) =>
+    request.post('/Ships/image/change/waste/',{
+            id: id,
+        },{
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
             'Content-Type': 'application/json',
 }})
 
+// AI
+
+export const requestAIResult = (token, formdata) => 
+    request.post('/Ships/predict/', formdata, {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            "Content-Type": "multipart/form-data",
+            "Accept": "application/json",
+}})
+
 // MAP
-export const requestShipLocation = (token) =>
-    request.get('Ships/ship/location/', {
+
+export const requestCommonShipLocation = (token) =>
+    request.get('/Ships/ship/normal/location/', {
     headers: {
         'AUTHORIZATION': 'jwt ' + token,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
 }})
 
+export const requestWastedShipLocation = (token) =>
+    request.get('/Ships/ship/waste/location/', {
+    headers: {
+        'AUTHORIZATION': 'jwt ' + token,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+}})

@@ -5,10 +5,10 @@ import * as base from 'native-base';
 import { getToken } from '../../../utils/getToken';
 import { registerQuestion } from '../../../utils/additionalInfoRequest';
 import Loading from '../../../utils/loading';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
-const SIZE_FONT = Dimensions.get('screen').height * 0.02
-
+const SIZE_FONT = Dimensions.get('screen').height * 0.015
 export default class Question extends Component{
 	constructor(props) {
 		super(props);
@@ -52,22 +52,23 @@ export default class Question extends Component{
                 </base.Header>
                 <base.Content>
 				<Loading visible={this.state.loadingVisible}/>
-				<base.Form style={{padding: 20,}}>
+				<base.Form style={{padding: 10,}}>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>문의하기</base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE,}}>궁금하신 점이 있다면 문의해주세요</base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey'}}>궁금하신 점이 있다면 문의해주세요!</base.Text>
 				</base.Form>
-				<base.Form style={{padding: 10}}>
+				<base.Form style={{paddingHorizontal: 10, marginVertical: 5}}>
 					<base.Item regular style={{ width:'100%', borderRadius: 10}}>
-						<base.Input placeholder={'문의 제목'} value={this.state.title} onChangeText={(title) => this.setState({title})} style={{fontFamily:'Nanum'}} placeholderStyle={{fontFamily:'Nanum'}}/>
+						<base.Input placeholder={'문의 제목'} value={this.state.title} onChangeText={(title) => this.setState({title})} style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+						placeholderStyle={{fontFamily:'Nanum'}}/>
 					</base.Item>
 				</base.Form>
-				<base.Form style={{padding: 10}}>
+				<base.Form style={{paddingHorizontal: 10, marginVertical: 5}}>
 					<base.Textarea rowSpan={5} bordered
 						onChangeText={(content) => this.setState({content})} placeholder="문의 내용"
-						style={{fontFamily: 'Nanum', marginTop:10, marginBottom: 10, borderRadius: 10, padding: 10,}}/>
+						style={{fontFamily: 'Nanum', borderRadius: 10, padding: 10, fontSize: SIZE_FONT}}/>
 				</base.Form>
-				<base.Button rounded onPress={this.executeRegister} style={{flex: 1,backgroundColor: '#006eee', marginHorizontal: 10, height: 50}}>
-					<base.Text style={{fontFamily:'Nanum',}}>문의하기</base.Text>
+				<base.Button block onPress={this.executeRegister} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+					<base.Text style={{color: 'black'}}>문의하기</base.Text>
 				</base.Button>
                 </base.Content>
             <StatusBar hidden/>

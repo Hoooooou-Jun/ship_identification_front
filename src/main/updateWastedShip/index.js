@@ -1,13 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Dimensions } from 'react-native';
 import * as base from 'native-base';
-import { ValueInput } from './valueInput';
 import { Picker } from '@react-native-picker/picker';
 import { getToken } from '../../utils/getToken';
 import { requestWastedShipDetail } from '../../utils/shipInfoRequest';
 import { updateWastedShipDetail, } from '../../utils/shipInfoRequest';
+import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
+import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
 import Loading from '../../utils/loading';
+
+const SIZE_TITLE = Dimensions.get('screen').height * 0.04
+const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
+const SIZE_FONT = Dimensions.get('screen').height * 0.02
 
 export default class UpdateWastedShip extends Component{
 	constructor(props) {
@@ -80,59 +85,46 @@ export default class UpdateWastedShip extends Component{
 						<base.Right>
 						</base.Right>
 					</base.Header>
-					<base.Content padder>
+					<base.Content>
 						<Loading visible={this.state.loadingVisible}/>
-						<base.Text style={{fontFamily:'Nanum', fontSize: 40, color: '#006eee', padding: 10}}>선박정보수정</base.Text>
+						<base.Form style={{padding: 10,}}>
+							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>선박정보수정</base.Text>
+							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>아래의 선박정보를 수정해주세요</base.Text>
+						</base.Form>
 						<base.Form>
-						
 							<base.Form style={{marginVertical: 15}}>
 								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>선박종류</base.Text>
+									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
 									<Picker
 										selectedValue={this.state.types}
 										style={{height: 50, width: '100%'}}
 										onValueChange={(itemValue) => this.setState({types: itemValue})}>
-										<Picker.Item label="정보없음" value="정보없음"/>
-										<Picker.Item label="어선" value="어선"/>
-										<Picker.Item label="목선" value="목선"/>
-										<Picker.Item label="유선" value="유선"/>
-										<Picker.Item label="어장관리선" value="어선관리선"/>
-										<Picker.Item label="고무보트" value="고무보트"/>
-										<Picker.Item label="모터보트(레저용)" value="모터보트(레저용)"/>
-										<Picker.Item label="모터보트(선내기)" value="모터보트(선내기)"/>
-										<Picker.Item label="모터보트(선외기)" value="모터보트(선외기)"/>
-										<Picker.Item label="수상오토바이" value="수상오토바이"/>
-										<Picker.Item label="세일링 보트" value="세일링 보트"/>
+										{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 									</Picker>							
 								</base.Item>							
 							</base.Form>
 
 							<base.Form style={{marginVertical: 15, paddingHorizontal: 10}}>
-									<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>세부정보 및 특이사항</base.Text>
+									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>세부정보 및 특이사항</base.Text>
 									<base.Textarea rowSpan={5} bordered
 										onChangeText={(info) => this.setState({info})} value={this.state.info}
-										style={{fontFamily: 'Nanum', marginTop:10, marginBottom: 10, borderRadius: 10, padding: 10,}}/>
+										style={{fontFamily: 'Nanum', marginTop:10, marginBottom: 10, borderRadius: 10, padding: 10, fontSize: SIZE_FONT}}/>
 							</base.Form>
 
-							<base.Form >
+							<base.Form>
 								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>위치지역</base.Text>
+									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
 									<Picker
 										selectedValue={this.state.region}
 										style={{height: 50, width: '100%'}}
 										onValueChange={(itemValue) => this.setState({region: itemValue})}>
-										<Picker.Item label="정보없음" value="정보없음"/>
-										<Picker.Item label="당진" value="당진"/>
-										<Picker.Item label="서산" value="서산"/>
-										<Picker.Item label="태안" value="태안"/>
-										<Picker.Item label="홍성" value="홍성"/>
-										<Picker.Item label="보령" value="보령"/>
-										<Picker.Item label="서천" value="서천"/>
+										{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
 									</Picker>							
 								</base.Item>							
 							</base.Form>
-							<base.Button rounded onPress={this.updateDetail} style={{flex: 1,backgroundColor: '#006eee', marginVertical: 20, height: 50}}>
-								<base.Text style={{fontFamily: 'Nanum'}}>선박정보 수정하기</base.Text>
+							<base.Button block onPress={this.updateDetail} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6,
+								marginVertical: 20,}}>
+								<base.Text style={{color: 'black'}}>수정하기</base.Text>
 							</base.Button>
 						</base.Form>
 					</base.Content>

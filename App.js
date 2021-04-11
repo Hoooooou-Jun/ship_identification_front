@@ -19,6 +19,8 @@ import DetailCommonShip from './src/main/detailCommonShip';
 import DetailWastedShip from './src/main/detailWastedShip';
 import UpdateCommonShip from './src/main/updateCommonShip';
 import UpdateWastedShip from './src/main/updateWastedShip';
+import UpdateCommonShipMImage from './src/main/updateCommonShipMImage';
+import UpdateWastedShipMImage from './src/main/updateWastedShipMImage';
 import DetailCommonShipGallery from './src/main/detailCommonShipGallery';
 import DetailWastedShipGallery from './src/main/detailWastedShipGallery';
 import RegisterCommonShipImages from './src/main/registerCommonShipImages';
@@ -47,6 +49,8 @@ const homeStackNav = createStackNavigator(
 	DetailWastedShip: {screen: DetailWastedShip, navigationOptions: { headerShown: false }},
 	UpdateCommonShip: {screen: UpdateCommonShip, navigationOptions: { headerShown: false }},
 	UpdateWastedShip: {screen: UpdateWastedShip, navigationOptions: { headerShown: false }},
+	UpdateCommonShipMImage: {screen: UpdateCommonShipMImage, navigationOptions: { headerShown: false }},
+	UpdateWastedShipMImage: {screen: UpdateWastedShipMImage, navigationOptions: { headerShown: false }},
 	DetailCommonShipGallery: {screen: DetailCommonShipGallery, navigationOptions: { headerShown: false }},
 	DetailWastedShipGallery: {screen: DetailWastedShipGallery, navigationOptions: { headerShown: false }},
 	RegisterCommonShipImages: {screen: RegisterCommonShipImages, navigationOptions: { headerShown: false }},

@@ -1,11 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Image, Alert, FlatList, TouchableHighlight } from 'react-native';
+import { Dimensions } from 'react-native';
 import * as base from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestNotice } from '../../utils/additionalInfoRequest';
 
 import Loading from '../../utils/loading';
+
+const SIZE_NOTICETITLE = Dimensions.get('screen').height * 0.03
+const SIZE_NOTICESUBTITLE = Dimensions.get('screen').height * 0.015
 
 export default class Notice extends Component{
 	constructor(props) {
@@ -53,19 +56,19 @@ export default class Notice extends Component{
                 </base.Header>
                 <base.Content padder>
 				    <Loading visible={this.state.loadingVisible}/>
-                    <base.Form>
-                        <base.Card>
+                    <base.Form style={{flex: 1,}}>
+                        <base.Card style={{height: '100%'}}>
                             <base.CardItem header bordered>
-                                <base.Text style={{fontSize: 25, color: '#006eee'}}>{this.state.title}</base.Text>
+                                <base.Text style={{fontSize: SIZE_NOTICETITLE, color: '#006eee'}}>{this.state.title}</base.Text>
                             </base.CardItem>
                             <base.CardItem>
-                                <base.Text>{this.state.content}</base.Text>
+                                <base.Text style={{fontSize: SIZE_NOTICESUBTITLE}}>{this.state.content}</base.Text>
                             </base.CardItem>
-                            <base.CardItem style={{justifyContent: 'flex-end'}}>
-                                <base.Text>{this.state.date}</base.Text>  
+                            <base.CardItem style={{ justifyContent: 'flex-end'}}>
+                                <base.Text style={{color: 'grey', fontSize: SIZE_NOTICESUBTITLE,}}>{this.state.date}</base.Text>  
                             </base.CardItem>
                             <base.CardItem footer borderd style={{justifyContent: 'flex-end'}}>
-                                <base.Text>선박확인체계 관리자</base.Text>  
+                                <base.Text style={{fontSize: SIZE_NOTICESUBTITLE,}}>선박확인체계 관리자</base.Text>  
                             </base.CardItem>
                         </base.Card>
                     </base.Form>
