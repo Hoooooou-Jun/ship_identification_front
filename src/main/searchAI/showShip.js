@@ -7,8 +7,9 @@ const SIZE_TITLE = Dimensions.get('screen').height * 0.025
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.015
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_PERCENT = Dimensions.get('screen').height * 0.02
-const SIZE_IMG = Dimensions.get('screen').height * 0.35
-const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
+
+const SIZE_IMG_HEIGHT = Dimensions.get('screen').height * 0.2
+const SIZE_IMG_WIDTH = Dimensions.get('screen').width * 0.75
 
 export default class ShowShip extends Component{
 	constructor(props) {
@@ -16,13 +17,12 @@ export default class ShowShip extends Component{
 		this.state = {};
 	}
 	render() {
-		console.log(this.props.ship)
 		let kinds
 		if(this.props.kinds){ kinds =
-			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: 400, margin: 5, height: '100%'}}>
+			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: SIZE_IMG_WIDTH, margin: 5, height: '100%'}}>
 				<base.Form sytle={{flex: 1, width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center',}}>
-					<base.Form style={{width: '100%', height: 250, alignItems: 'center', justifyContent: 'center',}}>
-						<Image source={{uri: requestDomain + this.props.ship.main_img}} style={{width: '100%', height: 200,}}/>
+					<base.Form style={{width: '100%', alignItems: 'center', justifyContent: 'center',}}>
+						<Image source={{uri: requestDomain + this.props.ship.main_img}} style={{width: '100%', height: SIZE_IMG_HEIGHT,}}/>
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'white'}}>등록사진 {this.props.ship.img_cnt} 장</base.Text>
@@ -33,11 +33,10 @@ export default class ShowShip extends Component{
 						</base.Form>
 					</base.Form>
 					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>
-						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.props.ship.name} </base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.regit_date}</base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.register} 등록 선박</base.Text>
+						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee'}}>{this.props.ship.name} </base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.regit_date} {this.props.ship.register} 등록 선박</base.Text>
 					</base.Form>
-					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>
+					<base.Form style={{width: '100%', paddingHorizontal: 10, marginLeft: 10}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
 							<base.Text style={{flex: 1, color: 'black', fontSize: SIZE_FONT}}>등록번호</base.Text>
 							<base.Text style={{flex: 3, fontFamily:'Nanum', fontSize: SIZE_FONT}}>{this.props.ship.code}</base.Text>
@@ -55,10 +54,10 @@ export default class ShowShip extends Component{
 			</TouchableHighlight>
 		}
 		else { kinds =
-			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: 400, margin: 10, elevation: 6, backgroundColor: 'white'}}>
+			<TouchableHighlight onPress={this.props.onPress} style={{flex: 1, width: SIZE_IMG_WIDTH, margin: 10, elevation: 6, backgroundColor: 'white'}}>
 				<base.Form sytle={{flex: 1, width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center',}}>
-					<base.Form style={{width: '100%', height: 200, alignItems: 'center', justifyContent: 'center',}}>
-						<Image source={{uri: requestDomain + this.props.ship.main_img}} style={{width: '100%', height: 200,}}/>
+					<base.Form style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center',}}>
+						<Image source={{uri: requestDomain + this.props.ship.main_img}} style={{width: '100%', height: SIZE_IMG_HEIGHT,}}/>
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'white'}}>등록사진 {this.props.ship.img_cnt} 장</base.Text>
@@ -69,11 +68,10 @@ export default class ShowShip extends Component{
 						</base.Form>
 					</base.Form>
 					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>
-						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.props.ship.id}번 유기선박</base.Text>
-							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.regit_date}</base.Text>
-							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.register} 등록 선박</base.Text>
+						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee'}}>{this.props.ship.id}번 유기선박</base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.props.ship.regit_date} {this.props.ship.register} 등록 선박</base.Text>
 					</base.Form>
-					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>
+					<base.Form style={{width: '100%', paddingHorizontal: 10, marginLeft: 10}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start', marginVertical: 5}}>
 							<base.Text style={{flex: 1, color: 'black', fontSize: SIZE_FONT}}>위도</base.Text>
 							<base.Text style={{flex: 1, fontFamily:'Nanum', fontSize: SIZE_FONT}}>{this.props.ship.lat}</base.Text>
@@ -93,6 +91,12 @@ export default class ShowShip extends Component{
 		return(
 			<base.Form>
 				{kinds}
+				<base.Form style={{width: SIZE_IMG_WIDTH, padding: 10}}>
+					<base.Button onPress={this.props.onPress_registerIMG}
+						style={{justifyContent: 'center', alignItems: 'center', width: '100%', borderRadius: 10, backgroundColor: 'white', elevation: 6}}>
+						<base.Text style={{color: 'black'}}>{this.props.ship.name} 선박사진으로 추가등록하기</base.Text>
+					</base.Button>
+				</base.Form>
 			</base.Form>
 			
 		)

@@ -60,7 +60,7 @@ export const searchCommonShip = (token, index, name, types, code, tons, size, is
             is_vhf: is_vhf,
             is_ff: is_ff,
             region: region,
-            port: region,
+            port: port,
 		}, {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,

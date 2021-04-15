@@ -2,8 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Dimensions, Alert, Modal } from 'react-native';
 import * as base from 'native-base'
-import styles from './styles';
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from 'native-base';
 import Constants from 'expo-constants';
 import { requestSignup } from '../../utils/userInfoRequest/';
 import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';

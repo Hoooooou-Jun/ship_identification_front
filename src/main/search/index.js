@@ -2,8 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Dimensions } from 'react-native';
 import * as base from 'native-base';
-import { Picker } from '@react-native-picker/picker';
-import { KindsOfPort } from '../../kindsOfData/kindsOfPort';
+import { Picker } from 'native-base';
 import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
 import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
 
@@ -108,15 +107,16 @@ export default class Search extends Component{
 
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정착항구</base.Text>
-						<Picker
-							selectedValue={this.state.region}
-							style={{height: 50, width: '100%'}}
-							onValueChange={(itemValue) => this.setState({region: itemValue})}>
-							{ KindsOfPort.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
-						</Picker>							
-					</base.Item>							
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정박위치</base.Text>
+						<base.Input
+							placeholder="정박된 항구나 포구를 입력하세요"
+							onChangeText={(port) => this.setState({port})}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+							placeholderStyle={{fontFamily:'Nanum'}}
+							/>
+					</base.Item>
 				</base.Form>
+
 				<base.Button block onPress={this.searchShip} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
 					<base.Text style={{color: 'black'}}>검색하기</base.Text>
 				</base.Button>

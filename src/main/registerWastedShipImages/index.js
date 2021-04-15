@@ -87,7 +87,7 @@ export default class RegisterWastedShipImages extends Component{
 				this.setState({loadingVisible: true})
 				this.state.images.map((data, index)=>{
 					const formdata = new FormData()					
-					formdata.append("id",  response.data.data.id);
+					formdata.append("id", this.state.id);
 					formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
 						registerWastedShipImages(token, formdata).then((response) =>{
 							if(index + 1 == this.state.images.length){

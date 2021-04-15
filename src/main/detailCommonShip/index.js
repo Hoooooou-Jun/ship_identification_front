@@ -9,7 +9,7 @@ import ShowPlusDetail from './showPlusDetail';
 import { requestDomain } from '../../utils/domain';
 import { requestCommonShipGallery } from '../../utils/shipInfoRequest';
 import { deleteCommonShip } from '../../utils/shipInfoRequest';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign, Feather } from '@expo/vector-icons'; 
 import { requestPermission } from '../../utils/userInfoRequest';
 
 import Loading from '../../utils/loading';
@@ -34,7 +34,9 @@ export default class DetailCommonShip extends Component{
 			img_cnt: '',
 			latitude: '',
 			longitude: '',
-
+			
+			privacyAgreement: false,
+			
 			data: [],
 			loadingVisible_shipDetail: true,
 			loadingVisible_shipGallery: true,
@@ -198,6 +200,54 @@ export default class DetailCommonShip extends Component{
         })
 	}
 	render(){
+		let shipOwnerDetail
+		if(this.state.privacyAgreement){ shipOwnerDetail =
+			<base.Form style={{width: '100%'}}>
+			
+				<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>개인정보동의서</base.Text>
+				</base.Form>
+				<base.Form style={{ width:'100%', flexDirection: 'column', alignItems: 'flex-start'}}>
+					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT,}}>
+						『 개인정보보호법 』등 관련 법규에 의거하여 앱 선박확인체계는 선주님의 개인정보 수집 및 활용에 대해 개인정보 수집ㆍ활용 동의서를 받고 있습니다
+					</base.Text>
+					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT,}}>
+						개인정보 제공자가 동의한 내용 외의 다른 목적으로 활용하지 않으며, 제공된 개인정보의 이용을 거부하고자 할 때에는 개인정보 관리책임자를 통해 
+						열람, 정정, 삭제를 요구할 수 있습니다.
+					</base.Text>
+				</base.Form>
+				<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
+					<base.Text style={{margin: 10, fontWeight: 'bold'}}>개인정보항목</base.Text>
+					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선주명</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>최준호</base.Text>
+					</base.Form>
+					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>연락처</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>01077108539</base.Text>
+					</base.Form>
+					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>거주지</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>서울특별시 강동구 명일동 상암로 225 삼익가든아파트 1동 1007호</base.Text>
+					</base.Form>
+					<base.Form style={{ width:'100%', flexDirection: 'row', height: SIZE_IMG, padding: 10}}>
+						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
+					</base.Form>
+				</base.Item>
+			</base.Form>
+		}
+		else{ shipOwnerDetail =
+			<base.Form style={{width:'100%'}}>
+				<base.Form style={{width: '100%', alignItems: 'flex-end'}}>
+					<base.Text style={{margin: 10, fontWeight: 'bold', color: 'red',}}>선주 개인정보 동의가 필요합니다</base.Text>
+				</base.Form>
+				
+				<base.Button block onPress={()=>this.props.navigation.navigate('RegisterShipOwner', {id: this.state.id, name: this.state.name})}
+					style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+					<base.Text style={{color: 'black'}}>선주정보 등록하기</base.Text>
+				</base.Button>
+			</base.Form>
+		}
 		let CommonShipGallery
 		if(this.state.data.length){ CommonShipGallery =
 			<base.Form>
@@ -272,76 +322,110 @@ export default class DetailCommonShip extends Component{
 							<AntDesign name="delete" size={25} color="black"/>
 						</base.Button>
 					</base.Form>
-					<base.Form style={{padding: 20,}}>
-						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.state.name} </base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.state.regit_date} {this.state.register} 등록 선박</base.Text>
-					</base.Form>
-					<base.Form style={{justifyContent: 'center', margin: 10,}}>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>등록번호</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.code}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박길이</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.size}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박무게</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.tons}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>정착항구</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.port}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
-						</base.Form>
-						<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
-							<base.Text style={{margin: 10, fontWeight: 'bold'}}>식별장치</base.Text>
-							<base.ListItem style={{width: '100%'}}>
-								<base.CheckBox checked={this.state.is_ais} color="#006eee"/>
-								<base.Body><base.Text>AIS</base.Text></base.Body>
-								<base.CheckBox checked={this.state.is_vpass} color="#006eee"/>
-								<base.Body><base.Text>V-Pass</base.Text></base.Body>
-							</base.ListItem>
-							<base.ListItem style={{width: '100%'}}>
-								<base.CheckBox checked={this.state.is_vhf} color="#006eee"/>
-								<base.Body><base.Text>VHF-DSC</base.Text></base.Body>
-								<base.CheckBox checked={this.state.is_ff} color="#006eee"/>
-								<base.Body><base.Text>FF-GPS</base.Text></base.Body>
-							</base.ListItem>
-						</base.Item>
-					</base.Form>
-					<base.Form style={{flex: 1, height: 300,}}>
-						<MapView
-							provider={PROVIDER_GOOGLE}
-							style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
-							initialRegion={{
-								latitude: parseFloat(this.state.latitude),
-								longitude: parseFloat(this.state.longitude),
-								latitudeDelta: 0.05,
-								longitudeDelta: 0.05,
-							}}>
-							<Marker
-							coordinate={{
-								latitude: parseFloat(this.state.latitude),
-								longitude: parseFloat(this.state.longitude),
-							}}/>
-						</MapView>
-					</base.Form>
+					<base.Tabs>
+						<base.Tab heading={
+							<base.TabHeading style={{backgroundColor: 'white'}}>
+								<AntDesign name="infocirlceo" size={25} color="black"/>
+									<base.Text style={{color: 'black'}}>선박정보</base.Text>
+								</base.TabHeading>}>
+
+							<base.Form style={{padding: 20,}}>
+								<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.state.name} </base.Text>
+								<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey'}}>{this.state.regit_date} {this.state.register} 등록 선박</base.Text>
+							</base.Form>
+							<base.Form style={{justifyContent: 'center', margin: 10,}}>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>등록번호</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.code}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박길이</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.size}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박무게</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.tons}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>정박위치</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.port}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
+								</base.Form>
+								<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
+									<base.Text style={{margin: 10, fontWeight: 'bold'}}>식별장치</base.Text>
+									<base.ListItem style={{width: '100%'}}>
+										<base.CheckBox checked={this.state.is_ais} color="#006eee"/>
+										<base.Body><base.Text>AIS</base.Text></base.Body>
+										<base.CheckBox checked={this.state.is_vpass} color="#006eee"/>
+										<base.Body><base.Text>V-Pass</base.Text></base.Body>
+									</base.ListItem>
+									<base.ListItem style={{width: '100%'}}>
+										<base.CheckBox checked={this.state.is_vhf} color="#006eee"/>
+										<base.Body><base.Text>VHF-DSC</base.Text></base.Body>
+										<base.CheckBox checked={this.state.is_ff} color="#006eee"/>
+										<base.Body><base.Text>FF-GPS</base.Text></base.Body>
+									</base.ListItem>
+								</base.Item>
+							</base.Form>
+						</base.Tab>
+						<base.Tab heading={
+							<base.TabHeading style={{backgroundColor: 'white'}}>
+								<AntDesign name="user" size={25} color="black"/>
+									<base.Text style={{color: 'black'}}>선주정보</base.Text>
+								</base.TabHeading>}>
+							{shipOwnerDetail}
+						</base.Tab>
+						<base.Tab heading={
+							<base.TabHeading style={{backgroundColor: 'white'}}>
+								<Feather name="map" size={25} color="black"/>
+									<base.Text style={{color: 'black'}}>지형정보</base.Text>
+								</base.TabHeading>}>
+
+							<base.Form style={{justifyContent: 'center', margin: 10,}}>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
+								</base.Form>
+							</base.Form>
+							{/* <base.Form style={{flex: 1, height: 500,}}>
+								<MapView
+									provider={PROVIDER_GOOGLE}
+									style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
+									initialRegion={{
+										latitude: parseFloat(this.state.latitude),
+										longitude: parseFloat(this.state.longitude),
+										latitudeDelta: 0.05,
+										longitudeDelta: 0.05,
+									}}>
+									<Marker
+									coordinate={{
+										latitude: parseFloat(this.state.latitude),
+										longitude: parseFloat(this.state.longitude),
+									}}/>
+								</MapView>
+							</base.Form> */}
+
+						</base.Tab>
+					</base.Tabs>
 				</base.Content>			
 			</base.Container>
 		);

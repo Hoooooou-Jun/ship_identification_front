@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Alert, Dimensions } from 'react-native';
 import * as base from 'native-base';
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestWastedShipDetail } from '../../utils/shipInfoRequest';
 import { updateWastedShipDetail, } from '../../utils/shipInfoRequest';
