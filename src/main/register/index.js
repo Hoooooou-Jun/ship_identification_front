@@ -7,9 +7,8 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import * as Location from 'expo-location';
 import { getToken } from '../../utils/getToken';
 import { registerCommonShip, registerWastedShip, registerCommonShipImages, registerWastedShipImages } from '../../utils/shipInfoRequest';
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from 'native-base';
 import { SliderBox } from "react-native-image-slider-box";
-import { KindsOfPort } from '../../kindsOfData/kindsOfPort';
 import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
 import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -111,7 +110,10 @@ export default class Register extends Component{
 			console.log(location)
 			this.setState({latitude: location.coords['latitude'], longitude: location.coords['longitude']})
 		} catch (error) {
-		  Alert.alert("Can't find you.", "Please Try Again!")
+			Alert.alert(
+				'선박확인체계 알림',
+				'위치정보를 가져올 수 없습니다',
+			)
 		}
 		this.moveCurrentLocation();
 	}
@@ -176,7 +178,6 @@ export default class Register extends Component{
 			}
 		})
 	}
-
 	normalInput = () => {
 		return(
 			<base.Form>
@@ -270,16 +271,16 @@ export default class Register extends Component{
 				</base.Form>
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-						<base.Text style={{fontSize: 20, alignSelf:'flex-start'}}>정착항구</base.Text>
-						<Picker
-							selectedValue={this.state.region}
-							style={{height: 50, width: '100%'}}
-							onValueChange={(itemValue) => this.setState({region: itemValue})}>
-							{ KindsOfPort.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
-						</Picker>							
-					</base.Item>							
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정박위치</base.Text>
+						<base.Input
+							placeholder="정박된 항구나 포구를 입력하세요"
+							onChangeText={(port) => this.setState({port})}
+							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+							placeholderStyle={{fontFamily:'Nanum'}}
+							/>
+					</base.Item>
 				</base.Form>
-				<base.Form style={{flex: 1, height: 300, padding: 10}}>
+				{/* <base.Form style={{flex: 1, height: 400, padding: 10}}>
 					<MapView
 						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
@@ -296,7 +297,7 @@ export default class Register extends Component{
 							longitude: parseFloat(this.state.longitude),
 						}}/>
 					</MapView>
-				</base.Form>
+				</base.Form> */}
 				<base.Form style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding: 10,}}>
 					<base.Form style={{flex: 7, flexDirection: 'column', width: '100%'}}>
 						<base.Item regular style={{
@@ -357,8 +358,7 @@ export default class Register extends Component{
 						</Picker>							
 					</base.Item>							
 				</base.Form>
-
-				<base.Form style={{flex: 1, height: 300, padding: 10}}>
+				{/* <base.Form style={{flex: 1, height: 400, padding: 10}}>
 					<MapView
 						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
@@ -375,8 +375,7 @@ export default class Register extends Component{
 							longitude: parseFloat(this.state.longitude),
 						}}/>
 					</MapView>
-				</base.Form>
-
+				</base.Form> */}
 				<base.Form style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding: 10,}}>
 					<base.Form style={{flex: 7, flexDirection: 'column', width: '100%'}}>
 						<base.Item regular style={{

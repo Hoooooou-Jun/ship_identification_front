@@ -40,8 +40,8 @@ export default class Login extends Component{
 			loadingVisible_Font: true,
 			loadingVisible_login: false,
 		}
-		this.executeLogin = this.executeLogin.bind(this);
 		this.loadFont = this.loadFont(this);
+		this.executeLogin = this.executeLogin.bind(this);
 	}
 	componentDidMount(){
 		requestVersion().then((response) =>{
@@ -87,18 +87,13 @@ export default class Login extends Component{
 		else{
 			this.setState({loadingVisible_login: true})
 			requestLogin(this.state.srvno, this.state.password, this.state.device_id).then((response) => {
-				if(response.status == 200){
-					this.setState({loadingVisible_login: false})
-					AsyncStorage.setItem('token', response.data['data']['token'])
-					Alert.alert(
-						'선박확인체계 알림',
-						this.state.srvno + '님 반갑습니다',
-					)
-					this.props.navigation.navigate('Home')
-				}
-				else{
-					console.log('failed')
-				}
+				this.setState({loadingVisible_login: false})
+				AsyncStorage.setItem('token', response.data['data']['token'])
+				Alert.alert(
+					'선박확인체계 알림',
+					this.state.srvno + '님 반갑습니다',
+				)
+				this.props.navigation.navigate('Home')
 			}).catch((error) =>{
 				this.setState({loadingVisible_login: false})
 				const msg = error.response.data.message

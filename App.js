@@ -9,6 +9,8 @@ import Signup from './src/accounts/signup';
 
 import Home from './src/main/home';
 import Register from './src/main/register';
+import RegisterShipOwner from './src/main/registerShipOwner';
+import CheckShipOwnerConsent from './src/main/checkShipOwnerConsent';
 import Search from './src/main/search';
 import SearchResult from './src/main/searchResult';
 import SearchAI from './src/main/searchAI';
@@ -56,6 +58,9 @@ const homeStackNav = createStackNavigator(
 	RegisterCommonShipImages: {screen: RegisterCommonShipImages, navigationOptions: { headerShown: false }},
 	RegisterWastedShipImages: {screen: RegisterWastedShipImages, navigationOptions: { headerShown: false }},
 
+	RegisterShipOwner: {screen: RegisterShipOwner, navigationOptions: { headerShown: false }},
+	CheckShipOwnerConsent: {screen: CheckShipOwnerConsent, navigationOptions: { headerShown: false }},
+	
 	Notice: {screen: Notice, navigationOptions: { headerShown: false }},
 	NoticeList: {screen: NoticeList, navigationOptions: { headerShown: false }},
 	

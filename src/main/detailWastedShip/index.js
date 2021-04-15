@@ -10,7 +10,7 @@ import ShowPlusDetail from './showPlusDetail';
 import { requestDomain } from '../../utils/domain';
 import { requestWastedShipGallery } from '../../utils/shipInfoRequest';
 import { deleteWastedShip } from '../../utils/shipInfoRequest';
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign, Feather } from '@expo/vector-icons'; 
 import { requestPermission } from '../../utils/userInfoRequest';
 
 import Loading from '../../utils/loading';
@@ -247,53 +247,81 @@ export default class DetailWastedShip extends Component{
 							<AntDesign name="delete" size={25} color="black"/>
 						</base.Button>
 					</base.Form>
-					<base.Form style={{padding: 20,}}>
-						<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.state.id}번 유기선박</base.Text>
-						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey',}}>{this.state.regit_date} {this.state.register} 등록 선박</base.Text>
-					</base.Form>
-					<base.Form style={{flex: 1, padding: 10,}}>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>관리번호</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.id}</base.Text>
+					<base.Tabs>
+						<base.Tab heading={
+							<base.TabHeading style={{backgroundColor: 'white'}}>
+								<AntDesign name="infocirlceo" size={25} color="black"/>
+									<base.Text style={{color: 'black'}}>선박정보</base.Text>
+								</base.TabHeading>}>
+
+						<base.Form style={{padding: 20,}}>
+							<base.Text style={{fontFamily:'Nanum_Title', fontSize: SIZE_TITLE, color: '#006eee', marginBottom: 10,}}>{this.state.id}번 유기선박</base.Text>
+							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey',}}>{this.state.regit_date} {this.state.register} 등록 선박</base.Text>
 						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start', fontWeight: 'bold'}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
+						<base.Form style={{flex: 1, padding: 10,}}>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>관리번호</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.id}</base.Text>
+							</base.Form>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start', fontWeight: 'bold'}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선박종류</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.types}</base.Text>
+							</base.Form>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>세부정보</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.info}</base.Text>
+							</base.Form>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
+							</base.Form>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
+							</base.Form>
+							<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+								<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
+								<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
+							</base.Form>
 						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>세부정보</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.info}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위치지역</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.region}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
-						</base.Form>
-						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-							<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
-							<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
-						</base.Form>
-					</base.Form>
-					<base.Form style={{flex: 1, height: 300,}}>
-						<MapView
-							provider={PROVIDER_GOOGLE}
-							style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
-							initialRegion={{
-								latitude: parseFloat(this.state.latitude),
-								longitude: parseFloat(this.state.longitude),
-								latitudeDelta: 0.05,
-								longitudeDelta: 0.05,
-							}}>
-							<Marker
-							coordinate={{
-								latitude: parseFloat(this.state.latitude),
-								longitude: parseFloat(this.state.longitude),
-							}}/>
-						</MapView>
-					</base.Form>
+
+						</base.Tab>
+						<base.Tab heading={
+							<base.TabHeading style={{backgroundColor: 'white'}}>
+								<Feather name="map" size={25} color="black"/>
+									<base.Text style={{color: 'black'}}>지형정보</base.Text>
+								</base.TabHeading>}>
+
+							<base.Form style={{flex: 1, padding: 10,}}>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>위도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.latitude}</base.Text>
+								</base.Form>
+								<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
+									<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>경도</base.Text>
+									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
+								</base.Form>
+							</base.Form>
+							{/* <base.Form style={{flex: 1, height: 400,}}>
+								<MapView
+									provider={PROVIDER_GOOGLE}
+									style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
+									initialRegion={{
+										latitude: parseFloat(this.state.latitude),
+										longitude: parseFloat(this.state.longitude),
+										latitudeDelta: 0.05,
+										longitudeDelta: 0.05,
+									}}>
+									<Marker
+									coordinate={{
+										latitude: parseFloat(this.state.latitude),
+										longitude: parseFloat(this.state.longitude),
+									}}/>
+								</MapView>
+							</base.Form> */}
+
+						</base.Tab>
+					</base.Tabs>
 				</base.Content>				
 			</base.Container>
 		);

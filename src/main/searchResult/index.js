@@ -8,6 +8,7 @@ import ShowShip from './showShip';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Loading from '../../utils/loading';
 const SIZE_ICON = Dimensions.get('screen').height * 0.02
+const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 export default class SearchResult extends Component{
 	constructor(props) {
 		super(props);
@@ -182,8 +183,31 @@ export default class SearchResult extends Component{
 	}
 	
 	render(){
+		let pageBarHeader, pageBarFooter
+		if(this.state.data.length != 0){ pageBarHeader = pageBarFooter =
+			<base.Form style={{flexDirection: 'row', alignSelf: 'center', justifyContent: 'center', height: SIZE_ICON + 20, marginVertical: 10}}>
+				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.firstPage()}>
+					<AntDesign name="banckward" size={SIZE_ICON} color="#292929"/>
+				</base.Button>
+				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.previousPage()}>
+					<AntDesign name="caretleft" size={SIZE_ICON} color="#292929"/>
+				</base.Button>
+				<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
+					<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
+				</base.Form>
+				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
+					<AntDesign name="caretright" size={SIZE_ICON} color="#292929"/>
+				</base.Button>
+				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10, }} onPress={()=>this.lastPage()}>
+					<AntDesign name="forward" size={SIZE_ICON} color="#292929"/>
+				</base.Button>
+			</base.Form>
+		}
 		return(
-			
 			<base.Root>
 				<base.Container>
 					<base.Header style={{backgroundColor: 'white'}}>
@@ -197,58 +221,19 @@ export default class SearchResult extends Component{
 					</base.Header>
 					<base.Content>
 						<Loading visible={this.state.loadingVisible}/>
+						{pageBarHeader}
 						<FlatList
 							sytle={{flex:1}}
 							ref = {(ref) => this.flatList=ref}
 							data={this.state.data}
 							renderItem={({item}) => <ShowShip ship={item} flag={this.state.flag} onPress={()=>this.getDetail(item.id)}/>}
-							ListHeaderComponent={
-								<base.Form style={{flexDirection: 'row', alignSelf: 'center', justifyContent: 'center', height: SIZE_ICON + 20, marginVertical: 10}}>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.firstPage()}>
-										<AntDesign name="banckward" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.previousPage()}>
-										<AntDesign name="caretleft" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
-										<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
-									</base.Form>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
-										<AntDesign name="caretright" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10, }} onPress={()=>this.lastPage()}>
-										<AntDesign name="forward" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-								</base.Form>
-							}
-							ListFooterComponent={
-								<base.Form style={{flexDirection: 'row', alignSelf: 'center', justifyContent: 'center', height: SIZE_ICON + 20, marginVertical: 10}}>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.firstPage()}>
-										<AntDesign name="banckward" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.previousPage()}>
-										<AntDesign name="caretleft" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
-										<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
-									</base.Form>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
-										<AntDesign name="caretright" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
-									<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-									elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10, }} onPress={()=>this.lastPage()}>
-										<AntDesign name="forward" size={SIZE_ICON} color="#292929"/>
-									</base.Button>
+							ListEmptyComponent={
+								<base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10,}}>
+									<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 검색에 대한 검색결과가 없습니다</base.Text>
 								</base.Form>
 							}
 						/>
+						{pageBarFooter}
 					</base.Content>
 				</base.Container>
 			</base.Root>
