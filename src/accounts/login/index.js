@@ -12,7 +12,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { requestVersion } from '../../utils/additionalInfoRequest';
 
 import Loading from '../../utils/loading';
-import { AppVersion } from '../../utils/version';
+import { AppVersion, UnderInspection } from '../../utils/version';
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.1
 const SIZE_TITLE = Dimensions.get('screen').width * 0.11
@@ -139,7 +139,7 @@ export default class Login extends Component{
 	}
 	
 	render(){
-		if(this.state.server_status == 'checking'){
+		if(this.state.server_status == UnderInspection){
 			return(
 				<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}>
 					<base.Form style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>
@@ -202,7 +202,7 @@ export default class Login extends Component{
 			return(
 				<base.Container>
 					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-					<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login}/>
+					<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login} initialRoute={true}/>
 						<base.Form style={{flex: 3, width: '100%', borderRadius: 20, backgroundColor: 'white', elevation: 6,}}>
 							<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
 								

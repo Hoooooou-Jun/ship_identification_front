@@ -8,7 +8,7 @@ import { requestCommonShipDetail } from '../../utils/shipInfoRequest';
 import ShowPlusDetail from './showPlusDetail';
 import { requestDomain } from '../../utils/domain';
 import { requestCommonShipGallery } from '../../utils/shipInfoRequest';
-import { deleteCommonShip } from '../../utils/shipInfoRequest';
+import { deleteCommonShip, requestShipOwner } from '../../utils/shipInfoRequest';
 import { AntDesign, Feather } from '@expo/vector-icons'; 
 import { requestPermission } from '../../utils/userInfoRequest';
 
@@ -18,6 +18,7 @@ const SIZE_TITLE = Dimensions.get('screen').height * 0.035
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.0175
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_IMG = Dimensions.get('screen').height * 0.35
+const SIZE_OWNER_IMG = Dimensions.get('screen').width * 0.75
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
 
 export default class DetailCommonShip extends Component{
@@ -36,7 +37,8 @@ export default class DetailCommonShip extends Component{
 			longitude: '',
 			
 			privacyAgreement: false,
-			
+			own_img: '', own_name: '', phone: '', address: '', agreement_paper: '',
+
 			data: [],
 			loadingVisible_shipDetail: true,
 			loadingVisible_shipGallery: true,
@@ -132,6 +134,7 @@ export default class DetailCommonShip extends Component{
 										this.state.name + ' 선박 정보가 삭제되었습니다',
 									)
 									this.props.navigation.popToTop();
+									this.props.navigation.navigate('ListCommonShip');
 								}
 							})
 						}
@@ -154,35 +157,40 @@ export default class DetailCommonShip extends Component{
 		getToken().then((token) => {
 			const id = this.props.navigation.getParam('id');
 			requestCommonShipDetail(token, id).then((response) => {
-				if(response.status == 200){
-					this.setState({
-						id: id,
-						main_img: response.data.data.main_img,
-						main_img_id: response.data.data.main_img_id,
-						name: response.data.data.name,
-						code: response.data.data.code,
-						types: response.data.data.types,
-						is_ais: response.data.data.is_ais,
-						is_vpass: response.data.data.is_vpass,
-						is_vhf: response.data.data.is_vhf,
-						is_ff: response.data.data.is_ff,
-						port: response.data.data.port,
-						region: response.data.data.region,
-						tons: response.data.data.tons,
-						size: response.data.data.size,
-						register: response.data.data.register,
-						regit_date: response.data.data.regit_date,
-						is_train: response.data.data.is_train,
-						img_cnt: response.data.data.img_cnt,
-						latitude: response.data.data.lat,
-						longitude: response.data.data.lon,
+				this.setState({
+					id: id,
+					main_img: response.data.data.main_img,
+					main_img_id: response.data.data.main_img_id,
+					name: response.data.data.name,
+					code: response.data.data.code,
+					types: response.data.data.types,
+					is_ais: response.data.data.is_ais,
+					is_vpass: response.data.data.is_vpass,
+					is_vhf: response.data.data.is_vhf,
+					is_ff: response.data.data.is_ff,
+					port: response.data.data.port,
+					region: response.data.data.region,
+					tons: response.data.data.tons,
+					size: response.data.data.size,
+					register: response.data.data.register,
+					regit_date: response.data.data.regit_date,
+					is_train: response.data.data.is_train,
+					img_cnt: response.data.data.img_cnt,
+					latitude: response.data.data.lat,
+					longitude: response.data.data.lon,
 
-						loadingVisible_shipDetail: false,
+					loadingVisible_shipDetail: false,
+				})
+				requestShipOwner(token, id).then((response)=>{
+					this.setState({
+						privacyAgreement: true,
+						own_img: response.data.data.own_img,
+						own_name: response.data.data.own_name,
+						phone: response.data.data.phone,
+						address: response.data.data.address,
+						agreement_paper: response.data.data.agreement_paper,
 					})
-				}
-				else{
-					console.log('fail')
-				}
+				})
 			})
         })
 	}
@@ -203,36 +211,25 @@ export default class DetailCommonShip extends Component{
 		let shipOwnerDetail
 		if(this.state.privacyAgreement){ shipOwnerDetail =
 			<base.Form style={{width: '100%'}}>
-			
-				<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
-					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>개인정보동의서</base.Text>
-				</base.Form>
-				<base.Form style={{ width:'100%', flexDirection: 'column', alignItems: 'flex-start'}}>
-					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT,}}>
-						『 개인정보보호법 』등 관련 법규에 의거하여 앱 선박확인체계는 선주님의 개인정보 수집 및 활용에 대해 개인정보 수집ㆍ활용 동의서를 받고 있습니다
-					</base.Text>
-					<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT,}}>
-						개인정보 제공자가 동의한 내용 외의 다른 목적으로 활용하지 않으며, 제공된 개인정보의 이용을 거부하고자 할 때에는 개인정보 관리책임자를 통해 
-						열람, 정정, 삭제를 요구할 수 있습니다.
-					</base.Text>
-				</base.Form>
 				<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
-					<base.Text style={{margin: 10, fontWeight: 'bold'}}>개인정보항목</base.Text>
+					<base.Text style={{margin: 10, fontWeight: 'bold'}}>선주정보</base.Text>
+					<Image source={{uri: requestDomain + this.state.own_img,}} style={{width: SIZE_OWNER_IMG, height: SIZE_OWNER_IMG, alignSelf: 'center'}}/>
 					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
 						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>선주명</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>최준호</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.own_name}</base.Text>
 					</base.Form>
 					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
 						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>연락처</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>01077108539</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.phone}</base.Text>
 					</base.Form>
 					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start'}}>
 						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT, fontWeight: 'bold'}}>거주지</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>서울특별시 강동구 명일동 상암로 225 삼익가든아파트 1동 1007호</base.Text>
+						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.address}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', height: SIZE_IMG, padding: 10}}>
-						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
-					</base.Form>
+					<base.Button block onPress={()=>this.props.navigation.navigate('ImgViewer', {address: requestDomain + this.state.agreement_paper})}
+					style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+						<base.Text style={{color: 'black'}}>개인정보동의서 보기</base.Text>
+					</base.Button>
 				</base.Item>
 			</base.Form>
 		}
@@ -256,7 +253,7 @@ export default class DetailCommonShip extends Component{
 					data={this.state.data}
 					horizontal={true}
 					renderItem={({item, index}) => <ShowPlusDetail ship={item}
-						onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img, flag: 'Normal', id: item.id, index: index + 1, main_img_id: this.state.main_img_id})}/>}
+						onPress={()=>this.props.navigation.navigate('ShipImgViewer',{address: requestDomain + item.img, flag: 'Normal', id: this.state.id, img_id: item.id, index: index + 1, main_img_id: this.state.main_img_id})}/>}
 					ListFooterComponent={
 						<TouchableHighlight style={{flex: 1,}} onPress={()=>this.props.navigation.navigate('RegisterCommonShipImages',{id: this.state.id, name: this.state.name})}>
 							<base.Card style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, alignItems: 'center', justifyContent: 'center'}}>
@@ -406,7 +403,7 @@ export default class DetailCommonShip extends Component{
 									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
 								</base.Form>
 							</base.Form>
-							{/* <base.Form style={{flex: 1, height: 500,}}>
+							<base.Form style={{flex: 1, height: 500,}}>
 								<MapView
 									provider={PROVIDER_GOOGLE}
 									style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
@@ -422,8 +419,7 @@ export default class DetailCommonShip extends Component{
 										longitude: parseFloat(this.state.longitude),
 									}}/>
 								</MapView>
-							</base.Form> */}
-
+							</base.Form>
 						</base.Tab>
 					</base.Tabs>
 				</base.Content>			

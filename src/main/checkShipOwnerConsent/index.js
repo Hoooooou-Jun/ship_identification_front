@@ -1,9 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Image, Dimensions } from 'react-native';
+import { Image, Dimensions, Alert } from 'react-native';
 import * as base from 'native-base';
 import ViewShot from 'react-native-view-shot';
 import { getToken } from '../../utils/getToken';
+import { registerShipOwner } from '../../utils/shipInfoRequest';
 import Loading from '../../utils/loading';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.02
@@ -34,8 +35,11 @@ export default class CheckShipOwnerConsent extends Component{
 
 			visible: false,
 
-			signature: null
+			signature: null,
+			privacy_agree: 1,
+			agreement_paper: '',
 		};
+		this.registerShipOwnerInfo = this.registerShipOwnerInfo.bind(this);
 	}
 	componentDidMount(){
 		this.setState({
@@ -51,8 +55,34 @@ export default class CheckShipOwnerConsent extends Component{
 			signature: this.props.navigation.getParam('signature'),
 		})
 	}
+	registerShipOwnerInfo(){
+		this.setState({loadingVisible: true})
+		this.captureRef.capture().then(uri => {
+			getToken().then((token) =>{
+				const formdata = new FormData()
+				formdata.append("ship_id", this.state.ship_id);
+				formdata.append("own_name", this.state.own_name);
+				formdata.append("phone", this.state.phone);
+				formdata.append("address", this.state.address);
+				formdata.append("privacy_agree", this.state.privacy_agree);
+				formdata.append('own_img', {name:'ship.jpg', type:'image/jpeg', uri: this.state.own_img})
+				formdata.append('agreement_paper', {name:'ship.jpg', type:'image/jpeg', uri: uri})
+				registerShipOwner(token, formdata).then((response)=>{
+				this.setState({loadingVisible: false})
+					Alert.alert(
+						'선박확인체계 알림',
+						'선주정보가 등록되었습니다',
+					)
+					this.props.navigation.popToTop()
+					this.props.navigation.navigate('DetailCommonShip',{id: ship_id})
+				}).catch((err) => {
+					console.log(err)
+					console.log('실패')
+				})
+			})
+		});
+	}
 	render(){
-
 		return(
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
@@ -65,7 +95,8 @@ export default class CheckShipOwnerConsent extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content padder>
-					<ViewShot ref={captureRef} options={{ format: 'jpg', quality: 0.9 }}>
+					<Loading visible={this.state.loadingVisible}/>
+					<ViewShot ref = {(ref) => this.captureRef=ref} options={{ format: 'jpg', quality: 0.9 }} style={{backgroundColor: 'white'}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'black', margin: 10, fontSize: SIZE_TITLE, fontWeight: 'bold'}}>개인정보 수집ㆍ활용 동의서</base.Text>
 						</base.Form>
@@ -147,7 +178,7 @@ export default class CheckShipOwnerConsent extends Component{
 							</base.Form>
 						</base.Form>
 					</ViewShot>
-					<base.Button block style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+					<base.Button block onPress={this.registerShipOwnerInfo} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
 						<base.Text style={{color: 'black'}}>선주정보 등록하기</base.Text>
 					</base.Button>
 				</base.Content>

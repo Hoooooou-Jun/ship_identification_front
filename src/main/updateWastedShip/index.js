@@ -65,6 +65,7 @@ export default class UpdateWastedShip extends Component{
 						'선박 정보가 수정되었습니다',
 					)	
 					this.props.navigation.popToTop()
+					this.props.navigation.navigate('DetailWastedShip',{id: this.state.id});
 				}
 				else{
 					console.log('fail')

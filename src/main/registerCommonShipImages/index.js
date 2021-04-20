@@ -30,6 +30,9 @@ export default class RegisterCommonShipImages extends Component{
 			images: [],
 			clicked: '',
 			loadingVisible: false,
+
+			needLoadingPercent: false,
+			load: 0, sum: 0,
 		};
 		this.pickImage = this.pickImage.bind(this);
 		this.pickPhoto = this.pickPhoto.bind(this);
@@ -87,12 +90,17 @@ export default class RegisterCommonShipImages extends Component{
 		}
 		else{
 			getToken().then((token) =>{
-				this.setState({loadingVisible: true})
+				this.setState({
+					loadingVisible: true,
+					needLoadingPercent: true,
+					sum: this.state.images.length,
+				})
 				this.state.images.map((data, index)=>{
 					const formdata = new FormData()					
 					formdata.append("id", this.state.id);
 					formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
 						registerCommonShipImages(token, formdata).then((response) =>{
+							this.setState({load: this.state.load + 1})
 							if(index + 1 == this.state.images.length){
 								this.setState({loadingVisible: false})
 								Alert.alert(
@@ -100,6 +108,7 @@ export default class RegisterCommonShipImages extends Component{
 									this.state.name + ' 선박 사진 ' + this.state.images.length + '장이 추가등록되었습니다',
 								)
 								this.props.navigation.popToTop()
+								this.props.navigation.navigate('DetailCommonShip',{id: this.state.id})
 							}
 						}).catch((err) => {
 							console.log('실패')
@@ -138,7 +147,7 @@ export default class RegisterCommonShipImages extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} needLoadingPercent={this.state.needLoadingPercent} load={this.state.load} sum={this.state.sum}/>
 					<base.Root>
 						<base.Form style={{width:'100%', height: SIZE_IMG_HEIGHT, borderBottomWidth: 1, borderColor: '#DDD', flexDirection: 'column',}}>
 							<base.Form style={{flex: 1, height: SIZE_IMG_HEIGHT, width:'100%',}}>

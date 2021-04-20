@@ -49,6 +49,9 @@ export default class Register extends Component{
 			images: [],
 			
 			loadingVisible: false,
+
+			load: 0, sum: 0,
+			needLoadingPercent: false,
 		};
 		this.pickImage = this.pickImage.bind(this);
 		this.pickPhoto = this.pickPhoto.bind(this);
@@ -130,38 +133,83 @@ export default class Register extends Component{
 	}
 	registerShip(){
 		this.setState({loadingVisible: true})
+		if(this.state.images.length != 0){
+			this.setState({
+				needLoadingPercent: true,
+				sum: this.state.images.length,
+			})
+		}
 		getToken().then((token) =>{
 			if(this.state.flag == 'Normal'){
 				registerCommonShip(token, this.state.name, this.state.types, this.state.code, this.state.tons, 
 				this.state.size, this.state.is_ais, this.state.is_vpass, this.state.is_vhf, this.state.is_ff, this.state.region, this.state.port,
 				this.state.latitude, this.state.longitude).then((response) => {
-					
-					this.state.images.map((data, index)=>{
-						const formdata = new FormData()					
-						formdata.append("id",  response.data.data.id);
-						formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
+					if(this.state.images.length == 0){
+						this.setState({loadingVisible: false})
+						Alert.alert(
+							'선박확인체계 알림',
+							'일반선박 정보가 등록되었습니다, 추가로 선주 정보를 등록하시겠습니까?',
+							[{
+								text: "네",
+								onPress: () => this.props.navigation.navigate('RegisterShipOwner', {id: response.data.data.id, name: this.state.name})
+								},{
+								text: "아니오",
+								onPress: () => {
+									this.props.navigation.popToTop(),
+									this.props.navigation.navigate('DetailCommonShip',{id: response.data.data.id})
+								}
+							}]
+						);
+					}
+					else{
+						this.state.images.map((data, index)=>{
+							const formdata = new FormData()					
+							formdata.append("id",  response.data.data.id);
+							formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
 							registerCommonShipImages(token, formdata).then((response) =>{
+								this.setState({load: this.state.load + 1})
 								if(index + 1 == this.state.images.length){
 									this.setState({loadingVisible: false})
 									Alert.alert(
 										'선박확인체계 알림',
-										'일반선박 정보가 등록되었습니다',
-									)
-									this.props.navigation.popToTop()
+										'일반선박 정보가 등록되었습니다, 추가로 선주 정보를 등록하시겠습니까?',
+										[{
+											text: "네",
+											onPress: () => this.props.navigation.navigate('RegisterShipOwner', {id: this.state.id, name: this.state.name})
+											},{
+											text: "아니오",
+											onPress: () => {
+												this.props.navigation.popToTop(),
+												this.props.navigation.navigate('DetailCommonShip',{id: response.data.data.id})
+											}
+										}]
+									);
 								}
 							}).catch((err) => {
 								console.log('실패')
+							})
 						})
-					})
+					}
 				})
 			}
 			else if (this.state.flag == 'Wasted'){
 				registerWastedShip(token, this.state.types, this.state.latitude, this.state.longitude, this.state.info, this.state.region).then((response) => {
-					this.state.images.map((data, index)=>{
-						const formdata = new FormData()					
-						formdata.append("id",  response.data.data.id);
-						formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
+					if(this.state.images.length == 0){
+						this.setState({loadingVisible: false})
+						Alert.alert(
+							'선박확인체계 알림',
+							'유기선박 정보가 등록되었습니다',
+						)	
+						this.props.navigation.popToTop()
+						this.props.navigation.navigate('DetailWastedShip',{id: response.data.data.id})
+					}
+					else{
+						this.state.images.map((data, index)=>{
+							const formdata = new FormData()					
+							formdata.append("id",  response.data.data.id);
+							formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: data})
 							registerWastedShipImages(token, formdata).then((response) =>{
+							this.setState({load: this.state.load + 1})
 								if(index + 1 == this.state.images.length){
 									this.setState({loadingVisible: false})
 									Alert.alert(
@@ -169,11 +217,13 @@ export default class Register extends Component{
 										'유기선박 정보가 등록되었습니다',
 									)	
 									this.props.navigation.popToTop()
+									this.props.navigation.navigate('DetailWastedShip',{id: response.data.data.id})
 								}
 							}).catch((err) => {
 								console.log('실패')
+							})
 						})
-					})
+					}
 				})
 			}
 		})
@@ -280,7 +330,7 @@ export default class Register extends Component{
 							/>
 					</base.Item>
 				</base.Form>
-				{/* <base.Form style={{flex: 1, height: 400, padding: 10}}>
+				<base.Form style={{flex: 1, height: 400, padding: 10}}>
 					<MapView
 						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
@@ -297,7 +347,7 @@ export default class Register extends Component{
 							longitude: parseFloat(this.state.longitude),
 						}}/>
 					</MapView>
-				</base.Form> */}
+				</base.Form>
 				<base.Form style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding: 10,}}>
 					<base.Form style={{flex: 7, flexDirection: 'column', width: '100%'}}>
 						<base.Item regular style={{
@@ -358,7 +408,7 @@ export default class Register extends Component{
 						</Picker>							
 					</base.Item>							
 				</base.Form>
-				{/* <base.Form style={{flex: 1, height: 400, padding: 10}}>
+				<base.Form style={{flex: 1, height: 400, padding: 10}}>
 					<MapView
 						ref = {(ref) => this.mapView=ref}
 						provider={PROVIDER_GOOGLE}
@@ -375,7 +425,7 @@ export default class Register extends Component{
 							longitude: parseFloat(this.state.longitude),
 						}}/>
 					</MapView>
-				</base.Form> */}
+				</base.Form>
 				<base.Form style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding: 10,}}>
 					<base.Form style={{flex: 7, flexDirection: 'column', width: '100%'}}>
 						<base.Item regular style={{
@@ -450,7 +500,7 @@ export default class Register extends Component{
 						</base.Form>
 					</base.Header>
 					<base.Content>
-				    	<Loading visible={this.state.loadingVisible}/>
+				    	<Loading visible={this.state.loadingVisible} needLoadingPercent={this.state.needLoadingPercent} load={this.state.load} sum={this.state.sum}/>
 						<base.Form style={{width:'100%', height: SIZE_IMG_HEIGHT, borderBottomWidth: 1, borderColor: '#DDD', flexDirection: 'column',}}>
 							<base.Form style={{flex: 1, height: SIZE_IMG_HEIGHT, width:'100%',}}>
 								<SliderBox

@@ -78,8 +78,9 @@ export default class UpdateCommonShip extends Component{
 					Alert.alert(
 						'선박확인체계 알림',
 						'선박 정보가 수정되었습니다',
-					)	
-					this.props.navigation.popToTop()
+					)
+					this.props.navigation.popToTop();
+					this.props.navigation.navigate('DetailCommonShip',{id: this.state.id});
 				}
 				else{
 					console.log('fail')
@@ -202,7 +203,7 @@ export default class UpdateCommonShip extends Component{
 									<base.Input
 										placeholder="정박된 항구나 포구를 입력하세요"
 										onChangeText={(port) => this.setState({port})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
 										placeholderStyle={{fontFamily:'Nanum'}}
 										/>
 								</base.Item>

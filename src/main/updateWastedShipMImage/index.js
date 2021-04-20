@@ -59,6 +59,7 @@ export default class UpdateWastedShipMImage extends Component{
 								index + '번째 사진으로 대표사진이 수정되었습니다',
 							)
 							this.props.navigation.popToTop();
+							this.props.navigation.navigate('DetailWastedShip',{id: this.state.id})
 						})
 					}
 					else{

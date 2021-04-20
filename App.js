@@ -14,7 +14,6 @@ import CheckShipOwnerConsent from './src/main/checkShipOwnerConsent';
 import Search from './src/main/search';
 import SearchResult from './src/main/searchResult';
 import SearchAI from './src/main/searchAI';
-import SearchMap from './src/main/searchMap';
 import ListCommonShip from './src/main/listCommonShip';
 import ListWastedShip from './src/main/listWastedShip';
 import DetailCommonShip from './src/main/detailCommonShip';
@@ -27,14 +26,19 @@ import DetailCommonShipGallery from './src/main/detailCommonShipGallery';
 import DetailWastedShipGallery from './src/main/detailWastedShipGallery';
 import RegisterCommonShipImages from './src/main/registerCommonShipImages';
 import RegisterWastedShipImages from './src/main/registerWastedShipImages';
+
+import MapSelection from './src/main/mapSelection';
+import MapCommonShip from './src/main/mapCommonShip';
+import MapWastedShip from './src/main/mapWastedShip';
+
 import Notice from './src/main/notice';
 import NoticeList from './src/main/noticeList';
-
 import QNAList from './src/main/qna/qnaList';
 import Question from './src/main/qna/question';
 import Answer from './src/main/qna/answer';
 
 import ImgViewer from './src/main/imgViewer';
+import ShipImgViewer from './src/main/shipImgViewer';
 
 import MyAccount from './src/main/myAccount';
 const homeStackNav = createStackNavigator(
@@ -43,7 +47,6 @@ const homeStackNav = createStackNavigator(
     Search: {screen: Search, navigationOptions: {headerShown: false}},
 	SearchResult: {screen: SearchResult, navigationOptions: {headerShown: false}},
     SearchAI: {screen: SearchAI, navigationOptions: { headerShown: false }},
-    SearchMap: {screen: SearchMap, navigationOptions: { headerShown: false }},
     Register: {screen: Register, navigationOptions: { headerShown: false }},
     ListCommonShip: {screen: ListCommonShip, navigationOptions: { headerShown: false }},
     ListWastedShip: {screen: ListWastedShip, navigationOptions: { headerShown: false }},
@@ -58,6 +61,10 @@ const homeStackNav = createStackNavigator(
 	RegisterCommonShipImages: {screen: RegisterCommonShipImages, navigationOptions: { headerShown: false }},
 	RegisterWastedShipImages: {screen: RegisterWastedShipImages, navigationOptions: { headerShown: false }},
 
+	MapSelection: {screen: MapSelection, navigationOptions: { headerShown: false }},
+	MapCommonShip: {screen: MapCommonShip, navigationOptions: { headerShown: false }},
+	MapWastedShip: {screen: MapWastedShip, navigationOptions: { headerShown: false }},
+	
 	RegisterShipOwner: {screen: RegisterShipOwner, navigationOptions: { headerShown: false }},
 	CheckShipOwnerConsent: {screen: CheckShipOwnerConsent, navigationOptions: { headerShown: false }},
 	
@@ -69,6 +76,7 @@ const homeStackNav = createStackNavigator(
 	Answer: {screen: Answer, navigationOptions: { headerShown: false }},
 
 	ImgViewer: {screen: ImgViewer, navigationOptions: { headerShown: false }},
+	ShipImgViewer: {screen: ShipImgViewer, navigationOptions: { headerShown: false }},
 	
 	MyAccount: {screen: MyAccount, navigationOptions: { headerShown: false }},
   },{

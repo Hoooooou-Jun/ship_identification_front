@@ -56,10 +56,9 @@ export default class RegisterShipOwner extends Component{
 			month: currentDay.getMonth(),
 			day: currentDay.getDate(),
 
-			name: this.props.navigation.getParam('name'),
 			ship_id: this.props.navigation.getParam('id'),
+			name: this.props.navigation.getParam('name'),
 		})
-		console.log(this.state.name)
 	}
 
 	async pickPhoto() {
@@ -207,7 +206,7 @@ export default class RegisterShipOwner extends Component{
 											options: BUTTONS,
 											cancelButtonIndex: CANCEL_INDEX,
 											destructiveButtonIndex: DESTRUCTIVE_INDEX,
-											title: "선박 사진 등록"
+											title: "선주 사진 등록"
 											},
 											buttonIndex => {this.setState({ clicked: buttonIndex });}
 									)}>
@@ -257,6 +256,9 @@ export default class RegisterShipOwner extends Component{
 					</Modal>
 					<base.Form style={{marginTop: 20}}>
 						<base.Text style={{margin: 10, fontWeight: 'bold'}}>서명란</base.Text>
+							<base.Text style={{flex: 1, margin: 10, fontSize: SIZE_FONT, color: 'red'}}>
+								* 서명 시, 시계방향으로 90도 돌려 서명하세요
+							</base.Text>
 						<base.Form style={{flex: 1, height: 200, justifyContent: 'center', alignItems: 'center', padding: 10, }}>
 								{this.state.signature ? (
 								<base.Form style={{transform: [{ rotate: '90deg' }] }}>
@@ -270,7 +272,6 @@ export default class RegisterShipOwner extends Component{
 							) : <base.Form style={{ width: 300, height: 200, backgroundColor: 'gray',}}/>}
 						</base.Form>
 					</base.Form>
-
 					<base.Button block onPress={()=>this.setState({visible: true})} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
 						<base.Text style={{color: 'black'}}>서명하기</base.Text>
 					</base.Button>

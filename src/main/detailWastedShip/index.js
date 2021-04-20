@@ -128,9 +128,10 @@ export default class DetailWastedShip extends Component{
 									this.setState({loadingVisible: false})
 									Alert.alert(
 										'선박확인체계 알림',
-										this.state.id + ' 유기선박 정보가 삭제되었습니다',
+										this.state.id + '번 유기선박 정보가 삭제되었습니다',
 									)
 									this.props.navigation.popToTop();
+									this.props.navigation.navigate('ListWastedShip');
 								}
 							})
 						}
@@ -193,7 +194,7 @@ export default class DetailWastedShip extends Component{
 					data={this.state.data}
 					horizontal={true}
 					renderItem={({item, index}) => <ShowPlusDetail ship={item}
-						onPress={()=>this.props.navigation.navigate('ImgViewer',{address: requestDomain + item.img, flag: 'Wasted', id: item.id, index: index + 1})}/>}
+						onPress={()=>this.props.navigation.navigate('ShipImgViewer',{address: requestDomain + item.img, id: this.state.id, flag: 'Wasted', img_id: item.id, index: index + 1})}/>}
 					ListFooterComponent={
 						<TouchableHighlight style={{flex: 1,}} onPress={()=>this.props.navigation.navigate('RegisterWastedShipImages',{id: this.state.id})}>
 							<base.Card style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, alignItems: 'center', justifyContent: 'center'}}>
@@ -302,7 +303,7 @@ export default class DetailWastedShip extends Component{
 									<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.longitude}</base.Text>
 								</base.Form>
 							</base.Form>
-							{/* <base.Form style={{flex: 1, height: 400,}}>
+							<base.Form style={{flex: 1, height: 400,}}>
 								<MapView
 									provider={PROVIDER_GOOGLE}
 									style={{flex: 1, marginTop: 10, width: '100%', height: '100%'}}
@@ -318,8 +319,7 @@ export default class DetailWastedShip extends Component{
 										longitude: parseFloat(this.state.longitude),
 									}}/>
 								</MapView>
-							</base.Form> */}
-
+							</base.Form>
 						</base.Tab>
 					</base.Tabs>
 				</base.Content>				
