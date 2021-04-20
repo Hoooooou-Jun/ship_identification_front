@@ -31,6 +31,7 @@ export default class Question extends Component{
 						'입력하신 문의사항이 전송되었습니다',
 					)
 					this.props.navigation.popToTop();
+					this.props.navigation.navigate('QNAList',)
 				}
 				else{
 					console.log('Question Register Fail')

@@ -63,8 +63,8 @@ export default class DetailCommonShipGallery extends Component{
 							data={this.state.data}
 							numColumns={3}
 							renderItem={({item, index}) => <ShowPlusDetail ship={item} idx={index + 1}
-								onPress={()=>this.props.navigation.navigate('ImgViewer',
-								{address: requestDomain + item.img, flag: 'Normal', id: item.id, index: index + 1, main_img_id: this.state.main_img_id})}/>}
+								onPress={()=>this.props.navigation.navigate('ShipImgViewer',
+								{address: requestDomain + item.img, flag: 'Normal', id: this.state.id, img_id: item.id, index: index + 1, main_img_id: this.state.main_img_id})}/>}
 							ListEmptyComponent={
 								<base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10,}}>
 									<base.Text style={{fontSize: SIZE_SUBTITLE}}>추가사진이 없습니다</base.Text>

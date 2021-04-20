@@ -18,11 +18,18 @@ import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 const SIZE_LOGO = Dimensions.get('screen').height * 0.08
 const SIZE_TITLE = Dimensions.get('screen').height * 0.0225
 const SIZE_FONT = Dimensions.get('screen').width * 0.035
-const SIZE_HEADER = Dimensions.get('screen').height * 0.02
 const SIZE_FOOTER = Dimensions.get('screen').height * 0.0175
 const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 const SIZE_LAYOUT = Dimensions.get('screen').width * 0.2
+
+var BUTTONS = [
+	{ text: "일반 선박", icon: "boat", iconColor: "grey" },
+	{ text: "유기 선박", icon: "boat", iconColor: "grey" },
+	{ text: "취소", icon: "close", iconColor: "grey" }
+];
+var DESTRUCTIVE_INDEX = 2;
+var CANCEL_INDEX = 2;
 
 export default class Home extends Component{
 	constructor(props) {
@@ -55,9 +62,6 @@ export default class Home extends Component{
 		this.timer = setInterval(() => {
 			this.movenotice();
 		}, 3000);
-	}
-	componentWillUnmount() {
-		clearInterval(this.timer);
 	}
 	getUserData(){
 		this.setState({loadingVisible_userData: true})
@@ -129,8 +133,7 @@ export default class Home extends Component{
 		return(
             <base.Container>
                 <base.Content contentContainerStyle={{alignItems: 'center', justifyContent:'center', flex: 1,}}>
-					<Loading visible={this.state.loadingVisible_userData || this.state.loadingVisible_noticeData}/>
-					
+					<Loading visible={this.state.loadingVisible_userData || this.state.loadingVisible_noticeData} initialRoute={false}/>
 					<base.Form style={{flex: 6, width: '100%', flexDirection: 'column', marginBottom: 10}}>
 						<base.Form style={{flex: 1, backgroundColor: '#EDF5FE', borderRadius: 20, elevation: 6}}>
 							<base.Form style={{flex: 1, alignItems: 'center', flexDirection: 'row', backgroundColor: '#EDF5FE', elevation: 6, width: '100%',
@@ -167,7 +170,7 @@ export default class Home extends Component{
 									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>질의응답</base.Text>
 								</base.CardItem>
 								<base.CardItem button style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center',backgroundColor:'rgba(0,0,0,0)'}} onPress={this.executeLogout}>
-									<AntDesign name="logout" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
+									<AntDesign name="poweroff" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
 									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>로그아웃</base.Text>
 								</base.CardItem>
 							</base.Form>
@@ -219,7 +222,7 @@ export default class Home extends Component{
 									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>AI 검색
 									</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('SearchMap')}>
+								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('MapSelection')}>
 									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
 										<Feather name="map" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
@@ -269,16 +272,11 @@ export default class Home extends Component{
 									</base.Form>
 									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>수치조류도</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>
-										Alert.alert(
-											'선박확인체계 알림',
-											'개발 중인 기능입니다',
-										)	
-									}>
+								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>Linking.openURL('https://www.marinetraffic.com/en/ais/home/centerx:126.1/centery:36.5/zoom:8')}>
 									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
 										<base.Icon name='ios-boat-outline' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>조업알리미</base.Text>
+									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>선박위치정보</base.Text>
 								</base.CardItem>
 							</base.Form>
 						</base.Form>
