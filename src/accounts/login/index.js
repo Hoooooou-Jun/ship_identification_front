@@ -150,7 +150,7 @@ export default class Login extends Component{
 						</base.Form>
 						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
 							<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
-							<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification Beta TEST {this.state.version}</base.Text>
+							<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification {this.state.version}</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>

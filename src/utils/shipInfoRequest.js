@@ -294,3 +294,14 @@ export const registerShipOwner = (token, formdata) =>
             "Content-Type": "multipart/form-data",
             "Accept": "application/json",
 }})
+
+export const requestTrainImage = (token, ship_id, img_data) => 
+    request.post('/Ships/image/train/', {
+        ship_id: ship_id,
+        img_data: img_data
+    },{
+        headers: {
+            "AUTHORIZATION": "jwt " + token,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+}})

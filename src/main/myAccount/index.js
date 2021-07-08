@@ -63,7 +63,7 @@ export default class MyAccount extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content padder>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center', margin: 10}}>
 						<base.Form style={{backgroundColor:'white', borderRadius: SIZE_LOGO / 2, justifyContent: 'center', alignItems: 'center', width: SIZE_LOGO, height: SIZE_LOGO, elevation: 6}}>
 							<Image source={require('../../../assets/img/logo_Army.jpg')} style={{width: SIZE_LOGO / 3 * 2, height: SIZE_LOGO / 3 * 2}}/>

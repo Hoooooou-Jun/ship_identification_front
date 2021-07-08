@@ -6,13 +6,16 @@ import ImageViewer from 'react-native-image-zoom-viewer';
 import { getToken } from '../../utils/getToken';
 import { deleteCommonShipImage, deleteWastedShipImage, updateCommonShipMImage, updateWastedShipMImage } from '../../utils/shipInfoRequest';
 import { requestPermission } from '../../utils/userInfoRequest';
-const renderFunction = ({cancel, saveToLocal}) => {
-    console.log(cancel) 
-}
+
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
+import * as Permissions from 'expo-permissions';
+
 export default class ShipImgViewer extends Component{
 	constructor(props) {
 		super(props);
 		this.state = {
+            address: '',
             id: '',
             main_img_id: '',
             img_id: '',
@@ -21,6 +24,8 @@ export default class ShipImgViewer extends Component{
 		};
         this.deleteShipImage = this.deleteShipImage.bind(this);
         this.updateShipMImage = this.updateShipMImage.bind(this);
+
+        this.downloadImage = this.downloadImage.bind(this);
 	}
     componentDidMount(){
         this.setState({
@@ -29,6 +34,7 @@ export default class ShipImgViewer extends Component{
             index: this.props.navigation.getParam('index'),
             flag: this.props.navigation.getParam('flag'),
             main_img_id: this.props.navigation.getParam('main_img_id'),
+            address: this.props.navigation.getParam('address'),
         })
     }
     deleteShipImage(){ 
@@ -138,34 +144,56 @@ export default class ShipImgViewer extends Component{
 		);
 
     }
+    async downloadImage(){
+        // const fileUri: string = `${FileSystem.documentDirectory}${filename}`;
+        const downloadedFile: FileSystem.FileSystemDownloadResult = await FileSystem.downloadAsync(this.state.address, FileSystem.documentDirectory + 'ship_img.jpg');
+        
+        if (downloadedFile.status != 200) {
+          handleError();
+        }
+        const perm = await Permissions.askAsync(Permissions.MEDIA_LIBRARY);
+        if (perm.status != 'granted') {
+            return;
+        }
+
+        try {
+            const asset = await MediaLibrary.createAssetAsync(downloadedFile.uri);
+            const album = await MediaLibrary.getAlbumAsync('Download');
+        if (album == null) {
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+        } else {
+            await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+        }
+        } catch (e) {
+            handleError(e);
+        }
+    }
 	render(){
 		return(
             <base.Container>
                 <base.Content padder>
-                    <Modal visible={true} transparent={true} >
-                    <base.Form style={{flexDirection: 'column', height: 100}}> 
+                    <Modal visible={true} transparent={true} onRequestClose={()=>this.props.navigation.goBack()}>
+                        <base.Form style={{flexDirection: 'row', height: 50}}>         
                             <base.Button style={{flex: 1, width: '100%', justifyContent: 'center', backgroundColor: 'white', height: 50, elevation: 6,}}
                                 onPress={this.updateShipMImage}>
                                 <base.Text style={{color: 'black'}}>대표사진 설정하기</base.Text>
+                            </base.Button>                 
+                            <base.Button style={{flex: 1, width: '100%', justifyContent: 'center', backgroundColor: 'white', height: 50,}}
+                                onPress={()=>this.deleteShipImage()}>
+                                <base.Text style={{color: 'black'}}>삭제하기</base.Text>
                             </base.Button>
-                            <base.Form style={{flexDirection: 'row'}}>                            
-                                <base.Button style={{flex: 1, width: '100%', justifyContent: 'center', backgroundColor: 'white', height: 50,}}
-                                    onPress={()=>this.deleteShipImage()}>
-                                    <base.Text style={{color: 'black'}}>삭제하기</base.Text>
-                                </base.Button>
-                                <base.Button style={{flex: 1, width: '100%', justifyContent: 'center', backgroundColor: 'white', height: 50,}}
-                                    onPress={()=>this.props.navigation.goBack()}>
-                                    <base.Text style={{color: 'black'}}>뒤로가기</base.Text>
-                                </base.Button>
-                            </base.Form>
+                        </base.Form>
+                        <base.Form style={{flexDirection: 'row', height: 50}}>
+                            <base.Button style={{flex: 1, width: '100%', justifyContent: 'center', backgroundColor: 'white', height: 50,}}
+                                onPress={()=>this.downloadImage()}>
+                                <base.Text style={{color: 'black'}}>저장하기</base.Text>
+                            </base.Button>
                         </base.Form>
                         <ImageViewer imageUrls={[{
-                            url: this.props.navigation.getParam('address'),
+                            url: this.state.address,
                             props: { }
                         }]}
-                        saveToLocalByLongPress={true}
-                        menus={renderFunction}
-                        />
+                    />
                     </Modal>
                 </base.Content>
             <StatusBar hidden/>

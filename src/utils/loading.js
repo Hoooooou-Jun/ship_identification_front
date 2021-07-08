@@ -15,7 +15,6 @@ export default class Loading extends Component{
             load: 0,
             sum: 100,
 
-            initialRoute: false,
             needLoadingPercent: false,
 		}
 	}
@@ -27,14 +26,14 @@ export default class Loading extends Component{
 	render() {
         let backButton
         let loadingPercent
-        if(this.props.needLoadingPercent){ loadingPercent =
+        if(this.props.needLoadingPercent){ loadingPercent = 
             <base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>{Math.floor(this.props.load/this.props.sum*100)}%</base.Text>
         }
-        // if(!this.props.initialRoute && this.state.sec > 10){ backButton =
-        //     <base.Button block style={{width: '80%', justifyContent: 'center', alignSelf: 'center', borderRadius: 10, backgroundColor: 'white'}} onPress={this.this.props.navigation.popToTop()}>
-        //         <base.Text style={{color: 'black', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>메인화면으로</base.Text>
-        //     </base.Button>
-        // }
+        if(!this.props.initialRoute && this.state.sec > 10){ backButton =
+            <base.Button block style={{width: '80%', justifyContent: 'center', alignSelf: 'center', borderRadius: 10, backgroundColor: 'white'}} onPress={this.props.onPress}>
+                <base.Text style={{color: 'black', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>뒤로가기</base.Text>
+            </base.Button>
+        }
 		return(
 			<Modal transparent={true} visible={this.props.visible}>
                 <base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center',}}>

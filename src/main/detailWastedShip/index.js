@@ -217,7 +217,7 @@ export default class DetailWastedShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
-					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{width: '100%' ,height: SIZE_IMG,}}>
 						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,

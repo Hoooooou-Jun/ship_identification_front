@@ -29,7 +29,7 @@ export default class ShowShip extends Component{
 						</base.Form>
 						<base.Form style={{position: 'absolute', top: 10, left: 10, elevation: 6, backgroundColor: 'rgba(255, 255, 255, 1)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
-							<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_PERCENT, color: 'red',}}>{this.props.percent} 유사</base.Text>
+							<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_PERCENT, color: 'red',}}>{this.props.percent}</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>
@@ -64,7 +64,7 @@ export default class ShowShip extends Component{
 						</base.Form>
 						<base.Form style={{position: 'absolute', top: 10, left: 10, elevation: 6, backgroundColor: 'rgba(255, 255, 255, 1)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
-							<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_PERCENT, color: 'red',}}>{this.props.percent} 유사</base.Text>
+							<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_PERCENT, color: 'red',}}>{this.props.percent}</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{width: '100%', padding: 10, marginLeft: 10}}>

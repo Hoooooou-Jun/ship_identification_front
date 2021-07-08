@@ -50,7 +50,7 @@ export default class DetailWastedShipGallery extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{width: '100%', justifyContent: 'center'}}>
 						<base.Button block onPress={()=>this.props.navigation.navigate('RegisterWastedShipImages',{id: this.state.id})}
 						style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>

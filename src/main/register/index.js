@@ -500,7 +500,7 @@ export default class Register extends Component{
 						</base.Form>
 					</base.Header>
 					<base.Content>
-				    	<Loading visible={this.state.loadingVisible} needLoadingPercent={this.state.needLoadingPercent} load={this.state.load} sum={this.state.sum}/>
+				    	<Loading visible={this.state.loadingVisible} needLoadingPercent={this.state.needLoadingPercent} load={this.state.load} sum={this.state.sum} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 						<base.Form style={{width:'100%', height: SIZE_IMG_HEIGHT, borderBottomWidth: 1, borderColor: '#DDD', flexDirection: 'column',}}>
 							<base.Form style={{flex: 1, height: SIZE_IMG_HEIGHT, width:'100%',}}>
 								<SliderBox

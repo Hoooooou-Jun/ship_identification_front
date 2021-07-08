@@ -5,6 +5,7 @@ import * as base from 'native-base';
 import ViewShot from 'react-native-view-shot';
 import { getToken } from '../../utils/getToken';
 import { registerShipOwner } from '../../utils/shipInfoRequest';
+import { Asset } from 'expo-asset';
 import Loading from '../../utils/loading';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.02
@@ -65,8 +66,13 @@ export default class CheckShipOwnerConsent extends Component{
 				formdata.append("phone", this.state.phone);
 				formdata.append("address", this.state.address);
 				formdata.append("privacy_agree", this.state.privacy_agree);
-				formdata.append('own_img', {name:'ship.jpg', type:'image/jpeg', uri: this.state.own_img})
-				formdata.append('agreement_paper', {name:'ship.jpg', type:'image/jpeg', uri: uri})
+				const image = Asset.fromModule(require('../../../assets/img/empty.jpg'));
+				if (this.state.own_img !== "") {
+					formdata.append('own_img', {name:'ship.jpg', type:'image/jpeg', uri: this.state.own_img});
+				} else {
+					formdata.append('own_img', {name:'ship.jpg', type:'image/jpeg', uri: image.uri});
+				}
+				formdata.append('agreement_paper', {name:'ship.jpg', type:'image/jpeg', uri: uri});
 				registerShipOwner(token, formdata).then((response)=>{
 				this.setState({loadingVisible: false})
 					Alert.alert(
@@ -74,7 +80,7 @@ export default class CheckShipOwnerConsent extends Component{
 						'선주정보가 등록되었습니다',
 					)
 					this.props.navigation.popToTop()
-					this.props.navigation.navigate('DetailCommonShip',{id: ship_id})
+					this.props.navigation.navigate('DetailCommonShip',{id: this.state.ship_id})
 				}).catch((err) => {
 					console.log(err)
 					console.log('실패')
@@ -95,7 +101,7 @@ export default class CheckShipOwnerConsent extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content padder>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<ViewShot ref = {(ref) => this.captureRef=ref} options={{ format: 'jpg', quality: 0.9 }} style={{backgroundColor: 'white'}}>
 						<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'black', margin: 10, fontSize: SIZE_TITLE, fontWeight: 'bold'}}>개인정보 수집ㆍ활용 동의서</base.Text>
