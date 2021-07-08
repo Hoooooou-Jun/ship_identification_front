@@ -23,14 +23,6 @@ const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 const SIZE_LAYOUT = Dimensions.get('screen').width * 0.2
 
-var BUTTONS = [
-	{ text: "일반 선박", icon: "boat", iconColor: "grey" },
-	{ text: "유기 선박", icon: "boat", iconColor: "grey" },
-	{ text: "취소", icon: "close", iconColor: "grey" }
-];
-var DESTRUCTIVE_INDEX = 2;
-var CANCEL_INDEX = 2;
-
 export default class Home extends Component{
 	constructor(props) {
 		super(props);
@@ -105,16 +97,14 @@ export default class Home extends Component{
 	executeLogout() {
 		this.setState({loadingVisible: true})
         getToken().then((token)=>{
-            requestLogout(token).then( async (response) => {
-                if(response.status == 200){
-					this.setState({loadingVisible: false})
-                    await AsyncStorage.removeItem('token')
-					Alert.alert(
-						'선박확인체계 알림',
-						'정상적으로 로그아웃 되었습니다',
-					)
-                    this.props.navigation.navigate('Login')
-                }
+            requestLogout(token).then((response) => {
+				this.setState({loadingVisible: false})
+					AsyncStorage.removeItem('token')
+				Alert.alert(
+					'선박확인체계 알림',
+					'정상적으로 로그아웃 되었습니다',
+				)
+				this.props.navigation.navigate('Login')
             })
         })
     }
@@ -281,7 +271,7 @@ export default class Home extends Component{
 							</base.Form>
 						</base.Form>
 					</base.Form>
-					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER}}>선박확인체계 Beta TEST {AppVersion}</base.Text>
+					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER}}>선박확인체계 {AppVersion}</base.Text>
                 </base.Content>
 			<StatusBar hidden/>
             </base.Container>

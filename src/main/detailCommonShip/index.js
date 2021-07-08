@@ -35,6 +35,7 @@ export default class DetailCommonShip extends Component{
 			img_cnt: '',
 			latitude: '',
 			longitude: '',
+			is_train_img: false,
 			
 			privacyAgreement: false,
 			own_img: '', own_name: '', phone: '', address: '', agreement_paper: '',
@@ -178,6 +179,7 @@ export default class DetailCommonShip extends Component{
 					img_cnt: response.data.data.img_cnt,
 					latitude: response.data.data.lat,
 					longitude: response.data.data.lon,
+					is_train_img: response.data.data.train_img,
 
 					loadingVisible_shipDetail: false,
 				})
@@ -275,11 +277,20 @@ export default class DetailCommonShip extends Component{
 				<base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습대기</base.Text>
 			</base.Button>
 		}
+		let request_train_label = <base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습요청</base.Text>
+		if (this.state.is_train_img) {
+			request_train_label = <base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 요청완료</base.Text>
+		}
+		let Train_request = 
+			<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 60, backgroundColor: 'white', height: 40, backgroundColor: 'blue', borderRadius: 10, elevation: 6}} onPress={()=>this.props.navigation.navigate("TrainGallery",{id: this.state.id})}>
+				{request_train_label}
+			</base.Button>
+
 		return(
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
-						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
+						<base.Button transparent onPress={()=>this.props.navigation.pop()}>
 							<base.Icon name='arrow-back' style={{color: 'black', fontSize: 25}}/>
 						</base.Button>
 					</base.Left>
@@ -287,10 +298,11 @@ export default class DetailCommonShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content>
-					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{width: '100%', height: SIZE_IMG,}}>
 						<Image resizeMode='cover' source={{uri: requestDomain + this.state.main_img,}} style={{width: '100%', height: '100%',}}/>
 						{Train_Btn}
+						{Train_request}
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
 							<base.Text style={{color: 'white'}}>등록사진 {this.state.img_cnt} 장</base.Text>

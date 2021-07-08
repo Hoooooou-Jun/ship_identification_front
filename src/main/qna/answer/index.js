@@ -84,7 +84,7 @@ export default class Answer extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content padder>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form>
                         <base.Card>
                             <base.CardItem header bordered>

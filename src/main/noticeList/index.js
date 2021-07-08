@@ -50,7 +50,7 @@ export default class NoticeList extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content>
-				    <Loading visible={this.state.loadingVisible}/>
+				    <Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{padding: 10,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>공지사항</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>신규 및 업데이트 소식을 알려드립니다!</base.Text>

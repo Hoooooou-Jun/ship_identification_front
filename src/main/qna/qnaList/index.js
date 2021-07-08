@@ -52,7 +52,7 @@ export default class QNAList extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{padding: 10,}}>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>질의응답</base.Text>
 						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey'}}>궁금하신 점이 있다면 문의해주세요!</base.Text>

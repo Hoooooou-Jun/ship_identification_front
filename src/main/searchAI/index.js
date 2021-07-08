@@ -88,7 +88,7 @@ export default class SearchAI extends Component{
 				loadingVisible: true,
 			})
 			getToken().then((token) =>{
-				const formdata = new FormData()	
+				const formdata = new FormData()
 				formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: this.state.img})
 				requestAIResult(token, formdata).then((response) => {
 					this.setState({
@@ -216,7 +216,7 @@ export default class SearchAI extends Component{
 						</base.Right>
 					</base.Header>
 					<base.Content contentContainerStyle={{flex: 1,}}>
-						<Loading visible={this.state.loadingVisible}/>
+						<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 						<base.Form style={{padding: 10,}}>
 							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>AI 검색</base.Text>
 							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, color: 'grey',}}>인공지능을 이용하여 촬영한 선박을 검색합니다</base.Text>

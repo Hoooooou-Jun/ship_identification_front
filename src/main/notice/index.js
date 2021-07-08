@@ -55,7 +55,7 @@ export default class Notice extends Component{
                     </base.Right>
                 </base.Header>
                 <base.Content padder>
-				    <Loading visible={this.state.loadingVisible}/>
+				    <Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
                     <base.Form style={{flex: 1,}}>
                         <base.Card style={{height: '100%'}}>
                             <base.CardItem header bordered>

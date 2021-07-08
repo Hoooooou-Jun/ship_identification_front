@@ -269,7 +269,7 @@ export default class ListWastedShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<FlatList
 						ref = {(ref) => this.flatList=ref}
 						sytle={{flex:1}}

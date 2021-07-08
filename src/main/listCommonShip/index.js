@@ -48,6 +48,8 @@ export default class ListCommonShip extends Component{
 			sort: '',
 			clicked: null,
 			clicked_unit: null,
+
+			test: false,
 		};
 		this.showCommonShipList = this.showCommonShipList(this);
 
@@ -262,7 +264,7 @@ export default class ListCommonShip extends Component{
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
-					<Loading visible={this.state.loadingVisible}/>
+					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<FlatList
 						ref = {(ref) => this.flatList=ref}
 						sytle={{flex:1}}
@@ -270,7 +272,7 @@ export default class ListCommonShip extends Component{
 						renderItem={({item}) => <ShowShip ship={item} onPress={()=>this.props.navigation.navigate('DetailCommonShip',{id: item.id})}/>}
 						ListEmptyComponent={
 							<base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10,}}>
-								<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 조건을 만족하는 유기선박이 없습니다</base.Text>
+								<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 조건을 만족하는 일반선박이 없습니다</base.Text>
 							</base.Form>
 						}
 					/>

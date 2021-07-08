@@ -18,6 +18,8 @@ export default class MapCommonShip extends Component{
 			data: [],
             dataAll: [],
 
+            loadingVisible_test: false,
+
 			loadingVisible_data: false,
 			loadingVisible_dataAll: false,
 		};
@@ -101,7 +103,7 @@ export default class MapCommonShip extends Component{
                         </base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
-					<Loading visible={this.state.loadingVisible_data || this.state.loadingVisible_dataAll}/>
+					<Loading visible={this.state.loadingVisible_data || this.state.loadingVisible_dataAll} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
                     <base.Form style={{width: '100%', flexDirection: 'row', borderBottomWidth: 1, borderColor: 'grey'}}>
 						<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
 						onPress={this.moveCurrentLocation}>
