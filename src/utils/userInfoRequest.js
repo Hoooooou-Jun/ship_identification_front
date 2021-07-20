@@ -48,3 +48,12 @@ export const requestPermission = (token) =>
 		'Content-Type': 'application/json',
 	}
 })
+
+export const requestLicense = (token) =>
+	request.get('/Accounts/License/',{
+		headers: {
+		'AUTHORIZATION': 'jwt ' + token,
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+	}
+})

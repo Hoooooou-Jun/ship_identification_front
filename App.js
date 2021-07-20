@@ -27,6 +27,7 @@ import DetailWastedShipGallery from './src/main/detailWastedShipGallery';
 import RegisterCommonShipImages from './src/main/registerCommonShipImages';
 import RegisterWastedShipImages from './src/main/registerWastedShipImages';
 import TrainCommonShipGallery from './src/main/trainRequest';
+import License from './src/main/license';
 
 import MapSelection from './src/main/mapSelection';
 import MapCommonShip from './src/main/mapCommonShip';
@@ -62,6 +63,7 @@ const homeStackNav = createStackNavigator(
 	RegisterCommonShipImages: {screen: RegisterCommonShipImages, navigationOptions: { headerShown: false }},
 	RegisterWastedShipImages: {screen: RegisterWastedShipImages, navigationOptions: { headerShown: false }},
 	TrainGallery: {screen: TrainCommonShipGallery, navigationOptions: { headerShown: false}},
+	License: {screen: License, navigationOptions: { headerShown: false }},
 
 	MapSelection: {screen: MapSelection, navigationOptions: { headerShown: false }},
 	MapCommonShip: {screen: MapCommonShip, navigationOptions: { headerShown: false }},
