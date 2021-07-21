@@ -50,7 +50,7 @@ export const requestPermission = (token) =>
 })
 
 export const requestLicense = (token) =>
-	request.get('/Accounts/License/',{
+	request.get('/Accounts/license/',{
 		headers: {
 		'AUTHORIZATION': 'jwt ' + token,
 		'Accept': 'application/json',
