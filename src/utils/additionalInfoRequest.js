@@ -53,3 +53,12 @@ export const requestAnswer = (token, index) =>
 export const requestVersion = () => 
 	request.get('/Accounts/status/',{
 })
+
+export const requestLicense = (token) =>
+	request.get('/Accounts/license/',{
+		headers: {
+		'AUTHORIZATION': 'jwt ' + token,
+		'Accept': 'application/json',
+		'Content-Type': 'application/json',
+	}
+})

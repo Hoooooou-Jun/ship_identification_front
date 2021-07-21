@@ -20,8 +20,9 @@ const styles = StyleSheet.create({
       marginBottom: SIZE_MARGIN
     },
     logoMain: {
-        fontSize: SIZE_TITLE,
-        fontFamily:'Nanum_Title'
+      marginTop: 5,
+      fontSize: SIZE_TITLE,
+      fontFamily:'Nanum_Title'
     },
     logoSub: {
       fontSize: SIZE_SUBTITLE,
@@ -49,17 +50,18 @@ const styles = StyleSheet.create({
       marginBottom: SIZE_ITEM
     },
     itemUrl: {
-      fontSize: 15,
+      fontSize: 13,
       color: 'skyblue',
       textDecorationLine: 'underline',
       fontFamily:'Nanum'
     },
     itemName: {
-        fontSize: 25,
+        fontSize: 20,
         color: '#3f3f3f',
         fontFamily:'Nanum'
     },
     itemLicense: {
+        fontSize: 16,
         color: '#3f3f3f',
         fontFamily:'Nanum'
     }
