@@ -3,13 +3,14 @@ import { StyleSheet, Text, View, Dimensions, ScrollView, Linking, Button } from 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getToken } from '../../utils/getToken';
 import { requestLicense } from '../../utils/userInfoRequest';
+import Loading from '../../utils/loading'
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.1
 const SIZE_TITLE = Dimensions.get('screen').width * 0.11
 const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_BASE = Dimensions.get('screen').width * 0.06
 const SIZE_MARGIN = Dimensions.get('screen').width * 0.03
-const SIZE_ITEM = Dimensions.get('screen').width * 0.03
+const SIZE_ITEM = Dimensions.get('screen').width * 0.05
 
 // 임시 데이터 지정. 백엔드에서 프론트엔드, 백엔드 라이브러리 리스트 뽑아줄 예정.
 const data = [
@@ -43,7 +44,8 @@ class License extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            test: ''
+            test: '',
+            loadingVisible: true,
         }
     }
     
@@ -52,7 +54,8 @@ class License extends Component {
             requestLicense(token).then((response) => {
                 if (response.status == 200) {
                     this.setState({
-                        test: "hello"
+                        test: "hello",
+                        loadingVisible: false,
                     })
                 }
                 else {
@@ -68,6 +71,7 @@ class License extends Component {
     return (
       <ScrollView style={{backgroundColor: 'white', flex: 1}}>
         <View style={styles.container}>
+        <Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
           <View style={styles.logo}>
             <View style={styles.iconContainer}>
               <MaterialCommunityIcons name="sail-boat" size={SIZE_ICON} color={'white'} />
