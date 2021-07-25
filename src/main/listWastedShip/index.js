@@ -48,6 +48,8 @@ export default class ListWastedShip extends Component{
 			sort: '',
 			clicked: null,
 			clicked_unit: null,
+
+			refreshing: false
 		};
 		this.showWastedShipList = this.showWastedShipList(this);
 
@@ -56,6 +58,8 @@ export default class ListWastedShip extends Component{
 		this.nextPage = this.nextPage.bind(this);
 		this.firstPage = this.firstPage.bind(this);
 		this.lastPage = this.lastPage.bind(this);
+
+		this.setState({ refreshing: false });
 	}
 	firstPage(){
 		if(this.state.index == 1){
@@ -137,6 +141,11 @@ export default class ListWastedShip extends Component{
         })
 		this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 	}
+
+	handleRefresh = () => {
+		this.setState({refreshing: false}, () => {this.updateWastedShipList(this.state.index)})
+	}
+
 	render(){
 		if(this.state.clicked_unit != null){
 			if(this.state.clicked_unit == 8){
@@ -280,6 +289,8 @@ export default class ListWastedShip extends Component{
 								<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 조건을 만족하는 유기선박이 없습니다</base.Text>
 							</base.Form>
 						}
+						refreshing={this.state.refreshing}
+						onRefresh={this.handleRefresh}
 					/>
 					{pageBarFooter}
 				</base.Content>				

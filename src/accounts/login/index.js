@@ -60,7 +60,6 @@ export default class Login extends Component{
 			}
 		})
 		this.setState({device_id: Constants.deviceId})
-		
 	}
 	async loadFont(){
 		await Font.loadAsync({
@@ -198,7 +197,7 @@ export default class Login extends Component{
 				</base.Form>
             )
         }
-		else{
+		else {
 			return(
 				<base.Container>
 					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -216,7 +215,7 @@ export default class Login extends Component{
 									</base.Form>
 									<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
 										<base.Text style={styles.title}>선박확인체계</base.Text>
-										<base.Text style={styles.sub}>Ship_Identification Beta TEST {this.state.version}</base.Text>
+										<base.Text style={styles.sub}>Ship_Identification {this.state.version}</base.Text>
 									</base.Form>
 								</base.Form>
 							</base.Form>
