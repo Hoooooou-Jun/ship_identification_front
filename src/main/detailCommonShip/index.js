@@ -134,8 +134,7 @@ export default class DetailCommonShip extends Component{
 										'선박확인체계 알림',
 										this.state.name + ' 선박 정보가 삭제되었습니다',
 									)
-									this.props.navigation.popToTop();
-									this.props.navigation.navigate('ListCommonShip');
+									this.props.navigation.pop();
 								}
 							})
 						}
@@ -305,7 +304,7 @@ export default class DetailCommonShip extends Component{
 						{Train_request}
 						<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 25, width: 120,
 							alignItems: 'center', justifyContent: 'center'}}>
-							<base.Text style={{color: 'white'}}>등록사진 {this.state.img_cnt} 장</base.Text>
+							<base.Text style={{color: 'white'}}>등록사진 {this.state.img_cnt}장</base.Text>
 						</base.Form>
 					</base.Form>
 					{CommonShipGallery}

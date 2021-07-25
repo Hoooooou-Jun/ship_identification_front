@@ -50,6 +50,8 @@ export default class ListCommonShip extends Component{
 			clicked_unit: null,
 
 			test: false,
+			
+			refreshing: false
 		};
 		this.showCommonShipList = this.showCommonShipList(this);
 
@@ -58,6 +60,8 @@ export default class ListCommonShip extends Component{
 		this.nextPage = this.nextPage.bind(this);
 		this.firstPage = this.firstPage.bind(this);
 		this.lastPage = this.lastPage.bind(this);
+
+		this.setState({ refreshing: false });
 	}
 	firstPage(){
 		if(this.state.index == 1){
@@ -128,6 +132,11 @@ export default class ListCommonShip extends Component{
         })
 		this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 	}
+
+	handleRefresh = () => {
+		this.setState({refreshing: false}, () => {this.updateCommonShipList(this.state.index)})
+	}
+
 	render(){
 		if(this.state.clicked_unit != null){
 			if(this.state.clicked_unit == 8){
@@ -275,6 +284,8 @@ export default class ListCommonShip extends Component{
 								<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 조건을 만족하는 일반선박이 없습니다</base.Text>
 							</base.Form>
 						}
+						refreshing={this.state.refreshing}
+						onRefresh={this.handleRefresh}
 					/>
 					{pageBarFooter}
 				</base.Content>

@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import * as base from 'native-base';
-import { FlatList, Dimensions } from 'react-native';
+import { FlatList, Dimensions, Alert } from 'react-native';
 import { getToken } from '../../utils/getToken';
 import { searchCommonShip, searchWastedShip } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
@@ -64,6 +64,8 @@ export default class SearchResult extends Component{
 			sort: '',
 			clicked: null,
 			clicked_unit: null,
+
+			refreshing: false
 		};
 		this.showResult = this.showResult(this);
 		this.getDetail = this.getDetail.bind(this);
@@ -75,8 +77,13 @@ export default class SearchResult extends Component{
 
 		this.updateSearchCommonShip = this.updateSearchCommonShip.bind(this);
 		this.updateSearchWastedShip = this.updateSearchWastedShip.bind(this);
+
+		this.setState({ refreshing: false });
 	}
 	componentDidMount(){
+		this.updateData();
+	}
+	updateData() {
 		this.setState({
 			flag: this.props.navigation.getParam('flag'),
 
@@ -101,7 +108,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == 1){
 			Alert.alert(
 				'선박확인체계 알림',
-				'첫번째 페이지입니다',
+				'첫번째 페이지입니다.',
 			)
 		}
 		else {
@@ -113,7 +120,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == this.state.cnt){
 			Alert.alert(
 				'선박확인체계 알림',
-				'마지막 페이지입니다',
+				'마지막 페이지입니다.',
 			)
 		}
 		else {
@@ -125,7 +132,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == 1){
 			Alert.alert(
 				'선박확인체계 알림',
-				'첫번째 페이지입니다',
+				'첫번째 페이지입니다.',
 			)
 		}
 		else {
@@ -137,7 +144,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == this.state.pages){
 			Alert.alert(
 				'선박확인체계 알림',
-				'마지막 페이지입니다',
+				'마지막 페이지입니다.',
 			)
 		}
 		else {
@@ -145,6 +152,25 @@ export default class SearchResult extends Component{
 			else{this.updateSearchWastedShip(this.state.index + 1);}
 		}
 	}
+	
+	/*searchPage = () => { 
+		Alert.prompt(
+			"Enter password",
+			"Enter your password to claim your $1.5B in lottery winnings",
+			[
+			  {
+				text: "Cancel",
+				onPress: () => console.log("Cancel Pressed"),
+				style: "cancel"
+			  },
+			  {
+				text: "OK",
+				onPress: password => console.log("OK Pressed, password: " + password)
+			  }
+			],
+			"secure-text"
+		);
+	}*/
 	showResult(){
 		getToken().then((token) => {
 			if(this.state.flag == 'Normal'){
@@ -221,6 +247,17 @@ export default class SearchResult extends Component{
 		else{ // flag == 'Wasted'
 			this.props.navigation.navigate('DetailWastedShip',{id: id})}
 	}
+
+	handleRefresh = () => {
+		this.setState({refreshing: false}, () => {
+			if (this.state.flag == 'Normal') {
+				this.updateSearchCommonShip(this.state.index)
+			}
+			else {
+				this.updateSearchWastedShip(this.state.index) 
+			}	
+		})
+	}
 	
 	render(){
 		let pageBarFooter
@@ -236,6 +273,13 @@ export default class SearchResult extends Component{
 				</base.Button>
 				<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
 					<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
+					{/*<base.Text 
+					style={{fontSize: SIZE_ICON - 5,
+						color: "skyblue", 
+						fontWeight: 'bold', 
+						textDecorationLine: 'underline'}}
+					onPress={() => this.searchPage()}
+					>페이지 검색</base.Text>*/}
 				</base.Form>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
 				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
@@ -390,6 +434,8 @@ export default class SearchResult extends Component{
 									<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 검색에 대한 검색결과가 없습니다</base.Text>
 								</base.Form>
 							}
+							refreshing={this.state.refreshing}
+							onRefresh={this.handleRefresh}
 						/>
 						{pageBarFooter}
 					</base.Content>

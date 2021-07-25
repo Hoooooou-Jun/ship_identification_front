@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, ScrollView, Linking, Button } from 'react-native';
+import { Text, View, Dimensions, ScrollView, Linking } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getToken } from '../../utils/getToken';
 import { requestLicense, requestVersion } from '../../utils/additionalInfoRequest';
@@ -30,15 +30,16 @@ class License extends Component {
                     })
                 }
                 else {
-                    this.setState({
-                        test: "error"
-                    })
+                  console.log("error");
                 }
             })
         })
         requestVersion().then((response) => {
           if(response.status == 200) {
             this.setState({version: response.data.data.version})
+          }
+          else {
+            console.log("error");      
           }
         })
     }
@@ -54,11 +55,11 @@ class License extends Component {
             </View>
             <View style={styles.titleContainer}>
               <Text style={styles.logoMain}>선박확인체계</Text>
-              <Text style={styles.logoSub}>Ship_Identification Beta TEST {this.state.version}</Text>
+              <Text style={styles.logoSub}>Ship_Identification {this.state.version}</Text>
             </View>
           </View>
           <View style={styles.listMain}>
-            <Text style={{fontSize: 30, color: "#2c2c2c", fontWeight: 'bold'}}>📱 Front-End</Text>
+            <Text style={styles.itmeTitle}>📱 Front-End</Text>
             <View style={styles.listSub}>
             {Object.values(this.state.frontLicense).map(item => 
                   (
@@ -71,7 +72,7 @@ class License extends Component {
             </View>
            </View>
           <View style={styles.listMain}>
-            <Text style={{fontSize: 30, color: "#2c2c2c", fontWeight: 'bold'}}>📡 Back-End</Text>
+            <Text style={styles.itmeTitle}>📡 Back-End</Text>
               <View style={styles.listSub}>
               {Object.values(this.state.backLicense).map(item => 
                   (
