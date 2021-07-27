@@ -1,12 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
-import { Dimensions, FlatList, Alert } from 'react-native';
+import { Dimensions, FlatList, Alert, Modal, TextInput, Text, Pressable } from 'react-native';
 import * as base from 'native-base';
 import { getToken } from '../../utils/getToken';
 import { requestCommonShipList } from '../../utils/shipInfoRequest';
 import ShowShip from '../listCommonShip/showShip';
 import { AntDesign, Feather } from '@expo/vector-icons'; 
 import Loading from '../../utils/loading';
+import styles from './styles';
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.02
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
@@ -51,7 +52,11 @@ export default class ListCommonShip extends Component{
 
 			test: false,
 			
-			refreshing: false
+			refreshing: false,
+
+			modalVisible: false,
+
+			input: 1,
 		};
 		this.showCommonShipList = this.showCommonShipList(this);
 
@@ -137,7 +142,34 @@ export default class ListCommonShip extends Component{
 		this.setState({refreshing: false}, () => {this.updateCommonShipList(this.state.index)})
 	}
 
-	render(){
+	searchPageList(idx){
+		if(1 <= idx && this.state.cnt >= idx) {
+			this.setState({loadingVisible: true})
+			getToken().then((token) => {
+				requestCommonShipList(token, idx, this.state.sort, this.state.unit).then((response) => {
+					this.setState({
+						index: idx,
+						cnt: response.data.data.count,
+						data: response.data.data.data,
+						loadingVisible: false,
+					})
+				})
+        	})
+			this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'존재하지 않은 페이지입니다.',
+			)
+		}
+	}
+
+	setModalVisible = (visible) => {
+		this.setState({ modalVisible: visible });
+	}
+
+	render() {
 		if(this.state.clicked_unit != null){
 			if(this.state.clicked_unit == 8){
 				this.setState({clicked_unit: null})
@@ -221,6 +253,7 @@ export default class ListCommonShip extends Component{
 				</base.Button>
 				<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
 					<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
+					<base.Text style={{fontSize: SIZE_ICON - 5, color: 'skyblue', fontWeight: 'bold', textDecorationLine: 'underline' }} onPress={()=>this.setModalVisible(true)}>페이지검색</base.Text>
 				</base.Form>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
 				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
@@ -232,9 +265,34 @@ export default class ListCommonShip extends Component{
 				</base.Button>
 			</base.Form>
 		}
+		const { modalVisible } = this.state;
 		return(
 			<base.Root>
 			<base.Container>
+			<Modal
+          		animationType="fade"
+          		transparent={true}
+          		visible={modalVisible}
+          		onRequestClose={() => {this.setModalVisible(!modalVisible);}}>
+				<base.Form style={styles.centeredView}>
+            		<base.Form style={styles.modalView}>
+              			<Text style={styles.modalText}>검색할 페이지를 입력하세요.</Text>
+						<TextInput 
+							placeholder="페이지 입력" 
+							keyboardType="number-pad" 
+							onChangeText={number => this.setState({input: number})}
+							style={{borderBottomWidth: 1, height: 30, width: 70, margin: 20}}
+						/>
+              			<Pressable
+                			style={[styles.button, styles.buttonClose]}
+                			onPress={() => {
+							this.setModalVisible(!modalVisible);
+							this.searchPageList(this.state.input);}}>
+							<Text style={styles.textStyle}>검색</Text>
+						</Pressable>
+            		</base.Form>
+				</base.Form>
+			</Modal>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
 						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
