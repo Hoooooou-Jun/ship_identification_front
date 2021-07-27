@@ -153,15 +153,13 @@ export default class Login extends Component{
 						</base.Form>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
-						<base.Text style ={{fontSize: SIZE_WARNING + 10, margin: 10, color: '#006eee'}}>서버 점검 중</base.Text>
+						<base.Text style ={{fontSize: SIZE_WARNING + 10, margin: 10, color: '#006eee', fontStyle: 'italic'}}>서버 점검 중입니다.</base.Text>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'flex-start', margin: 10, flexDirection: 'column',}}>
 						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10, fontWeight: 'bold'}}>담당자 연락처</base.Text>
 						<base.Form style={{alignItems: 'flex-end', backgroundColor: 'white', elevation: 6, borderRadius: 20,}}>
-							<base.Text style={styles.devTitle}>32보병사단 정보통신대대 상병 김호준</base.Text>
-							<base.Text style={styles.devSub}>010-6433-4083</base.Text>
-							<base.Text style={styles.devTitle}>32보병사단 정보통신대대 일병 최재영</base.Text>
-							<base.Text style={styles.devSub}>010-4584-7486</base.Text>
+							<base.Text style={styles.devTitle}>제32보병사단 정보통신대대 선박확인체계 개발TF</base.Text>
+							<base.Text style={styles.devSub}>042-832-7681</base.Text>
 						</base.Form>
 					</base.Form>
 				</base.Form>

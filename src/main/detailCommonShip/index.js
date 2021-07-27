@@ -54,7 +54,7 @@ export default class DetailCommonShip extends Component{
 	updateShipInfo(){
 		Alert.alert(
 			'선박확인체계 알림',
-			this.state.name + '선박 정보를 수정하시겠습니까?',
+			this.state.name + '의 선박 정보를 수정하시겠습니까?',
 			[{
 				text: "네",
 				onPress: () => getToken().then((token) => {
@@ -82,7 +82,7 @@ export default class DetailCommonShip extends Component{
 	updateShipMImage(){
 		Alert.alert(
 			'선박확인체계 알림',
-			this.state.name + ' 대표사진을 수정하시겠습니까?',
+			this.state.name + '의 대표사진을 수정하시겠습니까?',
 			[{
 				text: "네",
 				onPress: () => getToken().then((token) => {
@@ -119,7 +119,7 @@ export default class DetailCommonShip extends Component{
 	deleteShipInfo(){
 		Alert.alert(
 			'선박확인체계 알림',
-			this.state.name + ' 선박 정보를 삭제하시겠습니까?',
+			this.state.name + '의 선박 정보를 삭제하시겠습니까?',
 			[{
 				text: "네",
 				onPress: () => getToken().then((token) => {
@@ -132,7 +132,7 @@ export default class DetailCommonShip extends Component{
 									this.setState({loadingVisible: false})
 									Alert.alert(
 										'선박확인체계 알림',
-										this.state.name + ' 선박 정보가 삭제되었습니다',
+										this.state.name + '의 선박 정보가 삭제되었습니다',
 									)
 									this.props.navigation.pop();
 								}
