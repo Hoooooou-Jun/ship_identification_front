@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
       marginBottom: SIZE_MARGIN
     },
     logoMain: {
-      marginTop: 5,
+      margin: 5,
       fontSize: SIZE_TITLE,
       fontFamily:'Nanum_Title'
     },
