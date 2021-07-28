@@ -16,7 +16,7 @@ import { AppVersion, UnderInspection } from '../../utils/version';
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.1
 const SIZE_TITLE = Dimensions.get('screen').width * 0.11
-const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.035
+
 const SIZE_FOOTER = Dimensions.get('screen').width * 0.03
 
 const SIZE_FONT = Dimensions.get('screen').width * 0.035
@@ -60,7 +60,6 @@ export default class Login extends Component{
 			}
 		})
 		this.setState({device_id: Constants.deviceId})
-		
 	}
 	async loadFont(){
 		await Font.loadAsync({
@@ -149,20 +148,18 @@ export default class Login extends Component{
 							</base.Form>
 						</base.Form>
 						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-							<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
-							<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification {this.state.version}</base.Text>
+							<base.Text style={styles.title}>선박확인체계</base.Text>
+							<base.Text style={styles.sub}>Ship_Identification {this.state.version}</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
-						<base.Text style ={{fontSize: SIZE_WARNING + 10, margin: 10, color: '#006eee'}}>서버 점검 중</base.Text>
+						<base.Text style ={{fontSize: SIZE_WARNING + 10, margin: 10, color: '#006eee', fontStyle: 'italic'}}>서버 점검 중입니다.</base.Text>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'flex-start', margin: 10, flexDirection: 'column',}}>
 						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10, fontWeight: 'bold'}}>담당자 연락처</base.Text>
 						<base.Form style={{alignItems: 'flex-end', backgroundColor: 'white', elevation: 6, borderRadius: 20,}}>
-							<base.Text style ={{fontSize: SIZE_WARNING, margin: 10,}}>32보병사단 정보통신대대 상병 최준호</base.Text>
-							<base.Text style ={{fontSize: SIZE_WARNING + 5, margin: 10,}}>010-7710-8539</base.Text>
-							<base.Text style ={{fontSize: SIZE_WARNING, margin: 10,}}>32보병사단 정보통신대대 상병 강주성</base.Text>
-							<base.Text style ={{fontSize: SIZE_WARNING + 5, margin: 10,}}>010-3377-5284</base.Text>
+							<base.Text style={styles.devTitle}>제32보병사단 정보통신대대 선박확인체계 개발TF</base.Text>
+							<base.Text style={styles.devSub}>042-832-7681</base.Text>
 						</base.Form>
 					</base.Form>
 				</base.Form>
@@ -178,15 +175,15 @@ export default class Login extends Component{
 							</base.Form>
 						</base.Form>
 						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-							<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
+							<base.Text style={styles.title}>선박확인체계</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
 						<base.Form>
-							<base.Text style ={{fontSize: SIZE_WARNING + 10, color: '#006eee'}}>* 현재버전 : {this.state.version}</base.Text>
+							<base.Text style={styles.version}>* 현재버전 : {this.state.version}</base.Text>
 						</base.Form>
 						<base.Form>
-							<base.Text style ={{fontSize: SIZE_WARNING + 10, color: '#006eee'}}>* 운용버전 : {this.state.version_server}</base.Text>
+							<base.Text style={styles.version}>* 운용버전 : {this.state.version_server}</base.Text>
 						</base.Form>
 						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10}}>업데이트가 필요합니다</base.Text>
 					</base.Form>
@@ -198,7 +195,7 @@ export default class Login extends Component{
 				</base.Form>
             )
         }
-		else{
+		else {
 			return(
 				<base.Container>
 					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -215,8 +212,8 @@ export default class Login extends Component{
 										</base.Form>
 									</base.Form>
 									<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
-										<base.Text style={{fontSize: SIZE_TITLE, color: 'black', fontFamily: 'Nanum_Title'}}>선박확인체계</base.Text>
-										<base.Text style={{color: 'grey', fontSize: SIZE_SUBTITLE}}>Ship_Identification Beta TEST {this.state.version}</base.Text>
+										<base.Text style={styles.title}>선박확인체계</base.Text>
+										<base.Text style={styles.sub}>Ship_Identification {this.state.version}</base.Text>
 									</base.Form>
 								</base.Form>
 							</base.Form>

@@ -19,9 +19,9 @@ const SIZE_LOGO = Dimensions.get('screen').height * 0.08
 const SIZE_TITLE = Dimensions.get('screen').height * 0.0225
 const SIZE_FONT = Dimensions.get('screen').width * 0.035
 const SIZE_FOOTER = Dimensions.get('screen').height * 0.0175
+const SIZE_SUBFOOTER = Dimensions.get('screen').height * 0.0150
 const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
-const SIZE_LAYOUT = Dimensions.get('screen').width * 0.2
 
 export default class Home extends Component{
 	constructor(props) {
@@ -144,24 +144,24 @@ export default class Home extends Component{
 								</base.Form>
 							</base.Form>						
 							<base.Form style={{flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center',}}>
-								<base.CardItem button style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor:'rgba(0,0,0,0)'}}
+								<base.CardItem button style={styles.cardButton}
 									onPress={()=>this.props.navigation.navigate('MyAccount')}>
 									<AntDesign name="idcard" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
-									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>내정보</base.Text>
+									<base.Text style={styles.cardText}>내정보</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor:'rgba(0,0,0,0)'}}
+								<base.CardItem button style={styles.cardButton}
 									onPress={()=>this.props.navigation.navigate('NoticeList')}>
 									<AntDesign name="notification" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
-									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>공지사항</base.Text>
+									<base.Text style={styles.cardText}>공지사항</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor:'rgba(0,0,0,0)'}}
+								<base.CardItem button style={styles.cardButton}
 									onPress={()=>this.props.navigation.navigate('QNAList')}>
 									<AntDesign name="message1" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
-									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>질의응답</base.Text>
+									<base.Text style={styles.cardText}>질의응답</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center',backgroundColor:'rgba(0,0,0,0)'}} onPress={this.executeLogout}>
+								<base.CardItem button style={styles.cardButton} onPress={this.executeLogout}>
 									<AntDesign name="poweroff" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
-									<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_FONT, color: 'black', marginTop: 10}}>로그아웃</base.Text>
+									<base.Text style={styles.cardText}>로그아웃</base.Text>
 								</base.CardItem>
 							</base.Form>
 						</base.Form>
@@ -199,24 +199,24 @@ export default class Home extends Component{
 									flex: 1, width: '100%', padding: 10,
 									flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 								}}>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('Search')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('Search')}>
+									<base.Form style={styles.baseIcon}>
 										<AntDesign name="search1" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>통합검색</base.Text>
+									<base.Text style={styles.baseItemText}>통합검색</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('SearchAI')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('SearchAI')}>
+									<base.Form style={styles.baseIcon}>
 									<AntDesign name="barschart" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>AI 검색
+									<base.Text style={styles.baseItemText}>AI 검색
 									</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('MapSelection')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('MapSelection')}>
+									<base.Form style={styles.baseIcon}>
 										<Feather name="map" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>지도검색</base.Text>
+									<base.Text style={styles.baseItemText}>지도검색</base.Text>
 								</base.CardItem>
 							</base.Form>
 						</base.Form>
@@ -225,23 +225,23 @@ export default class Home extends Component{
 									flex: 1, width: '100%', padding: 10,
 									flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 								}}>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1}} onPress={()=>this.props.navigation.navigate('ListCommonShip')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('ListCommonShip')}>
+									<base.Form style={styles.baseIcon}>
 										<AntDesign name="copy1" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>일반선박 목록</base.Text>
+									<base.Text style={styles.baseItemText}>일반선박 목록</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('ListWastedShip')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('ListWastedShip')}>
+									<base.Form style={styles.baseIcon}>
 										<AntDesign name="copy1" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>유기선박 목록</base.Text>
+									<base.Text style={styles.baseItemText}>유기선박 목록</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>this.props.navigation.navigate('Register')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>this.props.navigation.navigate('Register')}>
+									<base.Form style={styles.baseIcon}>
 										<AntDesign name="addfile" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>선박등록</base.Text>
+									<base.Text style={styles.baseItemText}>선박등록</base.Text>
 								</base.CardItem>
 							</base.Form>
 						</base.Form>
@@ -250,28 +250,29 @@ export default class Home extends Component{
 									flex: 1, width: '100%', padding: 10,
 									flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 								}}>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>Linking.openURL('http://m.kma.go.kr')}>
-								<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('http://m.kma.go.kr')}>
+								<base.Form style={styles.baseIcon}>
 										<base.Icon name='partly-sunny-outline' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>기상정보</base.Text>
+									<base.Text style={styles.baseItemText}>기상정보</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>Linking.openURL('http://m.khoa.go.kr/')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('http://m.khoa.go.kr/')}>
+									<base.Form style={styles.baseIcon}>
 										<MaterialCommunityIcons name="waves" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>수치조류도</base.Text>
+									<base.Text style={styles.baseItemText}>수치조류도</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={{ flexDirection: 'column', flex: 1,}} onPress={()=>Linking.openURL('https://www.marinetraffic.com/en/ais/home/centerx:126.1/centery:36.5/zoom:8')}>
-									<base.Form style={{ backgroundColor: '#EDF5FE', width: SIZE_LAYOUT, height: SIZE_LAYOUT, borderRadius: 20, alignItems: 'center', justifyContent: 'center', elevation: 6}}>
+								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('https://www.marinetraffic.com/en/ais/home/centerx:126.1/centery:36.5/zoom:8')}>
+									<base.Form style={styles.baseIcon}>
 										<base.Icon name='ios-boat-outline' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>
-									<base.Text style={{fontFamily:'Nanum', marginTop: 10, fontSize:SIZE_FONT}}>선박위치정보</base.Text>
+									<base.Text style={styles.baseItemText}>선박위치정보</base.Text>
 								</base.CardItem>
 							</base.Form>
 						</base.Form>
 					</base.Form>
-					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER}}>선박확인체계 {AppVersion}</base.Text>
+					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER, marginBottom: -10}}>선박확인체계 {AppVersion}</base.Text>
+					<base.Text onPress={()=>this.props.navigation.navigate('License')} style={{flex: 1, color: 'grey', fontSize: SIZE_SUBFOOTER, color: 'skyblue', textDecorationLine: 'underline'}}>License</base.Text>
                 </base.Content>
 			<StatusBar hidden/>
             </base.Container>

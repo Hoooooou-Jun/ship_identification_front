@@ -2,12 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Dimensions, Image, FlatList, Alert } from 'react-native';
 import * as base from 'native-base';
+import { Picker } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { getToken } from '../../utils/getToken';
 import { requestAIResult, registerCommonShipImages, registerWastedShipImages } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
 import Loading from '../../utils/loading';
+import { KindsOfSearchUnit } from '../../kindsOfData/kindsOfSearchUnit';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
@@ -34,6 +36,8 @@ export default class SearchAI extends Component{
 			kinds: [], // true: CommonShip, false: WastedShip
 
 			loadingVisible: false,
+
+			unit: '2162'
 		};
 		this.pickPhoto = this.pickPhoto.bind(this);
 		this.pickImage = this.pickImage.bind(this);
@@ -44,7 +48,7 @@ export default class SearchAI extends Component{
 		this.loading = this.loading.bind(this);
 		this.waiting = this.waiting.bind(this);
 	}
-	
+
 	async pickPhoto() {
 		if(ImagePicker.getCameraPermissionsAsync()) ImagePicker.requestCameraPermissionsAsync()
 		await ImagePicker.launchCameraAsync({
@@ -90,6 +94,8 @@ export default class SearchAI extends Component{
 			getToken().then((token) =>{
 				const formdata = new FormData()
 				formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: this.state.img})
+				formdata.append('unit' , this.state.unit)
+				console.log(formdata)
 				requestAIResult(token, formdata).then((response) => {
 					this.setState({
 						kinds: response.data.data.kinds,
@@ -238,9 +244,17 @@ export default class SearchAI extends Component{
 								<base.Icon name='ios-images' style={{color:'#006eee', fontSize: 25}}/>
 							</base.Button>
 						</base.Form>
-						<base.Button block onPress={this.getAIResult} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6}}>
+						<base.Form style={{alignItems: 'center'}}>
+							<Picker
+								selectedValue={this.state.unit}
+								style={{width: '95%', height: '5%'}}
+								onValueChange={(item) => this.setState({unit: item})}>
+								{ KindsOfSearchUnit.map((data)=>{ return <Picker.Item label={data.label} value={data.value} /> }) }
+							</Picker>
+						</base.Form>
+						<base.Button block onPress={this.getAIResult} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6, height: '6%'}}>
 							<base.Text style={{color: 'black'}}>AI 검색</base.Text>
-						</base.Button>
+						</base.Button>	
 						<base.Form style={{flex: 2, width: '100%', height: '100%',}}>
 							{AIResult}
 						</base.Form>				

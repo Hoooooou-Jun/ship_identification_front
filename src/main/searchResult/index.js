@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import * as base from 'native-base';
-import { FlatList, Dimensions } from 'react-native';
+import { FlatList, Dimensions, Alert, Modal, TextInput, Text, Pressable } from 'react-native';
 import { getToken } from '../../utils/getToken';
 import { searchCommonShip, searchWastedShip } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Loading from '../../utils/loading';
+import styles from './styles';
+
 var COMMON_BUTTONS = [
 	{ text: "선박명 순", icon: "logo-angular", iconColor: "grey" },
 	{ text: "최근 등록 순", icon: "time", iconColor: "grey" },
@@ -64,6 +66,10 @@ export default class SearchResult extends Component{
 			sort: '',
 			clicked: null,
 			clicked_unit: null,
+
+			refreshing: false,
+
+			modalVisible: false
 		};
 		this.showResult = this.showResult(this);
 		this.getDetail = this.getDetail.bind(this);
@@ -75,8 +81,13 @@ export default class SearchResult extends Component{
 
 		this.updateSearchCommonShip = this.updateSearchCommonShip.bind(this);
 		this.updateSearchWastedShip = this.updateSearchWastedShip.bind(this);
+
+		this.setState({ refreshing: false });
 	}
 	componentDidMount(){
+		this.updateData();
+	}
+	updateData() {
 		this.setState({
 			flag: this.props.navigation.getParam('flag'),
 
@@ -101,7 +112,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == 1){
 			Alert.alert(
 				'선박확인체계 알림',
-				'첫번째 페이지입니다',
+				'첫번째 페이지입니다.',
 			)
 		}
 		else {
@@ -113,7 +124,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == this.state.cnt){
 			Alert.alert(
 				'선박확인체계 알림',
-				'마지막 페이지입니다',
+				'마지막 페이지입니다.',
 			)
 		}
 		else {
@@ -125,7 +136,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == 1){
 			Alert.alert(
 				'선박확인체계 알림',
-				'첫번째 페이지입니다',
+				'첫번째 페이지입니다.',
 			)
 		}
 		else {
@@ -137,7 +148,7 @@ export default class SearchResult extends Component{
 		if(this.state.index == this.state.pages){
 			Alert.alert(
 				'선박확인체계 알림',
-				'마지막 페이지입니다',
+				'마지막 페이지입니다.',
 			)
 		}
 		else {
@@ -145,6 +156,7 @@ export default class SearchResult extends Component{
 			else{this.updateSearchWastedShip(this.state.index + 1);}
 		}
 	}
+	
 	showResult(){
 		getToken().then((token) => {
 			if(this.state.flag == 'Normal'){
@@ -221,7 +233,81 @@ export default class SearchResult extends Component{
 		else{ // flag == 'Wasted'
 			this.props.navigation.navigate('DetailWastedShip',{id: id})}
 	}
+
+	handleRefresh = () => {
+		this.setState({refreshing: false}, () => {
+			if (this.state.flag == 'Normal') {
+				this.updateSearchCommonShip(this.state.index)
+			}
+			else {
+				this.updateSearchWastedShip(this.state.index) 
+			}	
+		})
+	}
+
+	searchPageList(idx) {
+		if(this.state.flag == "Normal") {
+			if(1 <= idx && this.state.cnt >= idx) {
+				this.setState({ loadingVisible: true })
+				getToken().then((token) => {
+					searchCommonShip(token, idx, this.state.name, this.state.types, this.state.code, this.state.tons,
+						this.state.size, this.state.is_ais, this.state.is_vpass, this.state.is_vhf, this.state.is_ff, 
+						this.state.region, this.state.port, this.state.sort, this.state.unit).then((response) => {
+					if(response.status == 200){
+						this.setState({
+							index: idx,
+							cnt: response.data.data.count,
+							data: response.data.data.data,
+							loadingVisible: false,
+						})
+					}
+					else{
+						console.log('fail')
+					}
+					})
+				})
+				this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
+			}
+			else {
+				Alert.alert(
+					'선박확인체계 알림',
+					'존재하지 않은 페이지입니다.'
+					)
+			}
+		}
+		else { // Waste ship
+			if(1 <= idx && this.state.cnt >= idx) {
+				this.setState({ loadingVisible: true })
+				getToken().then((token) => {
+					searchWastedShip(token, idx, this.state.id, this.state.region, this.state.types, this.state.info, this.state.sort, this.state.unit).then((response) => {
+					if(response.status == 200){
+						this.setState({
+							index: idx,
+							cnt: response.data.data.count,
+							data: response.data.data.data,
+							loadingVisible: false,
+						})
+					}
+					else{
+						console.log('fail')
+					}
+					})
+				})
+				this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
+			}
+			else {
+				Alert.alert(
+					'선박확인체계 알림',
+					'존재하지 않은 페이지입니다.'
+					)
+			}
+		}
+	}
 	
+	setModalVisible = (visible) => {
+		this.setState({ modalVisible: visible });
+	}
+
 	render(){
 		let pageBarFooter
 		if(this.state.data.length != 0){ pageBarFooter =
@@ -236,6 +322,12 @@ export default class SearchResult extends Component{
 				</base.Button>
 				<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
 					<base.Text style={{fontSize: SIZE_ICON - 5}}>{this.state.index} / {this.state.cnt}</base.Text>
+					<base.Text 
+					style={{fontSize: SIZE_ICON - 5,
+						color: "skyblue", 
+						fontWeight: 'bold', 
+						textDecorationLine: 'underline'}}
+					onPress={() => this.setModalVisible(true)}>페이지 검색</base.Text>
 				</base.Form>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
 				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>this.nextPage()}>
@@ -344,9 +436,34 @@ export default class SearchResult extends Component{
 				else{ this.updateSearchWastedShip(1) }
 			}
 		}
+		const { modalVisible } = this.state;
 		return(
 			<base.Root>
 				<base.Container>
+				<Modal
+          		animationType="fade"
+          		transparent={true}
+          		visible={modalVisible}
+          		onRequestClose={() => {this.setModalVisible(!modalVisible);}}>
+				<base.Form style={styles.centeredView}>
+            		<base.Form style={styles.modalView}>
+              			<Text style={styles.modalText}>검색할 페이지를 입력하세요.</Text>
+						<TextInput 
+							placeholder="페이지 입력" 
+							keyboardType="number-pad" 
+							onChangeText={number => this.setState({input: Number(number)})}
+							style={{borderBottomWidth: 1, height: 30, width: 70, margin: 20}}
+						/>
+              			<Pressable
+                			style={[styles.button, styles.buttonClose]}
+                			onPress={() => {
+							this.setModalVisible(!modalVisible);
+							this.searchPageList(this.state.input)}}>
+							<Text style={styles.textStyle}>검색</Text>
+						</Pressable>
+            		</base.Form>
+				</base.Form>
+			</Modal>
 					<base.Header style={{backgroundColor: 'white'}}>
 						<base.Left>
 							<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
@@ -390,6 +507,8 @@ export default class SearchResult extends Component{
 									<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 검색에 대한 검색결과가 없습니다</base.Text>
 								</base.Form>
 							}
+							refreshing={this.state.refreshing}
+							onRefresh={this.handleRefresh}
 						/>
 						{pageBarFooter}
 					</base.Content>
