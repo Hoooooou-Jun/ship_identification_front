@@ -94,7 +94,8 @@ export default class SearchAI extends Component{
 			getToken().then((token) =>{
 				const formdata = new FormData()
 				formdata.append('image_data', {name:'ship.jpg', type:'image/jpeg', uri: this.state.img})
-				formdata.append('unit' , {unit: this.state.unit})
+				formdata.append('unit' , this.state.unit)
+				console.log(formdata)
 				requestAIResult(token, formdata).then((response) => {
 					this.setState({
 						kinds: response.data.data.kinds,
