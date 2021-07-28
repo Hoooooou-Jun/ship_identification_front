@@ -33,9 +33,17 @@ export default class ShowShip extends Component{
 		return(
 			<TouchableHighlight onPress={this.props.onPress} style={{borderRadius: 20, marginHorizontal: 10, marginVertical: 5, borderColor: 'grey', elevation: 6,}}>
 				<base.CardItem cardBody>
+
 					<base.Left style={{alignItems: 'center',width: SIZE_IMG, height: SIZE_IMG, flex: 2, padding: 10,}}>
-						<Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.main_img,}} style={{width: '100%', height: '100%',}}/>
+						<base.Form style={{width: '100%', height: '100%'}}>
+							<Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.main_img,}} style={{width: '100%', height: '100%',}}/>
+							<base.Form style={{position: 'absolute', bottom: 10, right: 10, elevation: 6, backgroundColor: 'rgba(0, 0, 0, 0.3)', borderRadius: 10, height: 20, width: 45,
+							alignItems: 'center', justifyContent: 'center'}}>
+								<base.Text style={{color: 'white', fontSize: SIZE_FONT}}>{this.props.ship.img_cnt}장</base.Text>
+							</base.Form>
+						</base.Form>					
 					</base.Left>
+
 					<base.Body style={{flex: 3,}}>
 						<base.Form style={{flex: 1, padding: 10,}}>
 							<base.Form style={{flex: 1, justifyContent: 'center'}}>
