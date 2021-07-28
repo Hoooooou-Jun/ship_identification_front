@@ -287,7 +287,7 @@ export default class ListWastedShip extends Component{
 						<TextInput 
 							placeholder="페이지 입력" 
 							keyboardType="number-pad" 
-							onChangeText={number => this.setState({input: number})}
+							onChangeText={number => this.setState({input: Number(number)})}
 							style={{borderBottomWidth: 1, height: 30, width: 70, margin: 20}}
 						/>
               			<Pressable
