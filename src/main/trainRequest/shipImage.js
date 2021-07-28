@@ -17,9 +17,9 @@ export default class ShipImage extends Component{
 	render() {
 		let showImage;
 		if(this.state.checked == 0) {
-			showImage = <Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.img}} style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG,}}/>
+			showImage = <Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.img}} style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, borderRadius: 5,}}/>
 		} else {
-			showImage = <Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.img}} style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, borderColor: "blue", borderWidth: 4}}/>
+			showImage = <Image resizeMode='cover' source={{uri: requestDomain + this.props.ship.img}} style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, borderRadius: 5, opacity: 0.4}}/>
 		}
 		return(
 			<TouchableHighlight onPress={()=>this.setState({checked: !this.state.checked}, this.props.onPress)}>

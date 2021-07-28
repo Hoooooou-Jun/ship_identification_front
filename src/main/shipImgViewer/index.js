@@ -53,8 +53,7 @@ export default class ShipImgViewer extends Component{
                                         '선박확인체계 알림',
                                         this.state.index + '번째 추가이미지가 삭제되었습니다',
                                     )
-                                    this.props.navigation.popToTop();
-                                    this.props.navigation.navigate('DetailCommonShip',{id: this.state.id})
+                                    this.props.navigation.pop();
                                 })
                             }
                             else{
@@ -64,8 +63,7 @@ export default class ShipImgViewer extends Component{
                                         '선박확인체계 알림',
                                         this.state.index + '번째 추가이미지가 삭제되었습니다',
                                     )
-                                    this.props.navigation.popToTop();
-                                    this.props.navigation.navigate('DetailWastedShip',{id: this.state.id})
+                                    this.props.navigation.pop();
                                 })
                             }
                         }

@@ -9,7 +9,10 @@ import { requestDomain } from '../../utils/domain';
 import Loading from '../../utils/loading';
 
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
-
+const SIZE_FONT = Dimensions.get('screen').height * 0.017
+const SIZE_BUTTON = Dimensions.get('screen').height * 0.013
+const SIZE_BUTTONWIDTH = Dimensions.get('screen').height * 0.06
+const SIZE_BUTTONHEIGHT = Dimensions.get('screen').height * 0.026
 export default class TrainCommonShipGallery extends Component{
 	constructor(props) {
 		super(props);
@@ -25,13 +28,13 @@ export default class TrainCommonShipGallery extends Component{
 	
 	componentDidMount = () => {
 		Alert.alert(
-			'선박확인체계 알림',
-			'※주의 사항※\n1. 다양한 측면을 찍어주세요.\n2. 사진은 최소 30장 이상 요청해주세요.\n3. 사진에 선박이 있는지 확인해주세요.\n4. 학습 요청 시 예전에 요청해주셨던 사진을 다시 보내주셔도 됩니다.'
+			'AI학습요청 시 주의사항',
+			'1. 다각도로 촬영된 선박 사진을 요청해주시기 바랍니다.\n2. 최소 30장 이상의 선박 사진을 요청해주시기 바랍니다.\n3. 사진에 선박이 있는지 확인해주시기 바랍니다.\n4. 학습 요청 시 이전에 요청한 선박 사진도 재요청이 가능합니다.'
 			
 		)
 	}
 
-    showCommonShipGallery(){
+    showCommonShipGallery() {
 		getToken().then((token) => {
 			this.setState({
 				id: this.props.navigation.getParam('id'),
@@ -59,11 +62,20 @@ export default class TrainCommonShipGallery extends Component{
         }
     }
 
+	/* checkTrainImageAll = () => {
+		const idx = Object.values(this.state.data).map(item => item.id)
+		this.setState({trainRequest: idx, trainImageLen: idx.length})
+		for( let i = 0; i < idx.length; i++ )
+		{
+			this.checkTrainImage(idx[i])
+		}
+	} */
+
     requestTrainImage = () => {
 		if(this.state.trainRequest.length < 30) {
 			Alert.alert(
 				'선박확인체계 알림',
-				'사진은 최소 30장 이상 선택해주세요.'
+				'30장 이상의 사진을 선택해주시기 바랍니다.'
 			)
 		} else{
 			getToken().then((token) => {
@@ -73,7 +85,7 @@ export default class TrainCommonShipGallery extends Component{
 						this.props.navigation.navigate("DetailCommonShip", {id: this.state.id});
 						Alert.alert(
 							'선박확인체계 알림',
-							'학습 요청이 완료되었습니다.\n학습 완료 시점은 금일부터 최소 일주일입니다.\n선박 사진 확인 후 학습이 불가능할 수 있습니다.'
+							'AI학습요청이 완료되었습니다.'
 						);
 					}
 				})
@@ -91,39 +103,38 @@ export default class TrainCommonShipGallery extends Component{
 						</base.Button>
 					</base.Left>
 					<base.Right>
-                        <base.Button onPress={this.requestTrainImage}>
-                            <base.Text>
-                                요청
-                            </base.Text>
-                        </base.Button>
+                        <base.Button transparent onPress={this.requestTrainImage}>
+							<base.Form style={{}}>
+								<base.Text style={{color: 'skyblue', fontSize: SIZE_FONT}}>요청하기</base.Text>
+							</base.Form>			
+						</base.Button>
 					</base.Right>
+				</base.Header>
+				<base.Header style={{ width: '100%', height: 30, backgroundColor: 'white', borderRadius: 30}}>
+							<base.Title style={{ color: 'black', marginLeft: 4 }}>
+                            	선택된 사진 개수 : {this.state.trainImageLen}장
+                        	</base.Title>
+						<base.Right>
+							{/*<base.Form style={{ backgroundColor: 'grey', borderRadius: 10, height: SIZE_BUTTONHEIGHT, width: SIZE_BUTTONWIDTH, justifyContent: 'center', alignItems: 'center' }}>
+								<base.Text onPress={ this.checkTrainImageAll } style={{color: 'white', fontSize: SIZE_BUTTON}}>전체 선택</base.Text>
+							</base.Form>*/}
+						</base.Right>
 				</base.Header>
 				<base.Content>
 					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{width: '100%', justifyContent: 'center'}}>
-                        <base.Header>
-                        <base.Body>
-                            <base.Title>
-							다양한 측면, 30장 이상, 선박 유무 확인
-                            </base.Title>
-							<base.Title>
-                            	선택된 이미지 수: {this.state.trainImageLen}
-                        	</base.Title>
-                        </base.Body>
-                        </base.Header>
 						<FlatList
-							sytle={{flex:1, height: 250, justifyContent: 'center', width: '100%'}}
+							style={{ height: '100%', width: '100%' }}
 							data={this.state.data}
 							numColumns={3}
-							renderItem={({item, index}) => <ShipImage ship={item} idx={index + 1}
-								onPress={()=>this.checkTrainImage(item.id)}/>}
+							renderItem={({item, index}) => <ShipImage ship={item} idx={index + 1} onPress={()=>this.checkTrainImage(item.id)}/>}
 							ListEmptyComponent={
 								<base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10,}}>
 									<base.Text style={{fontSize: SIZE_SUBTITLE}}>추가사진이 없습니다</base.Text>
 								</base.Form>
 							}
 						/>
-				</base.Form>
+					</base.Form>
 				</base.Content>				
 			</base.Container>
 		);

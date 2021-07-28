@@ -49,6 +49,11 @@ const styles = StyleSheet.create({
     item: {
       marginBottom: SIZE_ITEM
     },
+    itmeTitle: {
+      fontSize: 30, 
+      color: "#2c2c2c", 
+      fontWeight: 'bold'
+    },
     itemUrl: {
       fontSize: 13,
       color: 'skyblue',
