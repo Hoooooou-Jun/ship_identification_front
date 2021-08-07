@@ -199,11 +199,15 @@ export default class Login extends Component{
 			return(
 				<base.Container>
 					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-					<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login} initialRoute={true}/>
+
+						<StatusBar hidden/>
+						<Loading visible={this.state.loadingVisible_CDM || this.state.loadingVisible_Font || this.state.loadingVisible_login} initialRoute={true}/>
+						
 						<base.Form style={{flex: 3, width: '100%', borderRadius: 20, backgroundColor: 'white', elevation: 6,}}>
+							
 							<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-								
 							</base.Form>
+							
 							<base.Form style={{flex: 2, justifyContent: 'center', alignItems: 'center' }}>
 								<base.Form style={{flexDirection: 'row', justifyContent: 'flex-end', height: '100%'}}>
 									<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
@@ -230,13 +234,14 @@ export default class Login extends Component{
 									</base.Item>
 								</base.Form>
 							</base.Form>
-							
+
 							<base.Form style={{flex: 1, padding: 20,}}>
 								<base.Button block onPress={this.executeLogin} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, backgroundColor: '#006eee', elevation: 6,
 									height: SIZE_TITLE + 10}}>
 									<base.Text style={{color: 'white',}}>로그인</base.Text>
 								</base.Button>
 							</base.Form>
+
 						</base.Form>
 	
 						<base.Form style={{flex: 1, flexDirection: 'column', width: '100%',}}>
@@ -254,11 +259,12 @@ export default class Login extends Component{
 								</base.Button>
 							</base.Form>
 						</base.Form>
+
 						<base.Form style={{height: 50}}>
 							<base.Text style={{color: 'grey', fontSize: SIZE_FOOTER}}>Copyright ⓒ 2021. 32DIVISION. All rights reserved.</base.Text>
 						</base.Form>
+
 					</base.Content>
-				<StatusBar hidden/>
 				</base.Container>
 			);
 		}
