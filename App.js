@@ -43,6 +43,10 @@ import ImgViewer from './src/main/imgViewer';
 import ShipImgViewer from './src/main/shipImgViewer';
 
 import MyAccount from './src/main/myAccount';
+
+import store from './src/redux/store';
+import { Provider } from 'react-redux';
+
 const homeStackNav = createStackNavigator(
 	{
     Home: {screen: Home, navigationOptions: {headerShown: false}},
@@ -108,6 +112,6 @@ const AppContainer = createAppContainer(Root);
 
 export default class App extends Component {
 	render(){
-		return <AppContainer></AppContainer>;
+		return <Provider store={store}><AppContainer></AppContainer></Provider>;
 	}
 }
