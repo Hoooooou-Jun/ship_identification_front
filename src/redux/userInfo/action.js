@@ -8,8 +8,6 @@ export const updateUserInfo = (srvno, password, device_id, token, version) => di
 }
 
 const addUserInfo = (srvno, password, device_id, token, version, response) => {
-    console.log(srvno, password, device_id, token, version, response)
-    console.log(response)
     return {
         type: UPDATE_USERINFO,
         payload: {
