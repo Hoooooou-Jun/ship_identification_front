@@ -8,6 +8,7 @@ import { requestLogout } from '../../utils/userInfoRequest';
 import { requestNoticeList } from '../../utils/additionalInfoRequest';
 
 import { connect } from 'react-redux';
+import { resetUserInfo } from '../../redux/userInfo/action.js'
 
 import Loading from '../../utils/loading';
 
@@ -28,22 +29,38 @@ const Home = (props) => {
 	const [flatlistSize, setFlatlistSize] = useState(0)
 	const [flatlistIndex, setFlatlistIndex] = useState(0)
 
-	
-	useLayoutEffect(() => {
-		function getNoticeList() {
-		    requestNoticeList(props.userInfo.token).then((response) => {
-				try {
-					setData(response.data.data)
-					setFlatlistSize(response.data.data.length)
+	const loadNoticeData = async () => {
+		await requestNoticeList(props.userInfo.token).then((response) => {
+			if(response.status == 200) {
+				setData(response.data.data)
+				setFlatlistSize(response.data.data.length)
+			}
+			else {
+				console.log(err)
+			}
+		})
+		await setDataMount(true)
+	}
+
+	const executeLogout = () => {
+		requestLogout(props.userInfo.token).then((response) => {
+				if(response.data.status == 200) {
+					Alert.alert(
+						'선박확인체계 알림',
+						'정상적으로 로그아웃 되었습니다',
+					)
+					props.resetUserInfo()
+					props.navigation.navigate('Login')
 				}
-				catch(err) {
-					console.log(err)
+				else {
+					console.log('Failed logout')
 				}
 			})
-			setDataMount(true)
 		}
-		getNoticeList()
-	}, [])
+
+	useLayoutEffect(() => {
+		loadNoticeData()
+	})
 
 	if(dataMount) {
 		return(
@@ -87,7 +104,7 @@ const Home = (props) => {
 									<AntDesign name="message1" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
 									<base.Text style={styles.cardText}>질의응답</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={styles.cardButton} >
+								<base.CardItem button style={styles.cardButton} onPress={executeLogout}>
 									<AntDesign name="poweroff" size={SIZE_ICON} color="#006eee" style={{alignItems: 'center'}}/>
 									<base.Text style={styles.cardText}>로그아웃</base.Text>
 								</base.CardItem>
@@ -97,7 +114,7 @@ const Home = (props) => {
 					</base.Form>
 
 					<base.Form style={{flex: 2, margin: 10, elevation: 6, backgroundColor: 'white', borderRadius: 20}}>
-					 	{/* <FlatList
+					 	<FlatList
 							keyExtractor = { (item, index) => index.toString() }
 							data={data}
 							horizontal={true}
@@ -121,7 +138,7 @@ const Home = (props) => {
 									</base.Form>
 								</base.Form>
 							}
-						/> */}
+						/>
 					</base.Form>
 
 					<base.Form style={{flex: 15, width: '100%'}}>
@@ -222,13 +239,19 @@ const Home = (props) => {
 }
 
 const mapStateToProps = (state) => {
+	console.log(state)
 	return {
-		userInfo: state.userInfo
+		userInfo: state.userInfo,
 	}
 
 }
 
-export default connect(mapStateToProps)(Home);
+const mapDispatchToProps = {
+	resetUserInfo: () => resetUserInfo()
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
+
 // export default class Home extends Component{
 // 	constructor(props) {
 // 		super(props);

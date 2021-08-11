@@ -1,5 +1,5 @@
 import { requestUserData } from '../../utils/userInfoRequest.js'
-import { UPDATE_USERINFO } from './types.js'
+import { UPDATE_USERINFO, RESET_USERINFO } from './types.js'
 
 export const updateUserInfo = (srvno, password, device_id, token, version) => dispatch => {
     requestUserData(token).then((response) => {
@@ -22,5 +22,11 @@ const addUserInfo = (srvno, password, device_id, token, version, response) => {
             unit: response.data.data.unit,
             phone: response.data.data.phone,
         }
+    }
+}
+
+export const resetUserInfo = () => {
+    return {
+        type: RESET_USERINFO,
     }
 }

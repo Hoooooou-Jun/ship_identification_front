@@ -1,5 +1,6 @@
-import { UPDATE_USERINFO } from "./types.js";
+import { RESET_USERINFO, UPDATE_USERINFO } from "./types.js";
 import { userInfo } from "./initialData.js"
+import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 
 const reducerUserInfo = ( state = userInfo, action ) => {
     switch(action.type) {
@@ -16,7 +17,21 @@ const reducerUserInfo = ( state = userInfo, action ) => {
                 position: action.payload.position,
                 unit: action.payload.unit,
                 phone: action.payload.phone,
-        }
+            }
+        case RESET_USERINFO:
+            return {
+                ...state,
+                srvno: '',
+                password: '',
+                device_id: '',
+                token: '',
+                version: '',
+                name: '',
+                rank: '',
+                position: '',
+                unit: '',
+                phone: '',
+            }
         default: return state;
     }
 }

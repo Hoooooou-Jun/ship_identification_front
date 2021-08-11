@@ -1,7 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { Alert, Dimensions, Linking } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 import * as base from 'native-base';
 import Constants from 'expo-constants';
@@ -36,32 +35,29 @@ const Login = (props) => {
 	const [server_mount, setServer_Mount] = useState(false);
 	const [font_load, setFont_Load] = useState(false);
 
-	useEffect(() => {
-		async function loadFont() {
-			await Font.loadAsync({
-				'Roboto': require('../../../node_modules/native-base/Fonts/Roboto.ttf'),
-				'Roboto_medium': require('../../../node_modules/native-base/Fonts/Roboto_medium.ttf'),
-				Nanum: require('../../../assets/fonts/Nanum.ttf'),
-				Nanum_Title: require('../../../assets/fonts/Nanum_Title.ttf'),
-			})
-			await setFont_Load(true);  
-		}
-		function loadData() {
-			requestVersion().then((response) => {
-				try {
-					setServer_Mount(true)
-					setVersion_Server(response.data.data.version)
-					setServer_Status(response.data.data.server_status)
-				}
-				catch(err) {
-					console.log(err)
-				}
-			})
-			setDevice_Id(Constants.deviceId)
-		}
-		loadFont()
-		loadData()
-	}, []);
+	const loadFont = async () => {
+		await Font.loadAsync({
+			'Roboto': require('../../../node_modules/native-base/Fonts/Roboto.ttf'),
+			'Roboto_medium': require('../../../node_modules/native-base/Fonts/Roboto_medium.ttf'),
+			Nanum: require('../../../assets/fonts/Nanum.ttf'),
+			Nanum_Title: require('../../../assets/fonts/Nanum_Title.ttf'),
+		})
+		await setFont_Load(true);  
+	}
+
+	const loadData = async () => {
+		await requestVersion().then((response) => {
+			try {
+				setServer_Mount(true)
+				setVersion_Server(response.data.data.version)
+				setServer_Status(response.data.data.server_status)
+			}
+			catch(err) {
+				console.log(err)
+			}
+		})
+		await setDevice_Id(Constants.deviceId)
+	}
 
 	const executeLogin = () => {
 		if(srvno == '') {
@@ -78,7 +74,6 @@ const Login = (props) => {
 		}
 		else {
 			requestLogin(srvno, password, device_id).then((response) => {
-				AsyncStorage.setItem('token', response.data['data']['token'])
 				Alert.alert(
 					'선박확인체계 알림',
 					srvno + '님 반갑습니다',
@@ -127,6 +122,13 @@ const Login = (props) => {
 			})
 		}
 	}
+
+	useEffect(() => {
+		loadFont()
+		loadData()
+	}, []);
+
+	
 	if(font_load == true && server_mount) {
 		if(server_status == UnderInspection) {
 			return (
