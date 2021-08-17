@@ -8,6 +8,12 @@ export const requestLogin = (srvno, password, device_id) =>
 		device_id: device_id,
 })
 
+export const requestPasswordReset = (srvno, device_id) => 
+	request.post('/Accounts/password/reset/',{
+		srvno: srvno,
+		device_id: device_id,
+})
+
 // Destroy TOKEN
 export const requestLogout = (token) => 
 	request.get('/Accounts/logout/',{

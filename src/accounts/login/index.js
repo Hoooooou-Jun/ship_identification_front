@@ -236,15 +236,10 @@ const Login = (props) => {
 
 						<base.Form style={{flex: 1, flexDirection: 'column', width: '100%',}}>
 							<base.Form style={{flexDirection: 'row'}}>
-								<base.Button transparent style={styles.register} onPress={()=>props.navigation.navigate('Signup')}>
+								<base.Button transparent style={styles.register} onPress={() => props.navigation.navigate('Signup')}>
 										<base.Text style={{fontSize: SIZE_FONT, color: 'black'}}>회원가입</base.Text>
 								</base.Button>
-								<base.Button transparent style={styles.register} onPress={()=>
-												Alert.alert(
-													'선박확인체계 알림',
-													'개발 중인 기능입니다',
-												)	
-											}>
+								<base.Button transparent style={styles.register} onPress={() => props.navigation.navigate('Lost')}>
 									<base.Text style={{fontSize: SIZE_FONT, color: 'black'}}>비밀번호 초기화</base.Text>
 								</base.Button>
 							</base.Form>
