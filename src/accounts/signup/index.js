@@ -19,7 +19,7 @@ const Signup = (props) => {
 	const [srvno, setSrvno] = useState('')
 	const [password, setPassword] = useState('')
 	const [passwordCheck, setPasswordCheck] = useState('')
-	// const [check, setCheck] = useState(false)
+	const [check, setCheck] = useState(false)
 	const [name, setName] = useState('')
 	const [rank, setRank] = useState('')
 	const [position, setPosition] = useState('')
@@ -28,91 +28,93 @@ const Signup = (props) => {
 	const [device_id, setDevice_Id] = useState(Constants.deviceId)
 	const [loadingVisible, setLoadingVisible] = useState(false)
 
-	// useEffect(() => {
-	// 	setCheck(false)
-	// }, [passwordCheck]) 
+	useEffect(() => {
+		setCheck(false)
+	}, [passwordCheck]) 
 
 	const executeSignup = () => {
 		setLoadingVisible(true)
-		requestSignup(srvno, password, name, rank, position, unit, phone, device_id)
-		.then((response) => {
-			if(response.status == 200 && check == true) {
-				Alert.alert(
-					'선박확인체계 알림',
-					name + '님 환영합니다.',
-				)
+		if(check == true) {
+			requestSignup(srvno, password, name, rank, position, unit, phone, device_id)
+			.then((response) => {
+				if(response.status == 200) {
+					Alert.alert(
+						'선박확인체계 알림',
+						name + '님 환영합니다.',
+					)
+					setLoadingVisible(false)
+					props.navigation.popToTop();
+				}
+				else {
+					console.log('signup fail')
+					setLoadingVisible(false)
+				}
+			}).catch((error) => {
+				const msg = error.response.data.message
 				setLoadingVisible(false)
-				props.navigation.popToTop();
-			}
-			// else if(check == false) {
-			// 	Alert.alert(
-			// 		'선박확인체계 알림',
-			// 		'비밀번호 일치 여부를 확인해주시기 바랍니다.',
-			// 	)
-			// 	setLoadingVisible(false)
-			// }
-			else {
-				console.log('signup fail')
-				setLoadingVisible(false)
-			}
-		}).catch((error) => {
-			const msg = error.response.data.message
+				console.log(msg)
+				if(msg == 'Already exist serviceNum'){
+					Alert.alert(
+						'선박확인체계 알림',
+						'이미 존재하는 계정입니다.',
+					)
+				}
+				else if(msg == 'Already regist device'){
+					Alert.alert(
+						'선박확인체계 알림',
+						'이미 등록된 단말기입니다.',
+					)
+				}
+				else if(msg == 'Not special character in password'){
+					Alert.alert(
+						'선박확인체계 알림',
+						'비밀번호에 특수문자를 포함시키시기 바랍니다.',
+					)
+				}
+				else if(msg == 'Password with sequence'){
+					Alert.alert(
+						'선박확인체계 알림',
+						'연속적인 오름차순이나 내림차순인 비밀번호는 사용할 수 없습니다.',
+					)
+				}
+				else if(msg == 'Repeat the same character 3 times'){
+					Alert.alert(
+						'선박확인체계 알림',
+						'3번 이상 연속으로 중복된 문자가 들어가 비밀번호는 사용할 수 없습니다.',
+					)
+				}
+			})
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 확인해주시기 바랍니다.',
+			)
 			setLoadingVisible(false)
-			console.log(msg)
-			if(msg == 'Already exist serviceNum'){
-				Alert.alert(
-					'선박확인체계 알림',
-					'이미 존재하는 계정입니다.',
-				)
-			}
-			else if(msg == 'Already regist device'){
-				Alert.alert(
-					'선박확인체계 알림',
-					'이미 등록된 단말기입니다.',
-				)
-			}
-			else if(msg == 'Not special character in password'){
-				Alert.alert(
-					'선박확인체계 알림',
-					'비밀번호에 특수문자를 포함시키시기 바랍니다.',
-				)
-			}
-			else if(msg == 'Password with sequence'){
-				Alert.alert(
-					'선박확인체계 알림',
-					'연속적인 오름차순이나 내림차순인 비밀번호는 사용할 수 없습니다.',
-				)
-			}
-			else if(msg == 'Repeat the same character 3 times'){
-				Alert.alert(
-					'선박확인체계 알림',
-					'3번 이상 연속으로 중복된 문자가 들어가 비밀번호는 사용할 수 없습니다.',
-				)
-			}
-		})
+		}
 	}
 
-	// const checkPassword = () => {
-	// 	if(password == '' && passwordCheck == '') {
-	// 		Alert.alert(
-	// 			'선박확인체계 알림',
-	// 			'비밀번호를 입력해주시기 바랍니다.'
-	// 		)
-	// 	}
-	// 	else if(password == passwordCheck) {
-	// 		Alert.alert(
-	// 			'선박확인체계 알림',
-	// 			'비밀번호 확인이 완료되었습니다.'
-	// 		)
-	// 		setCheck(true)
-	// 	}
-	// 	else {
-	// 		Alert.alert(
-	// 			'선박확인체계 알림',
-	// 			'비밀번호가 일치하지 않습니다.'
-	// 		)
-	// 	}
-	// } //수정 요망. (상단의 계정 생성 error와 비밀번호 일치 여부가 같이 포함되어있어야 되는게 아닌가 싶음. 이거는 따로 로직을 짜봐야 할 듯.)
+	const checkPassword = () => {
+		if(password == '' && passwordCheck == '') {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 입력해주시기 바랍니다.'
+			)
+		}
+		else if(password == passwordCheck) {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호 확인이 완료되었습니다.'
+			)
+			setCheck(true)
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 일치하지 않습니다.'
+			)
+		}
+	}
 
 	return (
 		<base.Container>
@@ -127,10 +129,12 @@ const Signup = (props) => {
 			</base.Header>
 			<base.Content>
 				<Loading visible={loadingVisible} initialRoute={false} onPress={()=>props.navigation.goBack()}/>
+				
 				<base.Form style={{padding: 10,}}>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>회원가입</base.Text>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>하단의 정보를 입력해주시기 바랍니다.</base.Text>
 				</base.Form>
+
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>아이디</base.Text>
@@ -159,18 +163,21 @@ const Signup = (props) => {
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20}}>
 						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>비밀번호 확인</base.Text>
-						<base.Input
-							placeholder='비밀번호를 다시 입력해주시기 바랍니다.'
-							onChangeText={setPasswordCheck}
-							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
-							placeholderStyle={{fontFamily:'Nanum'}}
-							secureTextEntry={ true }
-							/>
+						<base.Form style={{flexDirection: 'row'}}>
+							<base.Input
+								placeholder='비밀번호를 다시 입력해주시기 바랍니다.'
+								onChangeText={setPasswordCheck}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+								placeholderStyle={{fontFamily:'Nanum'}}
+								secureTextEntry={ true }
+								/>
+							<TouchableOpacity style={{marginRight: 20}} onPress={checkPassword}>
+								<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '40%', marginRight: -10}}>확인하기</base.Text>
+							</TouchableOpacity>
+						</base.Form>
 					</base.Item>
 				</base.Form>
-				{/* <TouchableOpacity style={{alignItems: 'flex-end', marginRight: 20}}>
-					<base.Text style={{fontFamily: 'Nanum', color: 'skyblue'}} onPress={checkPassword}>인증하기</base.Text>
-				</TouchableOpacity> */}
+
 
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
@@ -227,7 +234,7 @@ const Signup = (props) => {
 						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>직책</base.Text>
 						<base.Input
 							placeholder="직책을 입력해주시기 바랍니다."
-							onChangeText={(position) => setPosition(position)}
+							onChangeText={setPosition}
 							style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 							placeholderStyle={{fontFamily:'Nanum'}}
 							/>
