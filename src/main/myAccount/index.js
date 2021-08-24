@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import * as base from 'native-base';
 import { Picker } from 'native-base';
 import { connect } from 'react-redux'
 import { Feather } from '@expo/vector-icons';
+import { requestCertification } from '../../utils/userInfoRequest';
 
 import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';
 import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
@@ -17,15 +18,32 @@ const SIZE_SUBFONT = Dimensions.get('screen').height * 0.015
 
 const MyAccount = (props) => {
 	const [edit, setEdit] = useState(false)
-	const [pwCertification, setPwCertification] = useState(false)
-	const [rank, setRank] = useState('')
-	const [unit, setUnit] = useState('사령부')
+	const [rank, setRank] = useState(props.userInfo.rank)
+	const [unit, setUnit] = useState(props.userInfo.unit)
 	const [position, setPosition] = useState('')
 	const [phone, setPhone] = useState('')
 	const [password, setPassword] = useState('')
+	const [pwCertification, setPwCertification] = useState(false)
 	const [newPassword, setNewPassword] = useState('')
+	const [newPasswordCheck, setNewPasswordCheck] = useState('')
 	const [passwordCheck, setPasswordCheck] = useState(false)
 
+	const onBack = () => {
+		Alert.alert(
+			"선박확인체계 알림",
+			"작성을 취소하시겠습니까?",
+			[
+				{
+					text: "예",
+					onPress: () => props.navigation.goBack(),
+				},
+				{ 
+					text: "아니오"
+				}
+			]
+		)
+	}
+	
 	const onEdit = () => {
 		setEdit(true)
 		Alert.alert(
@@ -42,12 +60,72 @@ const MyAccount = (props) => {
 		)
 	}
 
+	const onCertification = () => {
+		if(password == props.userInfo.password) {
+			setPwCertification(true)
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 인증되었습니다.'
+			)
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 다시 확인해주시기 바랍니다.'
+			)
+		}
+	}
+
+	const checkPassword = () => {
+		if(newPassword == newPasswordCheck) {
+			setPasswordCheck(true)
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 확인되었습니다.'
+			)
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 일치하지 않습니다.'
+			)
+		}
+	}
+
+	const editUserInfo = () => {
+		if(pwCertification == false) {
+			Alert.alert(
+				"선박확인체계 알림",
+				"비밀번호를 제외한 수정된 정보를 저장하시겠습니까?",
+				[
+					{
+						text: "예",
+						// onPress: () => 
+						// {
+						// 	setEdit(false)
+						// 	Alert.alert(
+						// 	'선박확인체계 알림',
+						// 	'저장이 완료되었습니다.'
+						// 	)
+						// },
+					},
+					{ 
+						text: "아니오"
+					}
+				]
+			)
+		}
+		else {
+
+		}
+	}
+
 	if(edit == false) {
 		return (
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
-						<base.Button transparent onPress={()=>props.navigation.goBack()}>
+						<base.Button transparent onPress={() => props.navigation.goBack()}>
 							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
@@ -100,7 +178,7 @@ const MyAccount = (props) => {
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
-						<base.Button transparent onPress={()=>props.navigation.goBack()}>
+						<base.Button transparent onPress={onBack}>
 							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
@@ -137,7 +215,7 @@ const MyAccount = (props) => {
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 							<base.Text style={{fontSize: SIZE_TITLE, alignSelf:'flex-start'}}>직책</base.Text>
 							<base.Input
-								placeholder="직책을 입력해주시기 바랍니다."
+								placeholder={props.userInfo.position}
 								onChangeText={setPosition}
 								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
@@ -148,7 +226,7 @@ const MyAccount = (props) => {
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 							<base.Text style={{fontSize: SIZE_TITLE, alignSelf:'flex-start'}}>연락처</base.Text>
 							<base.Input
-								placeholder="'-'를 제외한 11자리를 입력하시기 바랍니다."
+								placeholder={props.userInfo.phone}
 								onChangeText={setPhone}
 								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 								placeholderStyle={{fontFamily:'Nanum'}}
@@ -156,29 +234,52 @@ const MyAccount = (props) => {
 								/>
 						</base.Item>
 					</base.Form>
-
+					{pwCertification ||
 					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20}}>
 							<base.Text style={{fontSize: SIZE_TITLE, alignSelf:'flex-start'}}>비밀번호 변경하기</base.Text>
 							<base.Form style={{flexDirection: 'row'}}>
 								<base.Input
 									placeholder='현재 비밀번호를 입력해주시기 바랍니다.'
-
+									onChangeText={setPassword}
 									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
 									placeholderStyle={{fontFamily:'Nanum'}}
 									secureTextEntry={ true }
 									/>
-								<TouchableOpacity style={{marginRight: 20}} >
+								<TouchableOpacity style={{marginRight: 20}} onPress={onCertification}>
 									<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '40%', marginRight: -10}}>인증하기</base.Text>
 								</TouchableOpacity>
 							</base.Form>
 						</base.Item>
-					</base.Form>
-
-					{
-						pwCertification && true // 조건분기로 나누기.
-					}
-
+					</base.Form>}
+					{pwCertification &&
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_TITLE, alignSelf:'flex-start'}}>비밀번호 변경하기</base.Text>
+								<base.Input
+									placeholder='새 비밀번호를 입력해주시기 바랍니다.'
+									onChangeText={setNewPassword}
+									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									secureTextEntry={ true }
+									/>
+							</base.Item>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_TITLE,}}></base.Text>
+								<base.Form style={{flexDirection: 'row'}}>
+									<base.Input
+										placeholder='비밀번호를 다시 입력해주시기 바랍니다.'
+										onChangeText={setNewPasswordCheck}
+										style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT, marginLeft: '-1%', marginTop: '-2%' }}
+										placeholderStyle={{fontFamily:'Nanum'}}
+										secureTextEntry={ true }
+										/>
+									<TouchableOpacity style={{marginRight: 20}} onPress={checkPassword}>
+										<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '40%', marginRight: -10}}>확인하기</base.Text>
+									</TouchableOpacity>
+								</base.Form>
+							</base.Item>
+						</base.Form>}
 				</base.Content>
 			</base.Container>
 		)

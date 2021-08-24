@@ -33,6 +33,21 @@ export const requestUserData = (token) =>
 	}
 })
 
+export const requestEditUserData = (token, device_id, rank, unit, position, phone, password) => 
+	request.post('/Accounts/info/',{
+		device_id,
+		rank,
+		unit,
+		position,
+		phone,
+		password,
+	}, {
+		headers: {
+			'AUTHORIZATION': 'jwt ' + token,
+			'Accept': 'application/json',
+			'Content-Type': 'application/json',
+}})
+
 // User's detail Info
 export const requestSignup = (srvno, password, name, rank, position, unit, phone, device_id) => 
 	request.post('/Accounts/signup/',{
