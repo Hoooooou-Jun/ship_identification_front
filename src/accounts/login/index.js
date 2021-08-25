@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 import * as Font from 'expo-font';
 
 import { connect } from 'react-redux';
-import { updateUserInfo } from '../../redux/userInfo/action.js'
+import { loginUserInfo } from '../../redux/userInfo/action.js'
 
 import { requestLogin } from '../../utils/userInfoRequest/';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -78,7 +78,7 @@ const Login = (props) => {
 					'선박확인체계 알림',
 					srvno + '님 반갑습니다',
 				)
-				props.updateUserInfo(srvno, password, device_id, response.data.data.token, version)
+				props.loginUserInfo(srvno, password, device_id, response.data.data.token, version)
 				props.navigation.navigate('Home')
 			}).catch((error) => {
 				const msg = error.response.data.message
@@ -269,7 +269,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-	updateUserInfo: (srvno, password, device_id, token, version) => updateUserInfo(srvno, password, device_id, token, version)
+	loginUserInfo: (srvno, password, device_id, token, version) => loginUserInfo(srvno, password, device_id, token, version)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

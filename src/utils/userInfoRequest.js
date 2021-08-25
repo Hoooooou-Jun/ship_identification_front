@@ -35,12 +35,12 @@ export const requestUserData = (token) =>
 
 export const requestEditUserData = (token, device_id, rank, unit, position, phone, password) => 
 	request.post('/Accounts/info/',{
-		device_id,
-		rank,
-		unit,
-		position,
-		phone,
-		password,
+		device_id: device_id,
+		rank: rank,
+		unit: unit,
+		position: position,
+		phone: phone,
+		password: password,
 	}, {
 		headers: {
 			'AUTHORIZATION': 'jwt ' + token,

@@ -1,8 +1,8 @@
 import { RESET_USERINFO, UPDATE_USERINFO } from "./types.js";
 import { userInfo } from "./initialData.js"
-import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 
 const reducerUserInfo = ( state = userInfo, action ) => {
+    console.log(action)
     switch(action.type) {
         case UPDATE_USERINFO:
             return {

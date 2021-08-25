@@ -1,13 +1,39 @@
 import { requestUserData } from '../../utils/userInfoRequest.js'
 import { UPDATE_USERINFO, RESET_USERINFO } from './types.js'
 
-export const updateUserInfo = (srvno, password, device_id, token, version) => dispatch => {
+export const loginUserInfo = (srvno, password, device_id, token, version) => dispatch => {
     requestUserData(token).then((response) => {
-        dispatch(addUserInfo(srvno, password, device_id, token, version, response))
+        dispatch(updateUserInfo(
+            srvno,
+            password,
+            device_id,
+            token,
+            version,
+            response.data.data.name,
+            response.data.data.rank,
+            response.data.data.position,
+            response.data.data.unit,
+            response.data.data.phone,
+            ))
     })
 }
 
-const addUserInfo = (srvno, password, device_id, token, version, response) => {
+export const editUserInfo = (srvno, password, device_id, token, version, name, rank, position, unit, phone) => dispatch => {
+    dispatch(updateUserInfo(
+        srvno,
+        password,
+        device_id,
+        token,
+        version,
+        name,
+        rank,
+        position,
+        unit,
+        phone
+    ))
+}
+
+const updateUserInfo = (srvno, password, device_id, token, version, name, rank, position, unit, phone) => {
     return {
         type: UPDATE_USERINFO,
         payload: {
@@ -16,11 +42,11 @@ const addUserInfo = (srvno, password, device_id, token, version, response) => {
             device_id: device_id,
             token: token,
             version: version,
-            name: response.data.data.name,
-            rank: response.data.data.rank,
-            position: response.data.data.position,
-            unit: response.data.data.unit,
-            phone: response.data.data.phone,
+            name: name,
+            rank: rank,
+            position: position,
+            unit: unit,
+            phone: phone,
         }
     }
 }
