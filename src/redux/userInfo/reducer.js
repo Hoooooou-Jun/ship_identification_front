@@ -2,7 +2,6 @@ import { RESET_USERINFO, UPDATE_USERINFO } from "./types.js";
 import { userInfo } from "./initialData.js"
 
 const reducerUserInfo = ( state = userInfo, action ) => {
-    console.log(action)
     switch(action.type) {
         case UPDATE_USERINFO:
             return {
