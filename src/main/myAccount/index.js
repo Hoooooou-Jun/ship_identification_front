@@ -84,7 +84,8 @@ const MyAccount = (props) => {
 						text: "예",
 						onPress: () => 
 						{
-							requestEditUserData(props.userInfo.token, "bde9532e-edf6-41a4-b6e9-a7515c734f27", rank, unit, position, phone, props.userInfo.password)
+							console.log(props.userInfo.device_id)
+							requestEditUserData(props.userInfo.token, props.userInfo.device_id, rank, unit, position, phone, props.userInfo.password)
 							.then((response) => {
 								Alert.alert(
 								'선박확인체계 알림',
@@ -138,7 +139,7 @@ const MyAccount = (props) => {
 						onPress: () => 
 						{
 							if(passwordCheck == true) {
-								requestEditUserData(props.userInfo.token, "bde9532e-edf6-41a4-b6e9-a7515c734f27", rank, unit, position, phone, newPassword)
+								requestEditUserData(props.userInfo.token, props.userInfo.device_id, rank, unit, position, phone, newPassword)
 								.then((response) => {
 									Alert.alert(
 										'선박확인체계 알림',
@@ -353,16 +354,16 @@ const MyAccount = (props) => {
 					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={styles.itemBorder}>
 							<base.Text style={styles.itemTextLayout}>비밀번호 변경하기</base.Text>
-							<base.Form style={{flexDirection: 'row'}}>
+							<base.Form style={{flexDirection: 'row', marginTop: '-0%'}}>
 								<base.Input
 									placeholder='현재 비밀번호를 입력해주시기 바랍니다.'
 									onChangeText={setOldPassword}
-									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT, marginLeft: '-1%', marginTop: '-1%'}}
 									placeholderStyle={{fontFamily:'Nanum'}}
 									secureTextEntry={ true }
 									/>
 								<TouchableOpacity style={{marginRight: 20}} onPress={onCertification}>
-									<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '40%', marginRight: -10}}>인증하기</base.Text>
+									<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '20%', marginRight: -10}}>인증하기</base.Text>
 								</TouchableOpacity>
 							</base.Form>
 						</base.Item>
@@ -390,7 +391,7 @@ const MyAccount = (props) => {
 										secureTextEntry={ true }
 										/>
 									<TouchableOpacity style={{marginRight: 20}} onPress={checkPassword}>
-										<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '40%', marginRight: -10}}>확인하기</base.Text>
+										<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '20%', marginRight: -10}}>확인하기</base.Text>
 									</TouchableOpacity>
 								</base.Form>
 							</base.Item>

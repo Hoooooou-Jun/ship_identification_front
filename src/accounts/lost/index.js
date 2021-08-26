@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Alert, Dimensions, Clipboard } from 'react-native';
 import * as base from 'native-base'
 import Constants from 'expo-constants';
@@ -22,7 +22,7 @@ const Lost = (props) => {
 
 	const getPassword = () => {
 		setLoadingVisible(true)
-		requestPasswordReset(srvno, "bde9532e-edf6-41a4-b6e9-a7515c734f27").then((response) => {
+		requestPasswordReset(srvno, device_id).then((response) => {
 			Alert.alert(
 				'선박확인체계 알림',
 				'비밀번호가 초기화되었습니다.'
