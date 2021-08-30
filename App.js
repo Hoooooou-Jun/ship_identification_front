@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
+import { LogBox } from "react-native";
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -46,6 +46,10 @@ import MyAccount from './src/main/myAccount';
 
 import store from './src/redux/store';
 import { Provider } from 'react-redux';
+
+LogBox.ignoreLogs([
+	"VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
+  ]);
 
 const homeStackNav = createStackNavigator(
 	{

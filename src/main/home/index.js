@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './styles';
 import * as base from 'native-base';
 import { Linking, Alert, Dimensions, FlatList, TouchableHighlight } from 'react-native';
@@ -23,46 +23,57 @@ const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 
 const Home = (props) => {
-
-	// const [data, setData] = useState()
+	const flatListRef = useRef()
+	const [data, setData] = useState([])
 	const [dataMount, setDataMount] = useState(false)
-	// const [flatlistSize, setFlatlistSize] = useState(0)
-	// const [flatlistIndex, setFlatlistIndex] = useState(0)
 
-	// const loadNoticeData = async () => {
-	// 	await requestNoticeList(props.userInfo.token).then((response) => {
-	// 		if(response.status == 200) {
-	// 			setData(response.data.data)
-	// 			setFlatlistSize(response.data.data.length)
-	// 		}
-	// 		else {
-	// 			console.log(err)
-	// 		}
-	// 	})
-	// 	await setDataMount(true)
-	// }
-	useEffect(() => {
-		setDataMount(true)
-	})
+	const getNoticeList = () => {
+		requestNoticeList(props.userInfo.token).then((response) => {
+			if(response.status == 200) {
+				setData(response.data.data)
+				setDataMount(true)
+			}
+			else {
+				console.log('error')
+			}
+		})
+	}
+
 	const executeLogout = () => {
-		requestLogout(props.userInfo.token).then((response) => {
-				if(response.data.status == 200) {
-					Alert.alert(
-						'선박확인체계 알림',
-						'정상적으로 로그아웃 되었습니다',
-					)
-					props.resetUserInfo()
-					props.navigation.navigate('Login')
+		Alert.alert(
+			"선박확인체계 알림",
+			"로그아웃 하시겠습니까?",
+			[
+				{
+					text: "예",
+					onPress: () =>
+					{
+						requestLogout(props.userInfo.token).then((response) => {
+							if(response.data.status == 200) {
+								Alert.alert(
+									'선박확인체계 알림',
+									'정상적으로 로그아웃 되었습니다.',
+								)
+								props.resetUserInfo()
+								props.navigation.navigate('Login')
+							}
+							else {
+								console.log('Failed logout')
+							}
+						})
+					},
+				},
+				{ 
+					text: "아니오"
 				}
-				else {
-					console.log('Failed logout')
-				}
-			})
-		}
+			]
+		)
+	}
 
-	// useLayoutEffect(() => {
-	// 	loadNoticeData
-	// })
+	useEffect(() => {
+		getNoticeList()
+	}, [props.userInfo])
+
 
 	if(dataMount) {
 		return(
@@ -116,7 +127,8 @@ const Home = (props) => {
 					</base.Form>
 
 					<base.Form style={{flex: 2, margin: 10, elevation: 6, backgroundColor: 'white', borderRadius: 20}}>
-					 	{/* <FlatList
+					 	<FlatList
+						 	ref = {flatListRef}
 							keyExtractor = { (item, index) => index.toString() }
 							data={data}
 							horizontal={true}
@@ -140,7 +152,7 @@ const Home = (props) => {
 									</base.Form>
 								</base.Form>
 							}
-						/> */}
+						/>
 					</base.Form>
 
 					<base.Form style={{flex: 15, width: '100%'}}>

@@ -11,9 +11,6 @@ import Loading from '../../../utils/loading';
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 
-const SIZE_QNATITLE = Dimensions.get('screen').height * 0.02
-const SIZE_QNASUBTITLE = Dimensions.get('screen').height * 0.015
-
 const QNAList = (props) => {
 	const [data, setData] = useState([])
 	const [loadingVisible, setLoadingVisible] = useState(true)
@@ -56,6 +53,7 @@ const QNAList = (props) => {
 					<base.Text style={{color: 'black'}}>문의하기</base.Text>
 				</base.Button>
 				<FlatList
+					keyExtractor = { (item, index) => index.toString() }
 					style={{padding: 10,}}
 					data={data}
 					renderItem={({item}) =>	<ShowQuestion data={item} onPress={() => props.navigation.navigate('Answer',{id: item.id})} />}
