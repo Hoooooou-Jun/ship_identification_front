@@ -253,11 +253,9 @@ const Home = (props) => {
 }
 
 const mapStateToProps = (state) => {
-	console.log(state)
 	return {
 		userInfo: state.userInfo,
 	}
-
 }
 
 const mapDispatchToProps = {
