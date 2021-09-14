@@ -2,7 +2,6 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, useRef } from 'react';
 import * as base from 'native-base';
 import { FlatList, Dimensions, Alert, Modal, TextInput, Text, Pressable } from 'react-native';
-import { searchCommonShip, searchWastedShip } from '../../utils/shipInfoRequest';
 import ShowShip from './showShip';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Loading from '../../utils/loading';
@@ -46,27 +45,9 @@ let UNIT_CANCEL_INDEX = 8;
 
 const SearchResult = (props) => {
 	const [data, set_data] = useState([])
-	const [index, set_index] = useState(1)
 	const [cnt, set_cnt] = useState(0)
+	const [index, set_index] = useState(1)
 
-	const [flag, set_flag] = useState('Normal')
-	const [id, set_id] = useState('')
-	const [types, set_types] = useState('')
-	const [region, set_region] = useState('')
-	const [name, set_name] = useState('Normal')
-	const [code, set_code] = useState('Normal')
-	const [tons, set_tons] = useState('') // 안쓰임
-	const [size, set_size] = useState('') // 안쓰임
-	const [port, set_port] = useState('')
-
-	const [is_ais, set_is_ais] = useState(false)
-	const [is_vpass, set_is_vpass] = useState(false)
-	const [is_vhf, set_is_vhf] = useState(false)
-	const [is_ff, set_is_ff] = useState(false)
-
-	const [info, set_info] = useState('')
-
-	const [loadingVisible, set_loadingVisible] = useState(true)
 	const [unit, set_unit] = useState('all')
 	const [sort, set_sort] = useState('')
 	const [clicked, set_clicked] = useState(null)
@@ -77,35 +58,15 @@ const SearchResult = (props) => {
 	const [modalVisible, set_modalVisible] = useState(false)
 	const [input, set_input] = useState()
 
+	const [loadingVisible, set_loadingVisible] = useState(true)
+
 	const flatListRef = useRef()
 
 	useEffect(() => {
-		async function fetchData() {
-			await updateData()
-			showResult()
-		}
-		fetchData();
-	}, [])
-
-
-	console.log('초기', flag, id, types, region, name, code, tons, size, port, is_ais, is_vpass, is_vhf, is_ff, info)
-
-	const updateData = () => {
-		console.log('updateDate')
-		set_flag(props.navigation.getParam('flag'))
-		set_name(props.navigation.getParam('name'))
-		set_code(props.navigation.getParam('code'))
-		set_tons(props.navigation.getParam('tons'))
-		set_size(props.navigation.getParam('size'))
-		set_is_ais(props.navigation.getParam('is_ais'))
-		set_is_vpass(props.navigation.getParam('is_vpass'))
-		set_is_vhf(props.navigation.getParam('is_vhf'))
-		set_is_ff(props.navigation.getParam('is_ff'))
-		set_region(props.navigation.getParam('region'))
-		set_id(props.navigation.getParam('id'))
-		set_types(props.navigation.getParam('types'))
-		set_info(props.navigation.getParam('info'))
-	}
+		set_data(props.searchShip.data)
+		set_cnt(props.searchShip.cnt)
+		set_loadingVisible(false)
+	}, [props.searchShip])
 
 	const firstPage = () => {
 		if(index == 1){
@@ -115,7 +76,7 @@ const SearchResult = (props) => {
 			)
 		}
 		else {
-			if(flag == 'Normal'){updateSearchCommonShip(1);}
+			if(props.searchShip.flag == 'Normal'){updateSearchCommonShip(1);}
 			else{updateSearchWastedShip(1);}
 		}
 	}
@@ -127,7 +88,7 @@ const SearchResult = (props) => {
 			)
 		}
 		else {
-			if(flag == 'Normal'){updateSearchCommonShip(cnt);}
+			if(props.searchShip.flag == 'Normal'){updateSearchCommonShip(cnt);}
 			else{updateSearchWastedShip(cnt);}
 		}
 	}
@@ -139,100 +100,74 @@ const SearchResult = (props) => {
 			)
 		}
 		else {
-			if(flag == 'Normal'){updateSearchCommonShip(index - 1);}
+			if(props.searchShip.flag == 'Normal'){updateSearchCommonShip(index - 1);}
 			else{updateSearchWastedShip(index - 1);}
 		}
 	}
 	const nextPage = () => {
-		if(index == pages){
+		if(index == cnt){
 			Alert.alert(
 				'선박확인체계 알림',
 				'마지막 페이지입니다.',
 			)
 		}
 		else {
-			if(flag == 'Normal'){updateSearchCommonShip(index + 1);}
+			if(props.searchShip.flag == 'Normal'){updateSearchCommonShip(index + 1);}
 			else{updateSearchWastedShip(index + 1);}
 		}
 	}
 
-	const showResult = () => {
-		if(flag == 'Normal') {
-			console.log('showResult')
-			// console.log('name: ', name)
-			// console.log('types: ', types)
-			// console.log('code: ', code)
-			// console.log('tons: ', tons)
-			// console.log('size: ', size)
-			// console.log('is_ais: ', is_ais)
-			// console.log('is_vpass: ', is_vpass)
-			// console.log('is_vhf: ', is_vhf)
-			// console.log('is_ff: ', is_ff)
-			// console.log('region: ', region)
-			// console.log('port: ', port)
-			// console.log('sort: ', sort)
-			// console.log('unit: ', name)
-			searchCommonShip(props.token, 1, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, sort, unit).then((response) => {
-				if(response.status == 200) {
-					console.log('변경됨', props.token, 1, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, sort, unit)
-					console.log(response.data)
-					set_cnt(response.data.data.count)
-					set_data(data.concat(response.data.data.data))
-					set_loadingVisible(false)
-				}
-				else { 
-					console.log('fail') 
-				}
-			})
-		}
-		else { // flag == 'Wasted'
-			searchWastedShip(props.token, 1, id, region, types, info, sort, unit).then((response) => {
-				if(response.status == 200){
-					set_cnt(response.data.data.count)
-					set_data(data.concat(response.data.data.data))
-					set_loadingVisible(false)
-				}
-				else { 
-					console.log('fail') 
-				}
-			})
-		}
-	}
 	const updateSearchCommonShip = (idx) => {
-		set_loadingVisible(true)
-		searchCommonShip(props.token, idx, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, sort, unit).then((response) => {
-				if(response.status == 200) {
-					set_index(idx)
-					set_cnt(response.data.data.count)
-					set_data(response.data.data.data)
-					set_loadingVisible(false)
-				}
-				else { 
-					console.log('fail') 
-				}
-			})
+		//set_loadingVisible(true)
+		props.searchShip(
+			idx, 
+			props.token, 
+			props.searchShip.flag,
+			props.searchShip.name, 
+			props.searchShip.types, 
+			props.searchShip.code, 
+			props.searchShip.tons, 
+			props.searchShip.size, 
+			props.searchShip.is_ais, 
+			props.searchShip.is_vpass, 
+			props.searchShip.is_vhf, 
+			props.searchShip.is_ff, 
+			props.searchShip.region, 
+			props.searchShip.port, 
+			props.searchShip.id, 
+			props.searchShip.info, 
+			props.searchShip.sort, 
+			props.searchShip.unit)
 		this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 	}
 	const updateSearchWastedShip = (idx) => {
-		set_loadingVisible(true)
-		searchWastedShip(props.token, idx, id, region, types, info, sort, unit).then((response) => {
-				if(response.status == 200) {
-					set_index(idx)
-					set_cnt(response.data.data.count)
-					set_data(response.data.data.data)
-					set_loadingVisible(false)
-				}
-				else {
-					console.log('fail')
-				}
-			})
+		//set_loadingVisible(true)
+		props.searchShip(
+			idx, 
+			props.token, 
+			props.searchShip.flag,
+			props.searchShip.name, 
+			props.searchShip.types, 
+			props.searchShip.code, 
+			props.searchShip.tons, 
+			props.searchShip.size, 
+			props.searchShip.is_ais, 
+			props.searchShip.is_vpass, 
+			props.searchShip.is_vhf, 
+			props.searchShip.is_ff, 
+			props.searchShip.region, 
+			props.searchShip.port, 
+			props.searchShip.id, 
+			props.searchShip.info, 
+			props.searchShip.sort, 
+			props.searchShip.unit)
 		this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 	}
 	const getDetail = (id) => {
-		if(flag == 'Normal'){
-			props.navigation.navigate('DetailCommonShip',{id: id})}
-		else{ // flag == 'Wasted'
-			props.navigation.navigate('DetailWastedShip',{id: id})}
+		if(props.searchShip.flag == 'Normal') {
+			props.navigation.navigate('DetailCommonShip',{id: props.searchShip.id})}
+		else { // flag == 'Wasted'
+			props.navigation.navigate('DetailWastedShip',{id: props.searchShip.id})}
 	}
 
 	// const handleRefresh = () => {
@@ -247,20 +182,28 @@ const SearchResult = (props) => {
 	// }
 
 	const searchPageList = (idx) => {
-		if(flag == "Normal") {
+		if(props.searchShip.flag == "Normal") {
 			if(1 <= idx && cnt >= idx) {
-				set_loadingVisible(true)
-				searchCommonShip(props.token, idx, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, sort, unit).then((response) => {
-					if(response.status == 200) {
-						set_index(idx)
-						set_cnt(response.data.data.count)
-						set_data(response.data.data.data)
-						set_loadingVisible(false)
-					}
-					else {
-						console.log('fail')
-					}
-				})
+				//set_loadingVisible(true)
+				props.searchShip(
+					idx, 
+					props.token, 
+					props.searchShip.flag,
+					props.searchShip.name, 
+					props.searchShip.types, 
+					props.searchShip.code, 
+					props.searchShip.tons, 
+					props.searchShip.size, 
+					props.searchShip.is_ais, 
+					props.searchShip.is_vpass, 
+					props.searchShip.is_vhf, 
+					props.searchShip.is_ff, 
+					props.searchShip.region, 
+					props.searchShip.port, 
+					props.searchShip.id, 
+					props.searchShip.info, 
+					props.searchShip.sort, 
+					props.searchShip.unit)
 				this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 			}
 			else {
@@ -272,18 +215,26 @@ const SearchResult = (props) => {
 		}
 		else { // Waste ship
 			if(1 <= idx && cnt >= idx) {
-				set_loadingVisible(true)
-				searchWastedShip(props.token, idx, id, region, types, info, sort, unit).then((response) => {
-					if(response.status == 200) {
-						set_index(idx)
-						set_cnt(response.data.data.count)
-						set_data(response.data.data.data)
-						set_loadingVisible(false)
-					}
-					else {
-						console.log('fail')
-					}
-				})
+				//set_loadingVisible(true)
+				props.searchShip(
+					idx, 
+					props.token, 
+					props.searchShip.flag,
+					props.searchShip.name, 
+					props.searchShip.types, 
+					props.searchShip.code, 
+					props.searchShip.tons, 
+					props.searchShip.size, 
+					props.searchShip.is_ais, 
+					props.searchShip.is_vpass, 
+					props.searchShip.is_vhf, 
+					props.searchShip.is_ff, 
+					props.searchShip.region, 
+					props.searchShip.port, 
+					props.searchShip.id, 
+					props.searchShip.info, 
+					props.searchShip.sort, 
+					props.searchShip.unit)
 				this.flatList.scrollToOffset({x: 0, y: 0, animated: true})
 			}
 			else {
@@ -303,11 +254,11 @@ const SearchResult = (props) => {
 		if(data.length != 0){ pageBarFooter =
 			<base.Form style={{flexDirection: 'row', alignSelf: 'center', justifyContent: 'center', height: SIZE_ICON + 20, marginVertical: 10}}>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>firstPage()}>
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={() => firstPage()}>
 					<AntDesign name="banckward" size={SIZE_ICON} color="#292929"/>
 				</base.Button>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>previousPage()}>
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={() => previousPage()}>
 					<AntDesign name="caretleft" size={SIZE_ICON} color="#292929"/>
 				</base.Button>
 				<base.Form style={{flex: 1, height: SIZE_ICON + 10, justifyContent: 'center', alignItems: 'center',}}>
@@ -320,18 +271,18 @@ const SearchResult = (props) => {
 					onPress={() => setModalVisible(true)}>페이지 검색</base.Text>
 				</base.Form>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={()=>nextPage()}>
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10,}} onPress={() => nextPage()}>
 					<AntDesign name="caretright" size={SIZE_ICON} color="#292929"/>
 				</base.Button>
 				<base.Button style={{flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center',
-				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10, }} onPress={()=>lastPage()}>
+				elevation: 6, borderRadius: 10, height: SIZE_ICON + 10, marginHorizontal: 10, }} onPress={() => lastPage()}>
 					<AntDesign name="forward" size={SIZE_ICON} color="#292929"/>
 				</base.Button>
 			</base.Form>
 		}
 		
 		if(clicked != null) {
-			if(flag == 'Normal') {
+			if(props.searchShip.flag == 'Normal') {
 				if(clicked == 4) {
 					set_clicked(null)
 				}
@@ -422,7 +373,7 @@ const SearchResult = (props) => {
 					}
 				}
 				set_clicked_unit(null)
-				if(flag == 'Normal'){ updateSearchCommonShip(1) }
+				if(props.searchShip.flag == 'Normal'){ updateSearchCommonShip(1) }
 				else{ updateSearchWastedShip(1) }
 			}
 		}
@@ -486,12 +437,12 @@ const SearchResult = (props) => {
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={{ flex: 1 }}>
-					<Loading visible={loadingVisible} initialRoute={false} onPress={()=>props.navigation.goBack()}/>
+					<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 					<FlatList
 						ref = {flatListRef}
 						style={{flex:1}}
 						data={data}
-						renderItem={({item}) => <ShowShip ship={item} flag={flag} onPress={() => getDetail(item.id)}/>}
+						renderItem={({item}) => <ShowShip ship={item} flag={props.searchShip.flag} onPress={() => getDetail(item.id)}/>}
 						ListEmptyComponent={
 							<base.Form style={{flex: 1, alignItems: 'center', justifyContent: 'center', padding: 10,}}>
 								<base.Text style={{fontSize: SIZE_SUBTITLE}}>해당 검색에 대한 검색결과가 없습니다</base.Text>
@@ -508,9 +459,14 @@ const SearchResult = (props) => {
 }
 
 const mapStateToProps = (state) => {
-    return {
+	return {
+		searchShip: state.searchShip,
         token: state.userInfo.token
     }
 }
 
-export default connect(mapStateToProps)(SearchResult);
+const mapDispatchToProps = {
+	searchShip: (idx, token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit) => searchShip(idx, token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchResult);

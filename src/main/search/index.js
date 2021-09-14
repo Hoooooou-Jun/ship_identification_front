@@ -6,22 +6,26 @@ import { Picker } from 'native-base';
 import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
 import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
 
+import { connect } from 'react-redux';
+import { searchShip } from '../../redux/searchShip/action.js';
+
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
 const SIZE_SUBFONT = Dimensions.get('screen').height * 0.015
 
 const Search = (props) => {
-
 	const [flag, set_flag] = useState('Normal')
 	const [id, set_id] = useState('')
 	const [types, set_types] = useState('')
 	const [region, set_region] = useState('')
-	const [name, set_name] = useState('Normal')
-	const [code, set_code] = useState('Normal')
+	const [name, set_name] = useState('')
+	const [code, set_code] = useState('')
 	const [tons, set_tons] = useState('') // 안쓰임
 	const [size, set_size] = useState('') // 안쓰임
 	const [port, set_port] = useState('')
+	const [sort, set_sort] = useState('')
+	const [unit, set_unit] = useState('all')
 
 	const [is_ais, set_is_ais] = useState(false)
 	const [is_vpass, set_is_vpass] = useState(false)
@@ -35,12 +39,13 @@ const Search = (props) => {
 	const checkVHF = () => { (is_vhf == true) ? set_is_vhf(false) : set_is_vhf(true) }
 	const checkFF = () => { (is_ff == true) ? set_is_ff(false) : set_is_ff(true) }
 
+	// 일반/유기 선박 변경 시 입력값 초기화
 	useEffect(() => {
 		set_id('')
 		set_types('')
 		set_region('')
-		set_name('Normal')
-		set_code('Normal')
+		set_name('')
+		set_code('')
 		set_port('')
 		set_is_ais(false)
 		set_is_vpass(false)
@@ -50,30 +55,14 @@ const Search = (props) => {
 	}, [flag])
 
 	const searchShip = () => {
+		const idx = 1
 		if(flag == 'Normal') {
-			props.navigation.navigate('SearchResult', {				
-				flag: flag,
-				name: name,
-				types: types,
-				code: code,
-				tons: tons,
-				size: size,
-				is_ais: is_ais,
-				is_vpass: is_vpass,
-				is_vhf: is_vhf,
-				is_ff: is_ff,
-				region: region,
-				port: port,
-			})
+			props.searchShip(idx, props.token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit)
+			props.navigation.navigate('SearchResult')
 		}
 		else { // flag == 'Wasted'{
-			props.navigation.navigate('SearchResult', {
-				flag: flag,
-				id: id,
-				region: region,
-				types: types,
-				info: info,
-			})
+			props.searchShip(idx, props.token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit)
+			props.navigation.navigate('SearchResult')
 		}
 	}
 
@@ -258,4 +247,18 @@ const Search = (props) => {
 	)
 }
 
-export default Search;
+const mapStateToProps = (state) => {
+	return {
+		resultSearchShip: state.resultSearchShip,
+		token: state.userInfo.token
+	}
+
+}
+
+const mapDispatchToProps = {
+	searchShip: (idx, token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit) => searchShip(idx, token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
+
+
