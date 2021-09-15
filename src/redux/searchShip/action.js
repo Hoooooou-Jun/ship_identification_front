@@ -1,4 +1,4 @@
-import { SEARCH_COMMONSHIP, SEARCH_WASTEDSHIP, SEARCH_ERROR } from './types.js'
+import { SEARCH_COMMONSHIP, SEARCH_WASTEDSHIP, SEARCH_ERROR, SEARCH_RESET } from './types.js'
 import { searchCommonShip, searchWastedShip } from '../../utils/shipInfoRequest';
 
 export const searchShip = (idx, token, flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, id, info, sort, unit) => dispatch => {
@@ -45,6 +45,12 @@ export const searchShip = (idx, token, flag, name, types, code, tons, size, is_a
                 dispatch(searchError(error))
             })}
         }
+
+export const resetSearch = () => {
+    return {
+        type: SEARCH_RESET,
+    }
+}
 
 const commonShip = (flag, name, types, code, tons, size, is_ais, is_vpass, is_vhf, is_ff, region, port, sort, unit, cnt, data) => {
     return {

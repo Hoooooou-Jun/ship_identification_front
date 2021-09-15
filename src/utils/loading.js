@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
 import { Modal, Dimensions } from 'react-native';
 import * as base from 'native-base';
@@ -47,6 +48,7 @@ export default class Loading extends Component{
                             {backButton}
                     </base.Form>
                 </base.Form>
+                <StatusBar hidden/>
             </Modal>
 		)
 	}

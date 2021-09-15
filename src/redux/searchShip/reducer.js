@@ -1,4 +1,4 @@
-import { SEARCH_COMMONSHIP, SEARCH_WASTEDSHIP, SEARCH_ERROR } from './types.js'
+import { SEARCH_COMMONSHIP, SEARCH_WASTEDSHIP, SEARCH_ERROR, SEARCH_RESET } from './types.js'
 import { resultSearchShip } from './initialData.js'
 
 const reducerSearchShip = ( state = resultSearchShip, action ) => {
@@ -68,6 +68,28 @@ const reducerSearchShip = ( state = resultSearchShip, action ) => {
                 info: '',
                 cnt: 0,
                 data: action.payload.error,
+            }
+        case SEARCH_RESET:
+            return {
+                ...state,
+                flag: '',
+                name: '',
+                types: '',
+                code: '',
+                tons: '',
+                size: '',
+                is_ais: false,
+                is_vpass: false,
+                is_vhf: false,
+                is_ff: false,
+                region: '',
+                port: '',
+                sort: '',
+                unit: '',
+                id: '',
+                info: '',
+                cnt: 0,
+                data: [],
             }
         default: return state;
     }
