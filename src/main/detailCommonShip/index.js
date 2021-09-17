@@ -1,13 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, FlatList, TouchableHighlight, Image, Alert } from 'react-native';
 import * as base from 'native-base';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { getToken } from '../../utils/getToken';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';;
 import ShowPlusDetail from './showPlusDetail';
 import { requestDomain } from '../../utils/domain';
 import { AntDesign, Feather } from '@expo/vector-icons'; 
-import { requestPermission } from '../../utils/userInfoRequest';
 
 import Loading from '../../utils/loading';
 import { connect } from 'react-redux';
@@ -23,15 +21,17 @@ const SIZE_OWNER_IMG = Dimensions.get('screen').width * 0.75
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
 
 const DetailCommonShip = (props) => {
+	const [loadingVisible, set_loadingVisible] = useState(false)
+	const [id, set_id] = useState(props.navigation.getParam('id'))
+
 	useEffect(() => {
 		showCommonShipDetail()
 	}, [])
 
 	const showCommonShipDetail = () => {
-		const id = props.navigation.getParam('id');
-		props.loadDetailShip(props.token, id)
-		props.loadShipOwner(props.token, id)
-		props.loadGalleryCommonShip(props.token, id)
+		props.loadDetailShip(props.userInfo.token, id)
+		props.loadShipOwner(props.userInfo.token, id)
+		props.loadGalleryCommonShip(props.userInfo.token, id)
 	}
 
 	const updateShipInfo = () => {
@@ -40,23 +40,18 @@ const DetailCommonShip = (props) => {
 			props.detailCommonShip.name + '의 선박 정보를 수정하시겠습니까?',
 			[{
 				text: "네",
-				onPress: () => getToken().then((token) => {
-					this.setState({loadingVisible: true})
-					requestPermission(token).then((response) => {
-						if(response.data.data.user_level > 1){
-							this.setState({loadingVisible: false})
-							this.props.navigation.navigate('UpdateCommonShip',{id: props.detailCommonShip.id})
-						}
-						else{
-							this.setState({loadingVisible: false})
-							Alert.alert(
-								'선박확인체계 알림',
-								'선박 정보 수정 권한이 없습니다',
-							)
-						}
-					})
-				})
-				},{
+				onPress: () => {
+					if(props.userInfo.level > 1){
+						props.navigation.navigate('UpdateCommonShip', {id: props.detailCommonShip.id})
+					}
+					else{
+						Alert.alert(
+							'선박확인체계 알림',
+							'선박 정보 수정 권한이 없습니다',
+						)
+					}
+				}
+				}, {
 				text: "아니오",
 				onPress: () => console.log("Cancel Pressed"),
 			}]
@@ -68,31 +63,25 @@ const DetailCommonShip = (props) => {
 			props.detailCommonShip.name + '의 대표사진을 수정하시겠습니까?',
 			[{
 				text: "네",
-				onPress: () => getToken().then((token) => {
-					this.setState({loadingVisible: true})
-					requestPermission(token).then((response) => {
-						if(response.data.data.user_level > 1){
-							if(props.detailCommonShip.data.length < 2){
-								this.setState({loadingVisible: false})
-								Alert.alert(
-									'선박확인체계 알림',
-									'대표사진을 수정할 사진이 없습니다',
-								)
-							}
-							else{
-								this.setState({loadingVisible: false})
-								this.props.navigation.navigate('UpdateCommonShipMImage',{id: props.detailCommonShip.id, main_img_id: props.detailCommonShip.main_img_id,})
-							}
-						}
-						else{
-							this.setState({loadingVisible: false})
+				onPress: () => {
+					if(props.userInfo.level > 1) {
+						if(props.detailCommonShip.data.length < 2){
 							Alert.alert(
 								'선박확인체계 알림',
-								'대표사진 수정 권한이 없습니다',
+								'대표사진을 수정할 사진이 없습니다',
 							)
 						}
-					})
-				})
+						else{
+							props.navigation.navigate('UpdateCommonShipMImage', {id: props.detailCommonShip.id, main_img_id: props.detailCommonShip.main_img_id})
+						}
+					}
+					else {
+						Alert.alert(
+							'선박확인체계 알림',
+							'대표사진 수정 권한이 없습니다',
+						)
+					}
+				}
 				},{
 				text: "아니오",
 				onPress: () => console.log("Cancel Pressed"),
@@ -105,31 +94,25 @@ const DetailCommonShip = (props) => {
 			props.detailCommonShip.name + '의 선박 정보를 삭제하시겠습니까?',
 			[{
 				text: "네",
-				onPress: () => getToken().then((token) => {
-					this.setState({loadingVisible: true})
-					requestPermission(token).then((response) => {
-						if(response.data.data.user_level > 1){
-							const id = this.props.navigation.getParam('id');
-							deleteCommonShip(token, id).then((response) => {
-								if(response.status == 200){
-									this.setState({loadingVisible: false})
-									Alert.alert(
-										'선박확인체계 알림',
-										props.detailCommonShip.name + '의 선박 정보가 삭제되었습니다',
-									)
-									this.props.navigation.pop();
-								}
-							})
-						}
-						else{
-							this.setState({loadingVisible: false})
-							Alert.alert(
-								'선박확인체계 알림',
-								'선박 정보 삭제 권한이 없습니다',
-							)
-						}
-					})
-				})
+				onPress: () => {
+					if(props.userInfo.level > 1) {
+						deleteCommonShip(token, id).then((response) => {
+							if(response.status == 200){
+								Alert.alert(
+									'선박확인체계 알림',
+									props.detailCommonShip.name + '의 선박 정보가 삭제되었습니다',
+								)
+								props.navigation.pop();
+							}
+						})
+					}
+					else {
+						Alert.alert(
+							'선박확인체계 알림',
+							'선박 정보 삭제 권한이 없습니다',
+						)
+					}
+				}
 				},{
 				text: "아니오",
 				onPress: () => console.log("Cancel Pressed"),
@@ -368,7 +351,7 @@ const DetailCommonShip = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
-        token: state.userInfo.token,
+        userInfo: state.userInfo,
 		detailCommonShip: state.detailCommonShip,
 		shipOwner: state.shipOwner,
 		galleryCommonShip: state.galleryCommonShip,
