@@ -9,4 +9,5 @@ export const userInfo = {
     position: '',
     unit: '',
     phone: '',
+    level: '',
 }

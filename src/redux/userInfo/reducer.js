@@ -16,6 +16,7 @@ const reducerUserInfo = ( state = userInfo, action ) => {
                 position: action.payload.position,
                 unit: action.payload.unit,
                 phone: action.payload.phone,
+                level: action.payload.level,
             }
         case RESET_USERINFO:
             return {
@@ -30,6 +31,7 @@ const reducerUserInfo = ( state = userInfo, action ) => {
                 position: '',
                 unit: '',
                 phone: '',
+                levle: '',
             }
         default: return state;
     }
