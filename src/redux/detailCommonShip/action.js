@@ -1,7 +1,7 @@
 import { LOAD_DETAILCOMMONSHIP, ERROR_DETAILCOMMONSHIP, RESET_DETAILCOMMONSHIP } from './types'
-import { requestCommonShipDetail } from '../../utils/shipInfoRequest'
+import { deleteCommonShip, requestCommonShipDetail, updateCommonShipDetail, updateCommonShipMImage } from '../../utils/shipInfoRequest'
 
-export const loadDetailShip = (token, id) => dispatch => {
+export const loadDetailCommonShip = (token, id) => dispatch => {
     requestCommonShipDetail(token, id).then((response) => {
         dispatch((loadData(
             id,
@@ -28,6 +28,39 @@ export const loadDetailShip = (token, id) => dispatch => {
         )))
     }).catch((error) => {
         dispatch(loadError(error))
+    })
+}
+
+export const updateDetailCommonShip = (token, id, name, types, code, tons, size, is_ais, is_vhf, is_vpass, is_ff, region, port) => dispatch => {
+    updateCommonShipDetail(token, id, name, types, code, tons, size, is_ais, is_vhf, is_vpass, is_ff, region, port).then((response) => {
+        if(response.status == 200) {
+            dispatch(loadDetailCommonShip(token, id))
+        }
+        else {
+            console.log('detailCommonship update fail')
+        }
+    })
+}
+
+export const updateCommonShipMainImage = (token, img_id, id,) => dispatch => {
+    updateCommonShipMImage(token, img_id).then((response) => {
+        if(response.status == 200) {
+            dispatch(loadDetailCommonShip(token, id))
+        }
+        else {
+            console.log('commonship main image update fail')
+        }
+    })
+}
+
+export const deleteCommonShipInfo = (token, id) => dispatch => {
+    deleteCommonShip(token, id).then((response) => {
+        if(response.status == 200) {
+            console.log('commonship info delete success')
+        }
+        else {
+            console.log('commonship info delete fail')
+        }
     })
 }
 
@@ -69,7 +102,7 @@ const loadError = (error) => {
     }
 }
 
-export const loadReset = () => {
+export const resetDetailCommonShip = () => {
     return {
         type : RESET_DETAILCOMMONSHIP,
     }

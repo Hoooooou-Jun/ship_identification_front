@@ -13,7 +13,7 @@ const ShowShip = (props) => {
 		let Train_Btn
 		if(props.ship.is_train){ Train_Btn =
 			<base.Button rounded
-				style={{ backgroundColor: 'white', backgroundColor: 'green', height: 20,
+				style={{ backgroundColor: 'white', backgroundColor: '#5CAB7D', height: 20,
 				shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},
 				alignItems: 'center', justifyContent: 'center'}}>
 				<base.Text style={{fontSize: SIZE_FONT}}>AI 학습완료</base.Text>
@@ -21,7 +21,7 @@ const ShowShip = (props) => {
 		}
 		else { Train_Btn =
 			<base.Button rounded
-				style={{ backgroundColor: 'white', backgroundColor: 'red', height: 20,
+				style={{ backgroundColor: 'white', backgroundColor: '#E53A40', height: 20,
 				shadowColor: 'rgba(0, 0, 0, 0.1)', shadowOpacity: 0.8, elevation: 6, shadowRadius: 15 , shadowOffset : { width: 1, height: 13},
 				alignItems: 'center', justifyContent: 'center'}}>
 				<base.Text style={{fontSize: SIZE_FONT}}>AI 학습대기</base.Text>

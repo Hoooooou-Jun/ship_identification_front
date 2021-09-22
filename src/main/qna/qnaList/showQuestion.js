@@ -9,7 +9,7 @@ const ShowQuestion = (props) => {
     let Answer
 
     if(props.data.status){ Answer =
-        <base.Button style={{backgroundColor: '#30A9DE', marginRight: 10, height: '100%'}}>
+        <base.Button style={{backgroundColor: '#5CAB7D', marginRight: 10, height: '100%'}}>
             <base.Text style={{fontSize : SIZE_QNATITLE}}>답변완료</base.Text>
         </base.Button>
     }

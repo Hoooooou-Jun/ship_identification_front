@@ -29,7 +29,7 @@ const loadError = (error) => {
     }
 }
 
-export const loadReset = () => {
+export const resetGalleryCommonShip = () => {
     return {
         type : RESET_GALLERYCOMMONSHIP,
     }

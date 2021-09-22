@@ -41,7 +41,7 @@ const loadError = (error) => {
     }
 }
 
-export const loadReset = () => {
+export const resetShipOwner = () => {
     return {
         type : RESET_SHIPOWNER,
     }

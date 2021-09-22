@@ -9,9 +9,9 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 
 import Loading from '../../utils/loading';
 import { connect } from 'react-redux';
-import { loadDetailShip } from '../../redux/detailCommonShip/action';
-import { loadShipOwner } from '../../redux/shipOwner/action'
-import { loadGalleryCommonShip } from '../../redux/galleryCommonShip/action';
+import { deleteCommonShipInfo, loadDetailCommonShip, resetDetailCommonShip } from '../../redux/detailCommonShip/action';
+import { loadShipOwner, resetShipOwner } from '../../redux/shipOwner/action'
+import { loadGalleryCommonShip, resetGalleryCommonShip } from '../../redux/galleryCommonShip/action';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.035
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.0175
@@ -21,23 +21,29 @@ const SIZE_OWNER_IMG = Dimensions.get('screen').width * 0.75
 const SIZE_SUBIMG = Dimensions.get('screen').height * 0.15
 
 const DetailCommonShip = (props) => {
-	const [loadingVisible, set_loadingVisible] = useState(false)
+	const [loadingVisible, set_loadingVisible] = useState(true)
 	const [id, set_id] = useState(props.navigation.getParam('id'))
 
 	useEffect(() => {
-		showCommonShipDetail()
-	}, [])
-
-	const showCommonShipDetail = () => {
-		props.loadDetailShip(props.userInfo.token, id)
+		props.loadDetailCommonShip(props.userInfo.token, id)
 		props.loadShipOwner(props.userInfo.token, id)
 		props.loadGalleryCommonShip(props.userInfo.token, id)
-	}
+		const timer = setTimeout(() => {
+			set_loadingVisible(false)
+		}, 1000)
+		timer
+		return () => {
+			props.resetDetailCommonShip()
+			props.resetShipOwner()
+			props.resetGalleryCommonShip()
+		}
+	}, [])
+
 
 	const updateShipInfo = () => {
 		Alert.alert(
 			'선박확인체계 알림',
-			props.detailCommonShip.name + '의 선박 정보를 수정하시겠습니까?',
+			props.detailCommonShip.name + '의 선박정보를 수정하시겠습니까?',
 			[{
 				text: "네",
 				onPress: () => {
@@ -47,7 +53,7 @@ const DetailCommonShip = (props) => {
 					else{
 						Alert.alert(
 							'선박확인체계 알림',
-							'선박 정보 수정 권한이 없습니다',
+							'선박정보 수정 권한이 없습니다.',
 						)
 					}
 				}
@@ -65,10 +71,10 @@ const DetailCommonShip = (props) => {
 				text: "네",
 				onPress: () => {
 					if(props.userInfo.level > 1) {
-						if(props.detailCommonShip.data.length < 2){
+						if(props.galleryCommonShip.gallery.length < 2){
 							Alert.alert(
 								'선박확인체계 알림',
-								'대표사진을 수정할 사진이 없습니다',
+								'대표사진을 수정할 사진이 없습니다.',
 							)
 						}
 						else{
@@ -91,25 +97,22 @@ const DetailCommonShip = (props) => {
 	const deleteShipInfo = () => {
 		Alert.alert(
 			'선박확인체계 알림',
-			props.detailCommonShip.name + '의 선박 정보를 삭제하시겠습니까?',
+			props.detailCommonShip.name + '의 선박정보를 삭제하시겠습니까?',
 			[{
 				text: "네",
 				onPress: () => {
 					if(props.userInfo.level > 1) {
-						deleteCommonShip(token, id).then((response) => {
-							if(response.status == 200){
-								Alert.alert(
-									'선박확인체계 알림',
-									props.detailCommonShip.name + '의 선박 정보가 삭제되었습니다',
-								)
-								props.navigation.pop();
-							}
-						})
+						props.deleteCommonShipInfo(props.userInfo.token, id)
+						Alert.alert(
+							'선박확인체계 알림',
+							props.detailCommonShip.name + '의 선박정보가 삭제되었습니다',
+						)
+						props.navigation.pop();
 					}
 					else {
 						Alert.alert(
 							'선박확인체계 알림',
-							'선박 정보 삭제 권한이 없습니다',
+							'선박정보 삭제 권한이 없습니다',
 						)
 					}
 				}
@@ -148,7 +151,7 @@ const DetailCommonShip = (props) => {
 	else{ shipOwnerDetail =
 		<base.Form style={{width:'100%'}}>
 			<base.Form style={{width: '100%', alignItems: 'flex-end'}}>
-				<base.Text style={{margin: 10, fontWeight: 'bold', color: 'red',}}>선주 개인정보 동의가 필요합니다</base.Text>
+				<base.Text style={{margin: 10, fontWeight: 'bold', color: 'red',}}>선주 개인정보 동의가 필요합니다.</base.Text>
 			</base.Form>
 			
 			<base.Button block onPress={() => props.navigation.navigate('RegisterShipOwner', {id: props.detailCommonShip.id, name: props.detailCommonShip.name})}
@@ -162,10 +165,11 @@ const DetailCommonShip = (props) => {
 		<base.Form>
 			<FlatList
 				style={{flex:1, height: SIZE_SUBIMG}}
+				keyExtractor={(item)=> item.id.toString()}
 				data={props.galleryCommonShip.gallery}
 				horizontal={true}
 				renderItem={({item, index}) => <ShowPlusDetail ship={item}
-					onPress={() => props.navigation.navigate('ShipImgViewer', {address: requestDomain + item.img, flag: 'Normal', id: props.detailCommonShip.id, img_id: item.id, index: index + 1, main_img_id: props.detailCommonShip.main_img_id})}/>}
+				onPress={() => props.navigation.navigate('ShipImgViewer', {address: requestDomain + item.img, flag: 'Normal', id: props.detailCommonShip.id, img_id: item.id, index: index + 1, main_img_id: props.detailCommonShip.main_img_id})}/>}
 				ListFooterComponent={
 					<TouchableHighlight style={{flex: 1,}} onPress={() => props.navigation.navigate('RegisterCommonShipImages',{id: props.detailCommonShip.id, name: props.detailCommonShip.name})}>
 						<base.Card style={{width: SIZE_SUBIMG, height: SIZE_SUBIMG, alignItems: 'center', justifyContent: 'center'}}>
@@ -178,12 +182,12 @@ const DetailCommonShip = (props) => {
 	}
 	let Train_Btn
 	if(props.detailCommonShip.is_train){ Train_Btn =
-		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'green', borderRadius: 10, elevation: 6}}>
+		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: '#5CAB7D', borderRadius: 10, elevation: 6}}>
 			<base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습완료</base.Text>
 		</base.Button>
 	}
 	else {Train_Btn =
-		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: 'red', borderRadius: 10,elevation: 6}}>
+		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 10, backgroundColor: 'white', height: 40, backgroundColor: '#E53A40', borderRadius: 10,elevation: 6}}>
 			<base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 학습대기</base.Text>
 		</base.Button>
 	}
@@ -192,7 +196,7 @@ const DetailCommonShip = (props) => {
 		request_train_label = <base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 요청완료</base.Text>
 	}
 	let Train_request = 
-		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 60, backgroundColor: 'white', height: 40, backgroundColor: 'blue', borderRadius: 10, elevation: 6}} onPress={() => props.navigation.navigate("TrainGallery", {id: props.detailCommonShip.id})}>
+		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 60, height: 40, backgroundColor: '#30A9DE', borderRadius: 10, elevation: 6}} onPress={() => props.navigation.navigate("TrainGallery", {id: props.detailCommonShip.id})}>
 			{request_train_label}
 		</base.Button>
 
@@ -208,7 +212,7 @@ const DetailCommonShip = (props) => {
 				</base.Right>
 			</base.Header>
 			<base.Content>
-			{/* <Loading visible={this.state.loadingVisible_shipDetail || this.state.loadingVisible_shipGallery || this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/> */}
+				<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 				<base.Form style={{width: '100%', height: SIZE_IMG,}}>
 					<Image resizeMode='cover' source={{uri: requestDomain + props.detailCommonShip.main_img,}} style={{width: '100%', height: '100%',}}/>
 					{Train_Btn}
@@ -225,7 +229,7 @@ const DetailCommonShip = (props) => {
 						<AntDesign name="retweet" size={25} color="black"/>
 					</base.Button>
 					<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-					onPress={() => props.navigation.navigate('DetailCommonShipGallery', {id: props.detailCommonShip.id, main_img_id: props.detailCommonShip.main_img_id})}>
+					onPress={() => props.navigation.navigate('DetailCommonShipGallery')}>
 						<AntDesign name="picture" size={25} color="black"/>
 					</base.Button>
 					<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
@@ -359,9 +363,13 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-	loadDetailShip: (token, id) => loadDetailShip(token, id),
+	loadDetailCommonShip: (token, id) => loadDetailCommonShip(token, id),
 	loadShipOwner: (token, id) => loadShipOwner(token, id),
 	loadGalleryCommonShip: (token, id) => loadGalleryCommonShip(token, id),
+	resetDetailCommonShip: () => resetDetailCommonShip(),
+	resetShipOwner: () => resetShipOwner(),
+	resetGalleryCommonShip: () => resetGalleryCommonShip(),
+	deleteCommonShipInfo: (token, id) => deleteCommonShipInfo(token, id),
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailCommonShip)

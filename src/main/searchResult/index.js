@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useState, useRef } from 'react';
 import * as base from 'native-base';
-import { FlatList, Dimensions, Alert, Modal, TextInput, Text, Pressable } from 'react-native';
+import { FlatList, Dimensions, Alert, Modal, TextInput, Text, Pressable, RefreshControl } from 'react-native';
 import ShowShip from './showShip';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Loading from '../../utils/loading';
@@ -58,6 +58,7 @@ const SearchResult = (props) => {
 	const [input, set_input] = useState()
 
 	const [loadingVisible, set_loadingVisible] = useState(true)
+	const [refreshing, set_refreshing] = useState(false)
 
 	const flatListRef = useRef()
 
@@ -273,6 +274,10 @@ const SearchResult = (props) => {
 			props.navigation.navigate('DetailWastedShip',{id: id})}
 	}
 
+	const onRefresh = () => {
+		set_refreshing(false)
+	}
+
 	let pageBarFooter
 	if(data.length != 0){ pageBarFooter =
 		<base.Form style={{flexDirection: 'row', alignSelf: 'center', justifyContent: 'center', height: SIZE_ICON + 20, marginVertical: 10}}>
@@ -466,6 +471,7 @@ const SearchResult = (props) => {
 				<base.Content contentContainerStyle={{ flex: 1 }}>
 					<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 					<FlatList
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
 						keyExtractor={(item)=> item.id.toString()}
 						ref={flatListRef}
 						style={{flex:1}}

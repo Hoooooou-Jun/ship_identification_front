@@ -1,222 +1,206 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Dimensions } from 'react-native';
 import * as base from 'native-base';
-import { updateCommonShipDetail, } from '../../utils/shipInfoRequest';
 import { Picker } from 'native-base';
-import { getToken } from '../../utils/getToken';
-import { requestCommonShipDetail } from '../../utils/shipInfoRequest';
 import { KindsOfShip } from '../../kindsOfData/kindsOfShip';
 import { KindsOfRegion } from '../../kindsOfData/kindsOfRegion';
 import Loading from '../../utils/loading';
+
+import { connect } from 'react-redux'
+import { loadDetailCommonShip, updateDetailCommonShip, resetDetailCommonShip } from '../../redux/detailCommonShip/action';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
 const SIZE_SUBTITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.02
 
-export default class UpdateCommonShip extends Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			name: '', types: '',
-			code: '',  tons: '', size: '', region: '',
-			is_ais: false, is_vpass: false, is_vhf: false, is_ff: false,
+const UpdateCommonShip = (props) => {
+	const [name, set_name] = useState(props.detailCommonShip.name)
+	const [code, set_code] = useState(props.detailCommonShip.code)
+	const [types, set_types] = useState(props.detailCommonShip.types)
+	const [region, set_region] = useState(props.detailCommonShip.region)
+	const [port, set_port] = useState(props.detailCommonShip.port)
+	const [tons, set_tons] = useState(props.detailCommonShip.tons)
+	const [size, set_size] = useState(props.detailCommonShip.size)
 
-			tmp_name: '', tmp_code: '', tmp_tons: '', tmp_size: '', tmp_region: '',
-			loadingVisible: true,
-		};
-		this.showCommonShipDetail = this.showCommonShipDetail(this);
-	
-		this.checkAIS = this.checkAIS.bind(this);
-		this.checkVPASS = this.checkVPASS.bind(this);
-		this.checkVHF = this.checkVHF.bind(this);
-		this.checkFF = this.checkFF.bind(this);
+	const [is_ais, set_is_ais] = useState(props.detailCommonShip.is_ais)
+	const [is_vpass, set_is_vpass] = useState(props.detailCommonShip.is_vpass)
+	const [is_vhf, set_is_vhf] = useState(props.detailCommonShip.is_vhf)
+	const [is_ff, set_is_ff] = useState(props.detailCommonShip.is_ff)
 
-		this.updateDetail = this.updateDetail.bind(this);
+	const checkAIS = () => { (is_ais == true) ? set_is_ais(false) : set_is_ais(true) }
+	const checkVPASS = () => { (is_vpass == true) ? set_is_vpass(false) : set_is_vpass(true) }
+	const checkVHF = () => { (is_vhf == true) ? set_is_vhf(false) : set_is_vhf(true) }
+	const checkFF = () => { (is_ff == true) ? set_is_ff(false) : set_is_ff(true) }
+
+	const updateDetail = () => {
+		Alert.alert(
+			"선박확인체계 알림",
+			"수정된 정보를 저장하시겠습니까?",
+			[
+				{
+					text: "예",
+					onPress: () =>
+					{
+						props.updateDetailCommonShip(props.token, props.detailCommonShip.id, name, types, code, tons, size, is_ais, is_vhf, is_vpass, is_ff, region, port)
+						props.navigation.pop()
+						Alert.alert(
+							'선박확인체계 알림',
+							'수정이 완료되었습니다.',
+						)
+					},
+				},
+				{ 
+					text: "아니오"
+				}
+			]
+		)
 	}
-	checkAIS(){ (this.state.is_ais == true) ? this.setState({is_ais: false}) : this.setState({is_ais: true}) }
-	checkVPASS(){ (this.state.is_vpass == true) ? this.setState({is_vpass: false}) : this.setState({is_vpass: true}) }
-	checkVHF(){ (this.state.is_vhf == true) ? this.setState({is_vhf: false}) : this.setState({is_vhf: true}) }
-	checkFF(){ (this.state.is_ff == true) ? this.setState({is_ff: false}) : this.setState({is_ff: true}) }
-	showCommonShipDetail(){
-		getToken().then((token) => {
-			const id = this.props.navigation.getParam('id');
-			requestCommonShipDetail(token, id).then((response) =>{
-				if(response.status == 200){
-					this.setState({
-						id: id,
-						name: response.data.data.name,
-						code: response.data.data.code,
-						types: response.data.data.types,
-						is_ais: response.data.data.is_ais,
-						is_vpass: response.data.data.is_vpass,
-						is_vhf: response.data.data.is_vhf,
-						is_ff: response.data.data.is_ff,
-						region: response.data.data.region, 
-						port: response.data.data.port,
-						tons: response.data.data.tons,
-						size: response.data.data.size,
-						regit_date: response.data.data.regit_date,
-						loadingVisible: false,
-					})
-				}
-				else{
-					console.log('fail')
-				}
-			})
-        })
-	}
-	updateDetail(){
-		this.setState({loadingVisible: true})
-		getToken().then((token) => {
-			const id = this.props.navigation.getParam('id');
-			updateCommonShipDetail(token, this.state.id, this.state.name, this.state.types, this.state.code,
-				this.state.tons, this.state.size, this.state.is_ais, this.state.is_vhf, this.state.is_vpass,
-				this.state.is_ff, this.state.region, '정보없음').then((response) =>{
-				if(response.status == 200){
-					this.setState({loadingVisible: false})
-					Alert.alert(
-						'선박확인체계 알림',
-						'선박 정보가 수정되었습니다',
-					)
-					this.props.navigation.popToTop();
-					this.props.navigation.navigate('DetailCommonShip',{id: this.state.id});
-				}
-				else{
-					console.log('fail')
-				}
-			})
-        })
-	}
-	render(){
-		return(
-			<base.Root>
-				<base.Container>
-					<base.Header style={{backgroundColor: 'white'}}>
-						<base.Left>
-							<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
-								<base.Icon name='arrow-back' style={{color: 'black'}}/>
-							</base.Button>
-						</base.Left>
-						<base.Right>
-						</base.Right>
-					</base.Header>
-					<base.Content>
-						<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
-						<base.Form style={{padding: 10,}}>
-							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>선박정보수정</base.Text>
-							<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>아래의 선박정보를 수정해주세요</base.Text>
+	return (
+		<base.Root>
+			<base.Container>
+				<base.Header style={{backgroundColor: 'white'}}>
+					<base.Left>
+						<base.Button transparent onPress={() => props.navigation.goBack()}>
+							<base.Icon name='arrow-back' style={{color: 'black'}}/>
+						</base.Button>
+					</base.Left>
+					<base.Right>
+					</base.Right>
+				</base.Header>
+				<base.Content>
+					{/* <Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/> */}
+					<base.Form style={{padding: 10,}}>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>선박정보 수정</base.Text>
+						<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>아래의 정보를 수정해주시기 바랍니다.</base.Text>
+					</base.Form>
+					<base.Form>
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박명</base.Text>
+								<base.Input
+									value={name}
+									onChangeText={set_name}
+									style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									/>
+							</base.Item>
 						</base.Form>
-						<base.Form>
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박명</base.Text>
-									<base.Input
-										value={this.state.name}
-										onChangeText={(name) => this.setState({name})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
-										placeholderStyle={{fontFamily:'Nanum'}}
-										/>
-								</base.Item>
-							</base.Form>
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>등록번호</base.Text>
-									<base.Input
-										value={this.state.code}
-										onChangeText={(code) => this.setState({code})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
-										placeholderStyle={{fontFamily:'Nanum'}}
-										keyboardType="number-pad"
-										/>
-								</base.Item>
-							</base.Form>
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>등록번호</base.Text>
+								<base.Input
+									value={code}
+									onChangeText={set_code}
+									style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									keyboardType="number-pad"
+									/>
+							</base.Item>
+						</base.Form>
+					
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
+								<Picker
+									selectedValue={types}
+									style={{height: 50, width: '100%'}}
+									onValueChange={set_types}>
+									{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
+								</Picker>							
+							</base.Item>							
+						</base.Form>
+			
+						<base.Form style={{marginHorizontal: 10,}}>
+							<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start', padding: 10}}>식별장치</base.Text>
+								<base.ListItem style={{width: '100%'}}>
+									<base.CheckBox checked={is_ais} color="#006eee" onPress={() => checkAIS()}/>
+									<base.Body><base.Text style={{fontSize: SIZE_FONT}}>AIS</base.Text></base.Body>
+									<base.CheckBox checked={is_vpass} color="#006eee" onPress={() => checkVPASS()}/>
+									<base.Body><base.Text style={{fontSize: SIZE_FONT}}>V-Pass</base.Text></base.Body>
+								</base.ListItem>
+								<base.ListItem style={{width: '100%'}}>
+									<base.CheckBox checked={is_vhf} color="#006eee" onPress={() => checkVHF()}/>
+									<base.Body><base.Text style={{fontSize: SIZE_FONT}}>VHF-DSC</base.Text></base.Body>
+									<base.CheckBox checked={is_ff} color="#006eee" onPress={() => checkFF()}/>
+									<base.Body><base.Text style={{fontSize: SIZE_FONT}}>FF-GPS</base.Text></base.Body>
+								</base.ListItem>
+							</base.Item>
+						</base.Form>
 						
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
-									<Picker
-										selectedValue={this.state.types}
-										style={{height: 50, width: '100%'}}
-										onValueChange={(itemValue) => this.setState({types: itemValue})}>
-										{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
-									</Picker>							
-								</base.Item>							
-							</base.Form>
-				
-							<base.Form style={{marginHorizontal: 10,}}>
-								<base.Item regular style={{ width:'100%', margin: 10, borderRadius: 10, flexDirection: 'column', alignItems: 'flex-start',}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start', padding: 10}}>식별장치</base.Text>
-									<base.ListItem style={{width: '100%'}}>
-										<base.CheckBox checked={this.state.is_ais} color="#006eee" onPress={() => this.checkAIS()}/>
-										<base.Body><base.Text style={{fontSize: SIZE_FONT}}>AIS</base.Text></base.Body>
-										<base.CheckBox checked={this.state.is_vpass} color="#006eee" onPress={() => this.checkVPASS()}/>
-										<base.Body><base.Text style={{fontSize: SIZE_FONT}}>V-Pass</base.Text></base.Body>
-									</base.ListItem>
-									<base.ListItem style={{width: '100%'}}>
-										<base.CheckBox checked={this.state.is_vhf} color="#006eee" onPress={() => this.checkVHF()}/>
-										<base.Body><base.Text style={{fontSize: SIZE_FONT}}>VHF-DSC</base.Text></base.Body>
-										<base.CheckBox checked={this.state.is_ff} color="#006eee" onPress={() => this.checkFF()}/>
-										<base.Body><base.Text style={{fontSize: SIZE_FONT}}>FF-GPS</base.Text></base.Body>
-									</base.ListItem>
-								</base.Item>
-							</base.Form>
-							
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박길이</base.Text>
-									<base.Input
-										value={this.state.size}
-										onChangeText={(size) => this.setState({size})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
-										placeholderStyle={{fontFamily:'Nanum'}}
-										keyboardType="number-pad"
-										/>
-								</base.Item>
-							</base.Form>
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박무게</base.Text>
-									<base.Input
-										value={this.state.tons}
-										onChangeText={(tons) => this.setState({tons})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
-										placeholderStyle={{fontFamily:'Nanum'}}
-										keyboardType="number-pad"
-										/>
-								</base.Item>
-							</base.Form>
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
-									<Picker
-										selectedValue={this.state.region}
-										style={{height: 50, width: '100%'}}
-										onValueChange={(itemValue) => this.setState({region: itemValue})}>
-										{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
-									</Picker>							
-								</base.Item>							
-							</base.Form>
-							<base.Form style={{marginVertical: 15}}>
-								<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
-									<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정박위치</base.Text>
-									<base.Input
-										placeholder="정박된 항구나 포구를 입력하세요"
-										onChangeText={(port) => this.setState({port})}
-										style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
-										placeholderStyle={{fontFamily:'Nanum'}}
-										/>
-								</base.Item>
-							</base.Form>
-							<base.Button block onPress={this.updateDetail} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6,
-								marginVertical: 20,}}>
-									<base.Text style={{color: 'black'}}>수정하기</base.Text>
-							</base.Button>
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박길이</base.Text>
+								<base.Input
+									value={size}
+									onChangeText={set_size}
+									style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									keyboardType="number-pad"
+									/>
+							</base.Item>
 						</base.Form>
-					</base.Content>
-				<StatusBar hidden/>
-				</base.Container>
-			</base.Root>
-		);
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박무게</base.Text>
+								<base.Input
+									value={tons}
+									onChangeText={set_tons}
+									style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									keyboardType="number-pad"
+									/>
+							</base.Item>
+						</base.Form>
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
+								<Picker
+									key={Math.random()}
+									selectedValue={region}
+									style={{height: 50, width: '100%'}}
+									onValueChange={set_region}>
+									{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
+								</Picker>							
+							</base.Item>							
+						</base.Form>
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
+								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>정박위치</base.Text>
+								<base.Input
+									value={port}
+									placeholder="정박된 항구나 포구를 입력하세요"
+									onChangeText={set_port}
+									style={{fontFamily:'Nanum', fontSize: SIZE_FONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									/>
+							</base.Item>
+						</base.Form>
+						<base.Button block onPress={updateDetail} style={{justifyContent: 'center', alignItems: 'center', borderRadius: 10, margin: 10, backgroundColor: 'white', elevation: 6,
+							marginVertical: 20,}}>
+								<base.Text style={{color: 'black'}}>수정하기</base.Text>
+						</base.Button>
+					</base.Form>
+				</base.Content>
+			<StatusBar hidden/>
+			</base.Container>
+		</base.Root>
+	)
+}
+
+const mapStateToProps = (state) => {
+	return {
+		token: state.userInfo.token,
+		detailCommonShip: state.detailCommonShip
 	}
 }
+
+const mapDispatchToProps = {
+	loadDetailCommonShip: (token, id) => loadDetailCommonShip(token, id),
+	updateDetailCommonShip: (token, id, name, types, code, tons, size, is_ais, is_vhf, is_vpass, is_ff, region, port) => updateDetailCommonShip(token, id, name, types, code, tons, size, is_ais, is_vhf, is_vpass, is_ff, region, port),
+	resetDetailCommonShip: () => resetDetailCommonShip(),
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateCommonShip)
