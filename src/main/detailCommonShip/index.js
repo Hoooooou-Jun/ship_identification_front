@@ -196,7 +196,7 @@ const DetailCommonShip = (props) => {
 		request_train_label = <base.Text style={{fontSize: SIZE_SUBTITLE}}>AI 요청완료</base.Text>
 	}
 	let Train_request = 
-		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 60, height: 40, backgroundColor: '#30A9DE', borderRadius: 10, elevation: 6}} onPress={() => props.navigation.navigate("TrainGallery", {id: props.detailCommonShip.id})}>
+		<base.Button style={{height: SIZE_SUBTITLE, position: 'absolute', left: 10, top: 60, height: 40, backgroundColor: '#30A9DE', borderRadius: 10, elevation: 6}} onPress={() => props.navigation.navigate("TrainGallery")}>
 			{request_train_label}
 		</base.Button>
 
