@@ -148,7 +148,7 @@ const DetailCommonShip = (props) => {
 			</base.Item>
 		</base.Form>
 	}
-	else{ shipOwnerDetail =
+	else { shipOwnerDetail =
 		<base.Form style={{width:'100%'}}>
 			<base.Form style={{width: '100%', alignItems: 'flex-end'}}>
 				<base.Text style={{margin: 10, fontWeight: 'bold', color: 'red',}}>선주 개인정보 동의가 필요합니다.</base.Text>

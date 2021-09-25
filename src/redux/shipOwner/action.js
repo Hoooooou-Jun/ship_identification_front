@@ -3,9 +3,10 @@ import { requestShipOwner } from '../../utils/shipInfoRequest'
 
 export const loadShipOwner = (token, id) => dispatch => {
     requestShipOwner(token, id).then((response) => {
+        console.log(response.data.data)
         dispatch((loadData(
             id,
-            response.data.data.privacyAgreement,
+            response.data.data.privacy_agree,
             response.data.data.own_img,
             response.data.data.own_name,
             response.data.data.phone,
