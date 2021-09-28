@@ -103,6 +103,7 @@ const UpdateCommonShip = (props) => {
 							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
 								<Picker
+									key={Math.random()}
 									selectedValue={types}
 									style={{height: 50, width: '100%'}}
 									onValueChange={set_types}>

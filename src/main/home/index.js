@@ -18,7 +18,7 @@ const SIZE_LOGO = Dimensions.get('screen').height * 0.08
 const SIZE_TITLE = Dimensions.get('screen').height * 0.0225
 const SIZE_FONT = Dimensions.get('screen').width * 0.035
 const SIZE_FOOTER = Dimensions.get('screen').height * 0.0175
-const SIZE_SUBFOOTER = Dimensions.get('screen').height * 0.0150
+const SIZE_SUBFOOTER = Dimensions.get('screen').height * 0.018
 const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 
@@ -237,9 +237,9 @@ const Home = (props) => {
 						</base.Form>
 
 					</base.Form>
-
-					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER, marginBottom: -10}}>선박확인체계 {props.userInfo.version}</base.Text>
-					<base.Text onPress={()=>props.navigation.navigate('License')} style={{flex: 1, color: 'grey', fontSize: SIZE_SUBFOOTER, color: 'skyblue', textDecorationLine: 'underline'}}>License</base.Text>
+					<base.Text onPress={()=>props.navigation.navigate('License')} style={{flex: 1, color: 'grey', fontSize: SIZE_SUBFOOTER, color: 'skyblue', textDecorationLine: 'underline', margin: '-2%'}}>License</base.Text>
+					<base.Text style={{flex: 1, color: 'grey', fontSize: SIZE_FOOTER}}>선박확인체계 {props.userInfo.version}</base.Text>
+					
 				</base.Content>
 			<StatusBar hidden/>
 			</base.Container>
