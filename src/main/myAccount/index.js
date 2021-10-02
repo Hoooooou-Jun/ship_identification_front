@@ -1,104 +1,415 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
-import { Image, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Dimensions, Alert, TouchableOpacity } from 'react-native';
 import * as base from 'native-base';
-import { getToken } from '../../utils/getToken';
-import { requestUserData } from '../../utils/userInfoRequest';
+import { Picker } from 'native-base';
+import { connect } from 'react-redux'
+import { Feather } from '@expo/vector-icons';
+
+import { editUserInfo } from '../../redux/userInfo/action';
+import { requestEditUserData } from '../../utils/userInfoRequest';
+import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';
+import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
+
 import styles from './styles';
 
+
 const SIZE_LOGO = Dimensions.get('screen').height * 0.3
+const SIZE_TITLE = Dimensions.get('screen').height * 0.02
 const SIZE_FONT = Dimensions.get('screen').height * 0.015
+const SIZE_SUBFONT = Dimensions.get('screen').height * 0.015
 
-import Loading from '../../utils/loading';
+const MyAccount = (props) => {
+	const [edit, setEdit] = useState(false)
+	const [rank, setRank] = useState(props.userInfo.rank)
+	const [unit, setUnit] = useState(props.userInfo.unit)
+	const [position, setPosition] = useState(props.userInfo.position)
+	const [phone, setPhone] = useState(props.userInfo.phone)
+	const [oldPassword, setOldPassword] = useState('')
+	const [pwCertification, setPwCertification] = useState(false)
+	const [newPassword, setNewPassword] = useState('')
+	const [newPasswordCheck, setNewPasswordCheck] = useState('')
+	const [passwordCheck, setPasswordCheck] = useState(false)
 
-export default class MyAccount extends Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			srvno: '',
-			password: '',
-            name : '',
-			rank : '',
-			position : '',
-			unit : '',
-			phone : '',
-			device_id : '',
+	useEffect(() => {
+		setPasswordCheck(false)
+	}, [newPassword, newPasswordCheck])
 
-			loadingVisible: true,
+	const onBack = () => {
+		Alert.alert(
+			"선박확인체계 알림",
+			"작성을 취소하시겠습니까?",
+			[
+				{
+					text: "예",
+					onPress: () =>
+					{
+						onReset()
+					},
+				},
+				{ 
+					text: "아니오"
+				}
+			]
+		)
+	}
+	
+	const onEdit = () => {
+		setEdit(true)
+		Alert.alert(
+			'선박확인체계 알림',
+			'수정할 정보를 입력하세요.'
+		)
+	}
+
+	const onReset = () => {
+		setEdit(false)
+		setRank(props.userInfo.rank)
+		setUnit(props.userInfo.unit)
+		setPosition(props.userInfo.position)
+		setPhone(props.userInfo.phone)
+		setOldPassword('')
+		setPwCertification(false)
+		setNewPassword('')
+		setNewPasswordCheck('')
+		setPasswordCheck(false)
+	}
+
+	const onSave = () => {
+		if(pwCertification == false) {
+			Alert.alert(
+				"선박확인체계 알림",
+				"비밀번호가 인증되지 않았습니다. 비밀번호를 제외한 수정된 정보를 저장하시겠습니까?",
+				[
+					{
+						text: "예",
+						onPress: () => 
+						{
+							console.log(props.userInfo.device_id)
+							requestEditUserData(props.userInfo.token, props.userInfo.device_id, rank, unit, position, phone, props.userInfo.password)
+							.then((response) => {
+								Alert.alert(
+								'선박확인체계 알림',
+								'저장이 완료되었습니다.'
+								)
+								setEdit(false)
+								props.editUserInfo(
+									props.userInfo.srvno,
+									props.userInfo.password,
+									props.userInfo.device_id,
+									props.userInfo.token,
+									props.userInfo.version,
+									props.userInfo.name,
+									rank,
+									position,
+									unit,
+									phone,
+									)
+								onReset()
+							}).catch((error) => {
+								const msg = error.response.data.message
+								console.log(msg)
+								if(msg == "Device_id isn't match") {
+									Alert.alert(
+										'선박확인체계 알림',
+										'계정에 귀속된 디바이스 아이디가 일치하지 않습니다.'
+									)
+								}
+								else {
+									Alert.alert(
+										'선박확인체계 알림',
+										'잘못된 접근입니다.'
+									)
+								}
+							})
+						},
+					},
+					{ 
+						text: "아니오"
+					}
+				]
+			)
 		}
-		this.getUserData = this.getUserData(this);
+		else {
+			Alert.alert(
+				"선박확인체계 알림",
+				"비밀번호를 포함한 수정된 정보를 저장하시겠습니까?",
+				[
+					{
+						text: "예",
+						onPress: () => 
+						{
+							if(passwordCheck == true) {
+								requestEditUserData(props.userInfo.token, props.userInfo.device_id, rank, unit, position, phone, newPassword)
+								.then((response) => {
+									Alert.alert(
+										'선박확인체계 알림',
+										'저장이 완료되었습니다.'
+										)
+									setEdit(false)
+									props.editUserInfo(
+										props.userInfo.srvno,
+										newPassword,
+										props.userInfo.device_id,
+										props.userInfo.token,
+										props.userInfo.version,
+										props.userInfo.name,
+										rank,
+										position,
+										unit,
+										phone,
+										)
+									onReset()
+								}).catch((error) => {
+									const msg = error.response.data.message
+									console.log(msg)
+									if(msg == "Device_id isn't match") {
+										Alert.alert(
+											'선박확인체계 알림',
+											'계정에 귀속된 디바이스 아이디가 일치하지 않습니다.'
+										)
+									}
+									else {
+										Alert.alert(
+											'선박확인체계 알림',
+											'비밀번호 생성 조건에 충족하지 않습니다. 다시 입력해주시기 바랍니다.'
+										)
+									}
+								})
+							}
+							else {
+								Alert.alert(
+									'선박확인체계 알림',
+									'비밀번호 일치 여부를 확인해주시기 바랍니다.'
+								)
+							}
+						},
+					},
+					{ 
+						text: "아니오"
+					}
+				]
+			)
+		}
 	}
-	getUserData(){
-		getToken().then((token) => {
-			requestUserData(token).then((response) => {
-            if(response.status == 200){
-				this.setState({
-					srvno: response.data.data.srvno,
-					name: response.data.data.name,
-					rank : response.data.data.rank,
-					position : response.data.data.position,
-					unit : response.data.data.unit,
-					phone : response.data.data.phone,
-					device_id : response.data.data.device_id,
 
-					loadingVisible: false,
-				})
-            }
-            else{
-                console.log('fail')
-            }
-		})
-        })
+	const onCertification = () => {
+		if(oldPassword == props.userInfo.password) {
+			setPwCertification(true)
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 인증되었습니다.'
+			)
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 다시 확인해주시기 바랍니다.'
+			)
+		}
 	}
-	render(){
-		return(
+
+	const checkPassword = () => {
+		if(newPassword == '') {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 입력해주시기 바랍니다.'
+			)
+		}
+		else if(newPasswordCheck == '') {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호를 입력해주시기 바랍니다.'
+			)
+		}
+		else if(newPassword == newPasswordCheck) {
+			setPasswordCheck(true)
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호 확인이 완료되었습니다.'
+			)
+		}
+		else {
+			Alert.alert(
+				'선박확인체계 알림',
+				'비밀번호가 일치하지 않습니다.'
+			)
+		}
+	}
+
+	if(edit == false) {
+		return (
 			<base.Container>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
-						<base.Button transparent onPress={()=>this.props.navigation.goBack()}>
+						<base.Button transparent onPress={() => props.navigation.goBack()}>
 							<base.Icon name='arrow-back' style={{color: 'black'}}/>
 						</base.Button>
 					</base.Left>
 					<base.Right>
+						<base.Button transparent onPress={onEdit}>
+							<Feather name="edit" size={25} color="black" />
+						</base.Button>
 					</base.Right>
 				</base.Header>
 				<base.Content padder>
-					<Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>this.props.navigation.goBack()}/>
 					<base.Form style={{flex: 1, width: '100%', justifyContent: 'center', alignItems: 'center', margin: 10}}>
 						<base.Form style={{backgroundColor:'white', borderRadius: SIZE_LOGO / 2, justifyContent: 'center', alignItems: 'center', width: SIZE_LOGO, height: SIZE_LOGO, elevation: 6}}>
 							<Image source={require('../../../assets/img/logo_Army.jpg')} style={{width: SIZE_LOGO / 3 * 2, height: SIZE_LOGO / 3 * 2}}/>
 						</base.Form>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>이름</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.name}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>이름</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.name}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>ID</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.srvno}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>ID</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.srvno}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>직급</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.rank}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>계급</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.rank}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>소속</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>제32보병사단 {this.state.unit}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>소속</base.Text>
+						<base.Text style={styles.formTextSub}>제32보병사단 {props.userInfo.unit}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>직책</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.position}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>직책</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.position}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>연락처</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.phone}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>연락처</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.phone}</base.Text>
 					</base.Form>
-					<base.Form style={{ width:'100%', flexDirection: 'row', alignItems: 'flex-start',}}>
-						<base.Text style={{flex: 1, color: 'black', margin: 10, fontSize: SIZE_FONT}}>기기정보</base.Text>
-						<base.Text style={{flex: 3, fontFamily:'Nanum', margin: 10, fontSize: SIZE_FONT}}>{this.state.device_id}</base.Text>
+					<base.Form style={styles.formLayout}>
+						<base.Text style={styles.formTextMain}>기기정보</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.device_id}</base.Text>
 					</base.Form>		
 				</base.Content>
 			</base.Container>
-		);
+		)
+	}
+	else {
+		return (
+			<base.Container>
+				<base.Header style={{backgroundColor: 'white'}}>
+					<base.Left>
+						<base.Button transparent onPress={onBack}>
+							<base.Icon name='arrow-back' style={{color: 'black'}}/>
+						</base.Button>
+					</base.Left>
+					<base.Right>
+						<base.Button transparent onPress={onSave}>
+							<Feather name="save" size={25} color="black" />
+						</base.Button>
+					</base.Right>
+				</base.Header>
+				<base.Content padder>
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>계급</base.Text>
+							<Picker
+								selectedValue={rank}
+								style={{height: 40, width: '100%'}}
+								onValueChange={(itemValue) => setRank(itemValue) }>
+								{ KindsOfRank.map((data)=>{ return <Picker.Item label={data.value} value={data.value} key={Math.random()} /> }) }
+							</Picker>
+						</base.Item>							
+					</base.Form>
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>소속부대 (제32보병사단)</base.Text>
+							<Picker
+								selectedValue={unit}
+								style={{height: 50, width: '100%'}}
+								onValueChange={(itemValue) => setUnit(itemValue) }>
+								{ KindsOfUnit.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={Math.random()} /> }) }
+							</Picker>				
+						</base.Item>							
+					</base.Form>
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>직책</base.Text>
+							<base.Input
+								placeholder={props.userInfo.position}
+								onChangeText={setPosition}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+								placeholderStyle={{fontFamily:'Nanum'}}
+								/>
+						</base.Item>
+					</base.Form>
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>연락처</base.Text>
+							<base.Input
+								placeholder={props.userInfo.phone}
+								onChangeText={setPhone}
+								style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+								placeholderStyle={{fontFamily:'Nanum'}}
+								keyboardType="number-pad"
+								/>
+						</base.Item>
+					</base.Form>
+					{pwCertification ||
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>비밀번호 변경하기</base.Text>
+							<base.Form style={{flexDirection: 'row', marginTop: '-0%'}}>
+								<base.Input
+									placeholder='현재 비밀번호를 입력해주시기 바랍니다.'
+									onChangeText={setOldPassword}
+									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT, marginLeft: '-1%', marginTop: '-1%'}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									secureTextEntry={ true }
+									/>
+								<TouchableOpacity style={{marginRight: 20}} onPress={onCertification}>
+									<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '20%', marginRight: -10}}>인증하기</base.Text>
+								</TouchableOpacity>
+							</base.Form>
+						</base.Item>
+					</base.Form>}
+					{pwCertification &&
+						<base.Form style={{marginVertical: 15}}>
+							<base.Item stackedLabel style={styles.itemBorder}>
+								<base.Text style={styles.itemTextLayout}>비밀번호 변경하기</base.Text>
+								<base.Input
+									placeholder='새 비밀번호를 입력해주시기 바랍니다.'
+									onChangeText={setNewPassword}
+									style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT}}
+									placeholderStyle={{fontFamily:'Nanum'}}
+									secureTextEntry={ true }
+									/>
+							</base.Item>
+							<base.Item stackedLabel style={styles.itemBorder}>
+								<base.Text style={{fontSize: SIZE_TITLE,}}></base.Text>
+								<base.Form style={{flexDirection: 'row'}}>
+									<base.Input
+										placeholder='비밀번호를 다시 입력해주시기 바랍니다.'
+										onChangeText={setNewPasswordCheck}
+										style={{fontFamily:'Nanum', fontSize: SIZE_SUBFONT, marginLeft: '-1%', marginTop: '-2%' }}
+										placeholderStyle={{fontFamily:'Nanum'}}
+										secureTextEntry={ true }
+										/>
+									<TouchableOpacity style={{marginRight: 20}} onPress={checkPassword}>
+										<base.Text style={{fontFamily: 'Nanum', fontSize: SIZE_SUBFONT, color: 'skyblue', marginTop: '20%', marginRight: -10}}>확인하기</base.Text>
+									</TouchableOpacity>
+								</base.Form>
+							</base.Item>
+						</base.Form>}
+				</base.Content>
+			</base.Container>
+		)
 	}
 }
+
+const mapStateToProps = (state) => {
+    return {
+        userInfo: state.userInfo
+    }
+}
+
+const mapDispatchToProps = {
+	editUserInfo: (srvno, password, device_id, token, version, name, rank, position, unit, phone) => editUserInfo(srvno, password, device_id, token, version, name, rank, position, unit, phone)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccount);
