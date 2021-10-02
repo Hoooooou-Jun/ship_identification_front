@@ -34,7 +34,7 @@ const DetailCommonShipGallery = (props) => {
 						<base.Text style={{color: 'black'}}>사진 추가등록하기</base.Text>
 					</base.Button>
 					<FlatList
-						sytle={{flex:1, height: 250, justifyContent: 'center', width: '100%'}}
+						style={{flex: 1, height: '100%', width: '100%'}}
 						data={data}
 						numColumns={3}
 						renderItem={({item, index}) => <ShowPlusDetail ship={item} idx={index + 1}

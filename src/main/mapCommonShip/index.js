@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
-import { getToken } from '../../utils/getToken';
 import { requestCommonShipLocation, requestCommonShipLocationDetail } from '../../utils/shipInfoRequest';
 import { AntDesign } from '@expo/vector-icons';
 import Loading from '../../utils/loading';
@@ -69,6 +68,7 @@ const MapCommonShip = (props) => {
         return data.map((ship) => {
             return (
                 <Marker
+                key = {ship.id}
                 pinColor='green'
                 coordinate={{
                     latitude: parseFloat(ship.lat),

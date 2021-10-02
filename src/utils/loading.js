@@ -4,11 +4,11 @@ import { Modal, Dimensions } from 'react-native';
 import * as base from 'native-base';
 
 const SIZE_LOAD_TITLE = Dimensions.get('screen').width * 0.07
-const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.04
+const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_LOAD_SUBSUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.175
-const SIZE_WIDTH = Dimensions.get('screen').width * 0.8
-const SIZE_HEIGHT = Dimensions.get('screen').width * 0.68
+const SIZE_WIDTH = Dimensions.get('screen').width * 0.73
+const SIZE_HEIGHT = Dimensions.get('screen').width * 0.86
 
 export default class Loading extends Component{
 	constructor(props) {
@@ -33,7 +33,7 @@ export default class Loading extends Component{
             <base.Text style={{color: 'white', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>{Math.floor(this.props.load/this.props.sum*100)}%</base.Text>
         }
         if(!this.props.initialRoute && this.state.sec > 10){ backButton =
-            <base.Button block style={{width: '30%', height: '10%', justifyContent: 'center', alignSelf: 'center', borderRadius: 5, backgroundColor: 'white'}} onPress={this.props.onPress}>
+            <base.Button block style={{width: '30%', height: '7%', justifyContent: 'center', alignSelf: 'center', borderRadius: 5, backgroundColor: 'white'}} onPress={this.props.onPress}>
                 <base.Text style={{color: 'black', fontSize: SIZE_LOAD_SUBTITLE, margin: 10}}>뒤로가기</base.Text>
             </base.Button>
         }

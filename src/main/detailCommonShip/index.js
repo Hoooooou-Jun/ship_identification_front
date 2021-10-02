@@ -161,7 +161,7 @@ const DetailCommonShip = (props) => {
 		</base.Form>
 	}
 	let CommonShipGallery
-	if(props.galleryCommonShip.gallery.length){ CommonShipGallery =
+	if(props.galleryCommonShip.gallery.length) { CommonShipGallery =
 		<base.Form>
 			<FlatList
 				style={{flex:1, height: SIZE_SUBIMG}}
@@ -237,7 +237,7 @@ const DetailCommonShip = (props) => {
 						<AntDesign name="edit" size={25} color="black"/>
 					</base.Button>
 					<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}
-					onPress={()=>props.navigation.navigate('RegisterCommonShipImages',{id: props.detailCommonShip.id, name: props.detailCommonShip.name})}>
+					onPress={() => props.navigation.navigate('RegisterCommonShipImages', {id: props.detailCommonShip.id, name: props.detailCommonShip.name})}>
 						<AntDesign name="addfile" size={25} color="black"/>
 					</base.Button>
 					<base.Button transparent style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}

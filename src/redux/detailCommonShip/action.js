@@ -95,9 +95,9 @@ const loadData = (id, main_img, main_img_id, name, code, types, is_ais, is_vpass
 
 const loadError = (error) => {
         return {
-        type : ERROR_DETAILCOMMONSHIP,
-        payload: {
-            error,
+            type : ERROR_DETAILCOMMONSHIP,
+            payload: {
+                error,
         }
     }
 }

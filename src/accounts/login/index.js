@@ -79,7 +79,7 @@ const Login = (props) => {
 					srvno + '님 반갑습니다',
 				)
 				props.loginUserInfo(srvno, password, device_id, response.data.data.token, version)
-				props.navigation.navigate('Home')
+				props.navigation.navigate('Home', {token: response.data.data.token})
 			}).catch((error) => {
 				const msg = error.response.data.message
 				console.log(msg)

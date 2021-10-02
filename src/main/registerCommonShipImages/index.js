@@ -102,7 +102,7 @@ const RegisterCommonShipImages = (props) => {
 		}
 	}
 
-	switch(clicked){
+	switch(clicked) {
 		case 0:{
 			pickPhoto();
 			set_clicked(null);
@@ -168,6 +168,7 @@ const RegisterCommonShipImages = (props) => {
 					</base.Button>
 					<base.Form sylle={{justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%',margin: 10,}}>
 						<FlatList
+							keyExtractor={(item)=> item.toString()}
 							data={images}
 							numColumns={3}
 							renderItem={({item}) => <Image resizeMode='cover' source={{uri: item}} style={{flex: 1 / 3, width: '100%', height: 150,}}/>}

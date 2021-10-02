@@ -103,11 +103,10 @@ const UpdateCommonShip = (props) => {
 							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>선박종류</base.Text>
 								<Picker
-									key={Math.random()}
 									selectedValue={types}
 									style={{height: 50, width: '100%'}}
 									onValueChange={set_types}>
-									{ KindsOfShip.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
+									{ KindsOfShip.map((data)=>{ return <Picker.Item key={data.value.toString()} label={data.value} value={data.value} /> }) }
 								</Picker>							
 							</base.Item>							
 						</base.Form>
@@ -158,11 +157,10 @@ const UpdateCommonShip = (props) => {
 							<base.Item stackedLabel style={{borderColor: '#006eee', height: 60, marginRight: 20,}}>
 								<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>위치지역</base.Text>
 								<Picker
-									key={Math.random()}
 									selectedValue={region}
 									style={{height: 50, width: '100%'}}
 									onValueChange={set_region}>
-									{ KindsOfRegion.map((data)=>{ return <Picker.Item label={data.value} value={data.value} /> }) }
+									{ KindsOfRegion.map((data)=>{ return <Picker.Item key={data.value.toString()} label={data.value} value={data.value} /> }) }
 								</Picker>							
 							</base.Item>							
 						</base.Form>

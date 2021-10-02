@@ -23,22 +23,30 @@ const SIZE_ICON = Dimensions.get('screen').height * 0.035
 const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 
 const Home = (props) => {
+	const [data, set_data] = useState([])
+	const [loadingVisible, set_loadingVisible] = useState(true)
+	const [flatListIndex, set_flatListIndex] = useState(0)
+	const [flatListSize, set_flatListSize] = useState(0)
+
 	const flatListRef = useRef()
-	const [data, setData] = useState([])
-	const [dataMount, setDataMount] = useState(false)
+
+	useEffect(() => {
+		getNoticeList()
+	}, [])
 
 	const getNoticeList = () => {
-		requestNoticeList(props.userInfo.token).then((response) => {
+		requestNoticeList(props.navigation.getParam('token')).then((response) => {
 			if(response.status == 200) {
-				setData(response.data.data)
-				setDataMount(true)
+				set_data(response.data.data)
+				set_flatListSize(response.data.data.length)
+				set_loadingVisible(false)
 			}
 			else {
 				console.log('error')
 			}
 		})
 	}
-
+	
 	const executeLogout = () => {
 		Alert.alert(
 			"선박확인체계 알림",
@@ -69,17 +77,10 @@ const Home = (props) => {
 			]
 		)
 	}
-
-	useEffect(() => {
-		getNoticeList()
-	}, [props.userInfo])
-
-
-	if(dataMount) {
 		return(
 			<base.Container>
 				<base.Content contentContainerStyle={{alignItems: 'center', justifyContent:'center', flex: 1,}}>
-
+					<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 					<base.Form style={{flex: 6, width: '100%', flexDirection: 'column', marginBottom: 10}}>
 						<base.Form style={{flex: 1, backgroundColor: '#EDF5FE', borderRadius: 20, elevation: 6}}>
 
@@ -244,12 +245,6 @@ const Home = (props) => {
 			<StatusBar hidden/>
 			</base.Container>
 		)
-	}
-	else {
-		return (
-			<Loading />
-		)
-	}
 }
 
 const mapStateToProps = (state) => {

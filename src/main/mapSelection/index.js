@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
+import React from 'react';
 import * as base from 'native-base';
 import { Dimensions } from 'react-native';
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04

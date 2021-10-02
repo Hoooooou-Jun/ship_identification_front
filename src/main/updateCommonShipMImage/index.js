@@ -24,12 +24,12 @@ const UpdateCommonShipMImage = (props) => {
 				text: "네",
 				onPress: () => {
 					if(img_id != main_img_id) {
-							props.updateCommonShipMainImage(props.token, img_id, id)
-							Alert.alert(
-								'선박확인체계 알림',
-								index + '번째 사진으로 대표사진이 수정되었습니다',
-							)
-							props.navigation.navigate('DetailCommonShip', {id: id})
+						props.updateCommonShipMainImage(props.token, img_id, id)
+						Alert.alert(
+							'선박확인체계 알림',
+							index + '번째 사진으로 대표사진이 수정되었습니다',
+						)
+						props.navigation.navigate('DetailCommonShip', {id: id})
 					}
 					else {
 						Alert.alert(
@@ -57,7 +57,6 @@ const UpdateCommonShipMImage = (props) => {
 				</base.Right>
 			</base.Header>
 			<base.Content>
-				{/* <Loading visible={this.state.loadingVisible} initialRoute={false} onPress={()=>props.navigation.goBack()}/> */}
 				<base.Form style={{padding: 10,}}>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>대표사진 설정</base.Text>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_SUBTITLE, marginTop: 10, color: 'grey',}}>대표사진으로 설정할 사진을 선택하세요</base.Text>

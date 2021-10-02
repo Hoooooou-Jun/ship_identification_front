@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
-import { getToken } from '../../utils/getToken';
 import { requestWastedShipLocation, requestWastedShipLocationDetail } from '../../utils/shipInfoRequest';
 import { AntDesign } from '@expo/vector-icons';
 import Loading from '../../utils/loading';
@@ -46,7 +45,7 @@ const MapWastedShip = (props) => {
         Location.getCurrentPositionAsync().then((location)=>{
             requestWastedShipLocationDetail(props.token, 
                 parseFloat(location.coords['latitude']), parseFloat(location.coords['longitude'])).then((response) => {
-                set_data(response.data.dat)
+                set_data(response.data.data)
                 set_loadingVisible_data(false)
             })
         })
@@ -68,6 +67,7 @@ const MapWastedShip = (props) => {
         return data.map((ship) => {
             return (
                 <Marker
+                key = {ship.id}
                 pinColor='red'
                 coordinate={{
                     latitude: parseFloat(ship.lat),
