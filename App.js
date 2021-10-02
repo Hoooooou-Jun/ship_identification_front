@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
+import { LogBox } from "react-native";
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -43,6 +43,15 @@ import ImgViewer from './src/main/imgViewer';
 import ShipImgViewer from './src/main/shipImgViewer';
 
 import MyAccount from './src/main/myAccount';
+
+import store from './src/redux/store';
+import { Provider } from 'react-redux';
+
+LogBox.ignoreLogs([
+	"VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
+	"Warning: Failed prop type: Invalid prop `tabStyle` of type `array` supplied to `DefaultTabBar`, expected `object`."
+  ]);
+
 const homeStackNav = createStackNavigator(
 	{
     Home: {screen: Home, navigationOptions: {headerShown: false}},
@@ -108,6 +117,6 @@ const AppContainer = createAppContainer(Root);
 
 export default class App extends Component {
 	render(){
-		return <AppContainer></AppContainer>;
+		return <Provider store={store}><AppContainer></AppContainer></Provider>;
 	}
 }
