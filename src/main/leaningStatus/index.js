@@ -5,7 +5,7 @@ import { Dimensions } from 'react-native';
 import Loading from '../../utils/loading';
 import styles from './styles';
 import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import { requestStatistics } from '../../utils/additionalInfoRequest'
+import { requestDBStatistics, requestAIStatistics } from '../../utils/additionalInfoRequest'
 import { connect } from 'react-redux';
 
 const SIZE_TITLE = Dimensions.get('screen').height * 0.04
@@ -15,6 +15,7 @@ const SIZE_FONT = Dimensions.get('screen').height * 0.018
 
 const LeaningStatus = (props) => {
     const [todayDB, set_todayDB] = useState([])
+    const [todayAI, set_todayAI] = useState([])
 
     useEffect(() => {
         getStatistics()
@@ -22,8 +23,11 @@ const LeaningStatus = (props) => {
 
     
     const getStatistics = () => {
-        requestStatistics(props.token).then((response) => {
+        requestDBStatistics(props.token).then((response) => {
             set_todayDB(response.data.data)
+        })
+        requestAIStatistics(props.token).then((response) => {
+            set_todayAI(response.data.data)
         })
     }
 

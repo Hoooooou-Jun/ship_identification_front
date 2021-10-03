@@ -63,8 +63,16 @@ export const requestLicense = (token) =>
 	}
 })
 
-export const requestStatistics = (token) => 
+export const requestDBStatistics = (token) => 
     request.get('/Ships/stat/normal/', {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})
+
+export const requestAIStatistics = (token) => 
+    request.get('/Ships/stat/train/', {
         headers: {
             'AUTHORIZATION': 'jwt ' + token,
             'Accept': 'application/json',
