@@ -188,7 +188,7 @@ const Login = (props) => {
 			)
 		}
 		else {
-			return(
+			return (
 				<base.Container>
 					<base.Content contentContainerStyle={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
 

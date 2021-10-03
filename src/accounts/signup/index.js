@@ -5,8 +5,18 @@ import * as base from 'native-base'
 import { Picker } from 'native-base';
 import Constants from 'expo-constants';
 import { requestSignup } from '../../utils/userInfoRequest/';
-import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';
+
+import { KindsOfUnit_31 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_31';
+import { KindsOfUnit_32 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_32';
+import { KindsOfUnit_35 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_35';
+import { KindsOfUnit_37 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_37';
+import { KindsOfUnit_39 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_39';
+import { KindsOfUnit_50 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_50';
+import { KindsOfUnit_53 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_53';
+import { KindsOfUnit_div } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_div';
+
 import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
+
 import Loading from '../../utils/loading';
 
 import styles from './styles'
@@ -24,7 +34,8 @@ const Signup = (props) => {
 	const [name, setName] = useState('')
 	const [rank, setRank] = useState('이병')
 	const [position, setPosition] = useState('')
-	const [unit, setUnit] = useState('사령부')
+	const [unit, setUnit] = useState('')
+	const [div, setDiv] = useState('32')
 	const [phone, setPhone] = useState('')
 	const [device_id, setDevice_Id] = useState(Constants.deviceId)
 	const [loadingVisible, setLoadingVisible] = useState(false)
@@ -32,6 +43,39 @@ const Signup = (props) => {
 	useEffect(() => {
 		setCheck(false)
 	}, [passwordCheck]) 
+
+	useEffect(() => {
+		switch(div) {
+			case '31': {
+				setUnit('31-div')
+				break;
+			}
+			case '32': {
+				setUnit('사령부')
+				break;
+			}
+			case '35': {
+				setUnit('35-div')
+				break;
+			}
+			case '37': {
+				setUnit('37-div')
+				break;
+			}
+			case '39': {
+				setUnit('39-div')
+				break;
+			}
+			case '50': {
+				setUnit('50-div')
+				break;
+			}
+			case '53': {
+				setUnit('53-div')
+				break;
+			}
+		}
+	}, [div])
 
 	const executeSignup = () => {
 		if(srvno != '' && password != '' && name != '' && rank != '' && position != '' && phone != '') {
@@ -125,11 +169,76 @@ const Signup = (props) => {
 		}
 	}
 
+	let unitField
+	if(div == '31') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_31.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '32') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_32.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '35') {
+		unitField = 
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_35.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '37') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_37.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '39') { 
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_39.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '50') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_50.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '53') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_53.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+
 	return (
 		<base.Container>
 			<base.Header style={{backgroundColor: 'white'}}>
 				<base.Left>
-					<base.Button transparent onPress={()=>props.navigation.goBack()}>
+					<base.Button transparent onPress={() => props.navigation.goBack()}>
 						<base.Icon name='arrow-back' style={{color: 'black'}}/>
 					</base.Button>
 				</base.Left>
@@ -137,7 +246,7 @@ const Signup = (props) => {
 				</base.Right>
 			</base.Header>
 			<base.Content>
-				<Loading visible={loadingVisible} initialRoute={false} onPress={()=>props.navigation.goBack()}/>
+				<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 				
 				<base.Form style={{padding: 10,}}>
 					<base.Text style={{fontFamily:'Nanum', fontSize: SIZE_TITLE, color: '#006eee',}}>회원가입</base.Text>
@@ -185,8 +294,6 @@ const Signup = (props) => {
 					</base.Item>
 				</base.Form>
 
-
-
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={styles.itemBorder}>
 						<base.Text style={styles.itemTextLayout}>이름</base.Text>
@@ -214,27 +321,33 @@ const Signup = (props) => {
 
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={styles.itemBorder}>
-					<base.Text style={styles.itemTextLayout}>계급</base.Text>
-					<Picker
-						selectedValue={rank}
-						style={{height: 40, width: '100%'}}
-						onValueChange={(itemValue) => setRank(itemValue) }>
-						{ KindsOfRank.map((data)=>{ return <Picker.Item label={data.value} value={data.value} key={Math.random()} /> }) }
-					</Picker>
+						<base.Text style={styles.itemTextLayout}>계급</base.Text>
+						<Picker
+							selectedValue={rank}
+							style={{height: 40, width: '100%'}}
+							onValueChange={(itemValue) => setRank(itemValue) }>
+							{ KindsOfRank.map((data)=>{ return <Picker.Item label={data.value} value={data.value} key={data.value.toString()} /> }) }
+						</Picker>
 					</base.Item>							
 				</base.Form>
 
-
 				<base.Form style={{marginVertical: 15}}>
 					<base.Item stackedLabel style={styles.itemBorder}>
-					<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>소속부대 (제32보병사단)</base.Text>
-					<Picker
-						selectedValue={unit}
-						style={{height: 50, width: '100%'}}
-						onValueChange={(itemValue) => setUnit(itemValue) }>
-						{ KindsOfUnit.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={Math.random()} /> }) }
-					</Picker>				
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>소속부대</base.Text>
+						<Picker
+							selectedValue={div}
+							style={{height: 50, width: '100%'}}
+							onValueChange={(itemValue) => setDiv(itemValue) }>
+						{ KindsOfUnit_div.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+						</Picker>				
 					</base.Item>							
+				</base.Form>
+
+				<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+						<base.Text style={{fontSize: SIZE_FONT, alignSelf:'flex-start'}}>여단·대대</base.Text>
+							{unitField}			
+						</base.Item>							
 				</base.Form>	
 				
 				<base.Form style={{marginVertical: 15}}>

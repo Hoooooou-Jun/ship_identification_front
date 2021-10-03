@@ -1,4 +1,4 @@
-export const KindsOfUnit = [
+export const KindsOfUnit_32 = [
     { label: '사령부', value: '사령부' },
     { label: '직할대', value: '직할대' },
     { label: '97여단', value: '97' },

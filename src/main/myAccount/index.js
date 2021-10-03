@@ -7,7 +7,16 @@ import { Feather } from '@expo/vector-icons';
 
 import { editUserInfo } from '../../redux/userInfo/action';
 import { requestEditUserData } from '../../utils/userInfoRequest';
-import { KindsOfUnit } from '../../kindsOfData/kindsOfUnit';
+
+import { KindsOfUnit_31 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_31';
+import { KindsOfUnit_32 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_32';
+import { KindsOfUnit_35 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_35';
+import { KindsOfUnit_37 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_37';
+import { KindsOfUnit_39 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_39';
+import { KindsOfUnit_50 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_50';
+import { KindsOfUnit_53 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_53';
+import { KindsOfUnit_div } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_div';
+
 import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
 
 import styles from './styles';
@@ -22,6 +31,7 @@ const MyAccount = (props) => {
 	const [edit, setEdit] = useState(false)
 	const [rank, setRank] = useState(props.userInfo.rank)
 	const [unit, setUnit] = useState(props.userInfo.unit)
+	const [div, setDiv] = useState('31')
 	const [position, setPosition] = useState(props.userInfo.position)
 	const [phone, setPhone] = useState(props.userInfo.phone)
 	const [oldPassword, setOldPassword] = useState('')
@@ -33,6 +43,39 @@ const MyAccount = (props) => {
 	useEffect(() => {
 		setPasswordCheck(false)
 	}, [newPassword, newPasswordCheck])
+
+	useEffect(() => {
+		switch(div) {
+			case '31': {
+				setUnit('31-div')
+				break;
+			}
+			case '32': {
+				setUnit('32-div')
+				break;
+			}
+			case '35': {
+				setUnit('35-div')
+				break;
+			}
+			case '37': {
+				setUnit('37-div')
+				break;
+			}
+			case '39': {
+				setUnit('39-div')
+				break;
+			}
+			case '50': {
+				setUnit('50-div')
+				break;
+			}
+			case '53': {
+				setUnit('53-div')
+				break;
+			}
+		}
+	}, [div])
 
 	const onBack = () => {
 		Alert.alert(
@@ -236,6 +279,71 @@ const MyAccount = (props) => {
 		}
 	}
 
+	let unitField
+	if(div == '31') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_31.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '32') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_32.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '35') {
+		unitField = 
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_35.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '37') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_37.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '39') { 
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_39.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '50') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_50.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '53') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_53.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+
 	if(edit == false) {
 		return (
 			<base.Container>
@@ -318,15 +426,23 @@ const MyAccount = (props) => {
 					</base.Form>
 					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={styles.itemBorder}>
-							<base.Text style={styles.itemTextLayout}>소속부대 (제32보병사단)</base.Text>
+							<base.Text style={styles.itemTextLayout}>소속부대</base.Text>
 							<Picker
-								selectedValue={unit}
+								selectedValue={div}
 								style={{height: 50, width: '100%'}}
-								onValueChange={(itemValue) => setUnit(itemValue) }>
-								{ KindsOfUnit.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={Math.random()} /> }) }
+								onValueChange={(itemValue) => setDiv(itemValue) }>
+								{ KindsOfUnit_div.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={Math.random()} /> }) }
 							</Picker>				
 						</base.Item>							
 					</base.Form>
+
+					<base.Form style={{marginVertical: 15}}>
+						<base.Item stackedLabel style={styles.itemBorder}>
+							<base.Text style={styles.itemTextLayout}>여단·대대</base.Text>
+							{unitField}			
+						</base.Item>							
+					</base.Form>	
+				
 					<base.Form style={{marginVertical: 15}}>
 						<base.Item stackedLabel style={styles.itemBorder}>
 							<base.Text style={styles.itemTextLayout}>직책</base.Text>

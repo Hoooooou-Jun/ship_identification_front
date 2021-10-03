@@ -171,7 +171,7 @@ const Home = (props) => {
 								</base.CardItem>
 								<base.CardItem button style={styles.baseDirection} onPress={()=>props.navigation.navigate('SearchAI')}>
 									<base.Form style={styles.baseIcon}>
-									<AntDesign name="barschart" size={SIZE_SUBICON} color="#006eee"/>
+									<MaterialCommunityIcons name="head-sync-outline" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
 									<base.Text style={styles.baseItemText}>AI 검색
 									</base.Text>
@@ -216,19 +216,21 @@ const Home = (props) => {
 									flex: 1, width: '100%', padding: 10,
 									flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
 								}}>
-								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('http://m.kma.go.kr')}>
+
+								<base.CardItem button style={styles.baseDirection} onPress={() => props.navigation.navigate('LeaningStatus')}>
 								<base.Form style={styles.baseIcon}>
-										<base.Icon name='partly-sunny-outline' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
+										<Feather name='pie-chart' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>
-									<base.Text style={styles.baseItemText}>기상정보</base.Text>
+									<base.Text style={styles.baseItemText}>AI 학습현황</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('http://m.khoa.go.kr/')}>
+
+								<base.CardItem button style={styles.baseDirection} onPress={() => Linking.openURL('http://m.khoa.go.kr/')}>
 									<base.Form style={styles.baseIcon}>
 										<MaterialCommunityIcons name="waves" size={SIZE_SUBICON} color="#006eee"/>
 									</base.Form>
 									<base.Text style={styles.baseItemText}>수치조류도</base.Text>
 								</base.CardItem>
-								<base.CardItem button style={styles.baseDirection} onPress={()=>Linking.openURL('https://www.marinetraffic.com/en/ais/home/centerx:126.1/centery:36.5/zoom:8')}>
+								<base.CardItem button style={styles.baseDirection} onPress={() => Linking.openURL('https://www.marinetraffic.com/en/ais/home/centerx:126.1/centery:36.5/zoom:8')}>
 									<base.Form style={styles.baseIcon}>
 										<base.Icon name='ios-boat-outline' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>

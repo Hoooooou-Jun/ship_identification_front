@@ -1,0 +1,15 @@
+export const KindsOfUnit_37 = [
+    { label: '37사단 직할대', value: '37직할대' },
+    { label: '110여단', value: '110' },
+    { label: '110여단 1대대', value: '110-1' },
+    { label: '110여단 2대대', value: '110-2' },
+    { label: '110여단 3대대', value: '110-3' },
+    { label: '111여단', value: '111' },
+    { label: '111여단 1대대', value: '111-1' },
+    { label: '111여단 2대대', value: '111-2' },
+    { label: '111여단 3대대', value: '111-3' },
+    { label: '112여단', value: '112' },
+    { label: '112여단 1대대', value: '112-1' },
+    { label: '112여단 2대대', value: '112-2' },
+    { label: '112여단 3대대', value: '112-3' },
+]
