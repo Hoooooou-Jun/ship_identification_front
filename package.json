@@ -4,6 +4,7 @@
     "postinstall": "rndebugger-open"
   },
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "@expo/vector-icons": "^12.0.3",
     "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/cameraroll": "^4.0.4",
@@ -29,7 +30,6 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-auto-scrolling": "^2.1.0",
     "react-native-camera-roll-picker": "^2.0.0",
-    "react-native-chart-kit": "^6.11.0",
     "react-native-dots-pagination": "^0.2.0",
     "react-native-gesture-handler": "^1.8.0",
     "react-native-image-crop-picker": "^0.36.0",
@@ -53,11 +53,13 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "rn-fetch-blob": "^0.12.0"
+    "rn-fetch-blob": "^0.12.0",
+    "victory-native": "^35.5.5"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
-    "react-native-debugger-open": "^0.3.25"
+    "react-native-debugger-open": "^0.3.25",
+    "xxxxx": "^1.0.3"
   },
   "private": true
 }

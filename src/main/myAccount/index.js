@@ -8,15 +8,7 @@ import { Feather } from '@expo/vector-icons';
 import { editUserInfo } from '../../redux/userInfo/action';
 import { requestEditUserData } from '../../utils/userInfoRequest';
 
-import { KindsOfUnit_31 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_31';
-import { KindsOfUnit_32 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_32';
-import { KindsOfUnit_35 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_35';
-import { KindsOfUnit_37 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_37';
-import { KindsOfUnit_39 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_39';
-import { KindsOfUnit_50 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_50';
-import { KindsOfUnit_53 } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_53';
-import { KindsOfUnit_div } from '../../kindsOfData/kindsOfUnit/kindsOfUnit_div';
-
+import { KindsOfUnit_div, KindsOfUnit_31, KindsOfUnit_32, KindsOfUnit_35, KindsOfUnit_37, KindsOfUnit_39, KindsOfUnit_50, KindsOfUnit_53, KindsOfUnit_2 } from '../../kindsOfData/kindsOfUnit';
 import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
 
 import styles from './styles';
@@ -47,31 +39,35 @@ const MyAccount = (props) => {
 	useEffect(() => {
 		switch(div) {
 			case '31': {
-				setUnit('31-div')
+				setUnit('31직할대')
 				break;
 			}
 			case '32': {
-				setUnit('32-div')
+				setUnit('직할대')
 				break;
 			}
 			case '35': {
-				setUnit('35-div')
+				setUnit('35직할대')
 				break;
 			}
-			case '37': {
-				setUnit('37-div')
-				break;
-			}
+			// case '37': {
+			// 	setUnit('37직할대')
+			// 	break;
+			// }
 			case '39': {
-				setUnit('39-div')
+				setUnit('39직할대')
 				break;
 			}
 			case '50': {
-				setUnit('50-div')
+				setUnit('50직할대')
 				break;
 			}
 			case '53': {
-				setUnit('53-div')
+				setUnit('53직할대')
+				break;
+			}
+			case '2': {
+				setUnit('2직할대')
 				break;
 			}
 		}
@@ -307,15 +303,15 @@ const MyAccount = (props) => {
 			{ KindsOfUnit_35.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
 		</Picker>
 	}
-	else if(div == '37') {
-		unitField =
-		<Picker
-			selectedValue={unit}
-			style={{height: 50, width: '100%'}}
-			onValueChange={(itemValue) => setUnit(itemValue) }>
-			{ KindsOfUnit_37.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
-		</Picker>
-	}
+	// else if(div == '37') {
+	// 	unitField =
+	// 	<Picker
+	// 		selectedValue={unit}
+	// 		style={{height: 50, width: '100%'}}
+	// 		onValueChange={(itemValue) => setUnit(itemValue) }>
+	// 		{ KindsOfUnit_37.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+	// 	</Picker>
+	// }
 	else if(div == '39') { 
 		unitField =
 		<Picker
@@ -341,6 +337,15 @@ const MyAccount = (props) => {
 			style={{height: 50, width: '100%'}}
 			onValueChange={(itemValue) => setUnit(itemValue) }>
 			{ KindsOfUnit_53.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
+		</Picker>
+	}
+	else if(div == '해병대') {
+		unitField =
+		<Picker
+			selectedValue={unit}
+			style={{height: 50, width: '100%'}}
+			onValueChange={(itemValue) => setUnit(itemValue) }>
+			{ KindsOfUnit_2.map((data)=>{ return <Picker.Item label={data.label} value={data.value} key={data.value.toString()} /> }) }
 		</Picker>
 	}
 

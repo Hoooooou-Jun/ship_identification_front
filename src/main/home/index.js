@@ -221,7 +221,7 @@ const Home = (props) => {
 								<base.Form style={styles.baseIcon}>
 										<Feather name='pie-chart' style={{fontSize: SIZE_SUBICON, color: '#006eee'}}/>
 									</base.Form>
-									<base.Text style={styles.baseItemText}>AI 학습현황</base.Text>
+									<base.Text style={styles.baseItemText}>DB 차트</base.Text>
 								</base.CardItem>
 
 								<base.CardItem button style={styles.baseDirection} onPress={() => Linking.openURL('http://m.khoa.go.kr/')}>
