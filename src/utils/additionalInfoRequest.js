@@ -78,3 +78,11 @@ export const requestAIStatistics = (token) =>
             'Accept': 'application/json',
             'Content-Type': 'application/json',
 }})
+
+export const requestDateDBStatistics = (token, year, month, day) => 
+    request.get(`/Ships/stat/normal/?year=${year}&month=${month}&day=${day}`, {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})

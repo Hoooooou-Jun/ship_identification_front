@@ -25,8 +25,6 @@ const SIZE_SUBICON = Dimensions.get('screen').height * 0.045
 const Home = (props) => {
 	const [data, set_data] = useState([])
 	const [loadingVisible, set_loadingVisible] = useState(true)
-	const [flatListIndex, set_flatListIndex] = useState(0)
-	const [flatListSize, set_flatListSize] = useState(0)
 
 	const flatListRef = useRef()
 
@@ -38,7 +36,6 @@ const Home = (props) => {
 		requestNoticeList(props.navigation.getParam('token')).then((response) => {
 			if(response.status == 200) {
 				set_data(response.data.data)
-				set_flatListSize(response.data.data.length)
 				set_loadingVisible(false)
 			}
 			else {
