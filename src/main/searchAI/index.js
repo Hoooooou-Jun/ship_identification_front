@@ -162,7 +162,7 @@ const SearchAI = (props) => {
 			<base.Card style={{flex: 1,}}>
 				<base.Form style={{alignItems:'center', justifyContent: 'center', flex: 1, height: '100%'}}>
 					<base.Text style ={{fontFamily:'Nanum',fontSize: 30, margin: 10}}>선박 AI 데이터 분석 중</base.Text>
-					<base.Text style ={{fontFamily:'Nanum',fontSize: 15}}>최대 1분 내외로 시간이 소요될 수 있습니다. </base.Text>
+					<base.Text style ={{fontFamily:'Nanum',fontSize: 15}}>최대 45초 내외로 시간이 소요될 수 있습니다. </base.Text>
 					<base.Spinner color='blue' />
 				</base.Form>
 			</base.Card>

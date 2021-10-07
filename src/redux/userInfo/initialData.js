@@ -10,4 +10,5 @@ export const userInfo = {
     unit: '',
     phone: '',
     level: '',
+    div: '',
 }

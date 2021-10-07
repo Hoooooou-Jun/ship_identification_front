@@ -94,7 +94,7 @@ const Home = (props) => {
 											<base.Text style={{color: 'grey', fontSize: SIZE_TITLE}}>{props.userInfo.rank} </base.Text>
 											<base.Text style={{color: '#006eee', fontSize: SIZE_TITLE + 10}}>{props.userInfo.name}</base.Text>
 										</base.Form>
-										<base.Text style={{color: 'grey', fontSize: SIZE_TITLE - 5}}>제32보병사단 {props.userInfo.unit} {props.userInfo.position}</base.Text>
+										<base.Text style={{color: 'grey', fontSize: SIZE_TITLE - 5}}>{props.userInfo.div} {props.userInfo.unit} {props.userInfo.position}</base.Text>
 									</base.Form>
 								</base.Form>
 							</base.Form>	

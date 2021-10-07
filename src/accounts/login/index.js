@@ -17,6 +17,7 @@ import Loading from '../../utils/loading';
 import { AppVersion, UnderInspection } from '../../utils/version';
 
 const SIZE_ICON = Dimensions.get('screen').height * 0.1
+const SIZE_SPLASHICON = Dimensions.get('screen').height * 0.3
 const SIZE_TITLE = Dimensions.get('screen').width * 0.11
 
 const SIZE_FOOTER = Dimensions.get('screen').width * 0.03
@@ -256,7 +257,17 @@ const Login = (props) => {
 	}
 	else {
 		return (
-			<Loading />
+			<base.Container style={{justifyContent: 'center', alignItems: 'center'}}>
+				<StatusBar hidden/>
+				<base.Form>
+					<base.Form style={{backgroundColor: '#006eee', borderRadius: 20}}>
+						<MaterialCommunityIcons name="sail-boat" size={SIZE_SPLASHICON} color="white" />
+					</base.Form>
+				</base.Form>
+					{/* <base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+						<base.Text></base.Text>
+					</base.Form> */}
+			</base.Container>
 		)
 	}
 }

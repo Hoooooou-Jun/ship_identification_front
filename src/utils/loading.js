@@ -8,7 +8,7 @@ const SIZE_LOAD_SUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_LOAD_SUBSUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_LOAD_LOGO = Dimensions.get('screen').width * 0.175
 const SIZE_WIDTH = Dimensions.get('screen').width * 0.73
-const SIZE_HEIGHT = Dimensions.get('screen').width * 0.82
+const SIZE_HEIGHT = Dimensions.get('screen').width * 0.77
 
 export default class Loading extends Component{
 	constructor(props) {

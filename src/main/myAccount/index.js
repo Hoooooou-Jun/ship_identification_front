@@ -142,6 +142,7 @@ const MyAccount = (props) => {
 									position,
 									unit,
 									phone,
+									props.userInfo.level,
 									)
 								onReset()
 							}).catch((error) => {
@@ -196,6 +197,7 @@ const MyAccount = (props) => {
 										position,
 										unit,
 										phone,
+										props.userInfo.level,
 										)
 									onReset()
 								}).catch((error) => {
@@ -384,7 +386,7 @@ const MyAccount = (props) => {
 					</base.Form>
 					<base.Form style={styles.formLayout}>
 						<base.Text style={styles.formTextMain}>소속</base.Text>
-						<base.Text style={styles.formTextSub}>제32보병사단 {props.userInfo.unit}</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.div} {props.userInfo.unit}</base.Text>
 					</base.Form>
 					<base.Form style={styles.formLayout}>
 						<base.Text style={styles.formTextMain}>직책</base.Text>
