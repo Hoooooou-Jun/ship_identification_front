@@ -62,3 +62,27 @@ export const requestLicense = (token) =>
 		'Content-Type': 'application/json',
 	}
 })
+
+export const requestDBStatistics = (token) => 
+    request.get('/Ships/stat/normal/', {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})
+
+export const requestAIStatistics = (token) => 
+    request.get('/Ships/stat/train/', {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})
+
+export const requestDateDBStatistics = (token, year, month, day) => 
+    request.get(`/Ships/stat/normal/?year=${year}&month=${month}&day=${day}`, {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+}})
