@@ -1,5 +1,5 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { Component } from 'react';
+import { LogBox } from "react-native";
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
@@ -28,6 +28,7 @@ import RegisterCommonShipImages from './src/main/registerCommonShipImages';
 import RegisterWastedShipImages from './src/main/registerWastedShipImages';
 import TrainCommonShipGallery from './src/main/trainRequest';
 import License from './src/main/license';
+import LeaningStatus from './src/main/leaningStatus';
 
 import MapSelection from './src/main/mapSelection';
 import MapCommonShip from './src/main/mapCommonShip';
@@ -43,6 +44,15 @@ import ImgViewer from './src/main/imgViewer';
 import ShipImgViewer from './src/main/shipImgViewer';
 
 import MyAccount from './src/main/myAccount';
+
+import store from './src/redux/store';
+import { Provider } from 'react-redux';
+
+LogBox.ignoreLogs([
+	"VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.",
+	"Warning: Failed prop type: Invalid prop `tabStyle` of type `array` supplied to `DefaultTabBar`, expected `object`."
+  ]);
+
 const homeStackNav = createStackNavigator(
 	{
     Home: {screen: Home, navigationOptions: {headerShown: false}},
@@ -64,6 +74,7 @@ const homeStackNav = createStackNavigator(
 	RegisterWastedShipImages: {screen: RegisterWastedShipImages, navigationOptions: { headerShown: false }},
 	TrainGallery: {screen: TrainCommonShipGallery, navigationOptions: { headerShown: false}},
 	License: {screen: License, navigationOptions: { headerShown: false }},
+	LeaningStatus: {screen: LeaningStatus, navigationOptions: { headerShown: false }},
 
 	MapSelection: {screen: MapSelection, navigationOptions: { headerShown: false }},
 	MapCommonShip: {screen: MapCommonShip, navigationOptions: { headerShown: false }},
@@ -108,6 +119,6 @@ const AppContainer = createAppContainer(Root);
 
 export default class App extends Component {
 	render(){
-		return <AppContainer></AppContainer>;
+		return <Provider store={store}><AppContainer></AppContainer></Provider>;
 	}
 }
