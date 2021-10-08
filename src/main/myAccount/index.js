@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { Feather } from '@expo/vector-icons';
 
 import { editUserInfo } from '../../redux/userInfo/action';
-import { requestEditUserData } from '../../utils/userInfoRequest';
+import { requestEditUserData, requestUserData } from '../../utils/userInfoRequest';
 
 import { KindsOfUnit_div, KindsOfUnit_31, KindsOfUnit_32, KindsOfUnit_35, KindsOfUnit_37, KindsOfUnit_39, KindsOfUnit_50, KindsOfUnit_53, KindsOfUnit_2 } from '../../kindsOfData/kindsOfUnit';
 import { KindsOfRank } from '../../kindsOfData/kindsOfRank';
@@ -31,7 +31,7 @@ const MyAccount = (props) => {
 	const [newPassword, setNewPassword] = useState('')
 	const [newPasswordCheck, setNewPasswordCheck] = useState('')
 	const [passwordCheck, setPasswordCheck] = useState(false)
-
+	
 	useEffect(() => {
 		setPasswordCheck(false)
 	}, [newPassword, newPasswordCheck])
@@ -66,8 +66,8 @@ const MyAccount = (props) => {
 				setUnit('53직할대')
 				break;
 			}
-			case '2': {
-				setUnit('2직할대')
+			case '해병대': {
+				setUnit('해병2')
 				break;
 			}
 		}
@@ -103,6 +103,7 @@ const MyAccount = (props) => {
 	const onReset = () => {
 		setEdit(false)
 		setRank(props.userInfo.rank)
+		setDiv('31')
 		setUnit(props.userInfo.unit)
 		setPosition(props.userInfo.position)
 		setPhone(props.userInfo.phone)
@@ -131,20 +132,22 @@ const MyAccount = (props) => {
 								'저장이 완료되었습니다.'
 								)
 								setEdit(false)
-								props.editUserInfo(
-									props.userInfo.srvno,
-									props.userInfo.password,
-									props.userInfo.device_id,
-									props.userInfo.token,
-									props.userInfo.version,
-									props.userInfo.name,
-									rank,
-									position,
-									unit,
-									phone,
-									props.userInfo.level,
-									)
-								onReset()
+								requestUserData(props.userInfo.token).then((response) => {
+									props.editUserInfo(
+										props.userInfo.srvno,
+										props.userInfo.password,
+										props.userInfo.device_id,
+										props.userInfo.token,
+										props.userInfo.version,
+										props.userInfo.name,
+										rank,
+										position,
+										response.data.data.unit,
+										phone,
+										props.userInfo.level,
+										)
+									onReset()
+								})
 							}).catch((error) => {
 								const msg = error.response.data.message
 								console.log(msg)
@@ -351,6 +354,14 @@ const MyAccount = (props) => {
 		</Picker>
 	}
 
+	let infoField
+	if(props.userInfo.unit == '31직할대' || props.userInfo.unit == '35직할대' || props.userInfo.unit == '39직할대' || props.userInfo.unit == '50직할대' || props.userInfo.unit == '53직할대') {
+		infoField = '직할대'
+	}
+	else {
+		infoField = props.userInfo.unit
+	}
+
 	if(edit == false) {
 		return (
 			<base.Container>
@@ -386,7 +397,7 @@ const MyAccount = (props) => {
 					</base.Form>
 					<base.Form style={styles.formLayout}>
 						<base.Text style={styles.formTextMain}>소속</base.Text>
-						<base.Text style={styles.formTextSub}>{props.userInfo.div} {props.userInfo.unit}</base.Text>
+						<base.Text style={styles.formTextSub}>{props.userInfo.div} {infoField}</base.Text>
 					</base.Form>
 					<base.Form style={styles.formLayout}>
 						<base.Text style={styles.formTextMain}>직책</base.Text>
@@ -532,7 +543,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-	editUserInfo: (srvno, password, device_id, token, version, name, rank, position, unit, phone) => editUserInfo(srvno, password, device_id, token, version, name, rank, position, unit, phone)
+	editUserInfo: (srvno, password, device_id, token, version, name, rank, position, unit, phone, level) => editUserInfo(srvno, password, device_id, token, version, name, rank, position, unit, phone, level)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAccount);

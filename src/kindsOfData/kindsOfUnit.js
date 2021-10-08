@@ -167,8 +167,8 @@ export const KindsOfUnit_53 = [
 ]
 
 export const KindsOfUnit_2 = [
-    { label: '2여단', value: '2' },
-    { label: '2여단 1대대', value: '2-1' },
-    { label: '2여단 2대대', value: '2-2' },
-    { label: '2여단 3대대', value: '2-3' },
+    { label: '2여단', value: '해병2' },
+    { label: '2여단 1대대', value: '해병2-1' },
+    { label: '2여단 2대대', value: '해병2-2' },
+    { label: '2여단 3대대', value: '해병2-3' },
 ]
