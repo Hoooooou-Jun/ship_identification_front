@@ -4,7 +4,8 @@ const SIZE_ICON = Dimensions.get('screen').height * 0.1
 const SIZE_TITLE = Dimensions.get('screen').width * 0.11
 const SIZE_SUBTITLE = Dimensions.get('screen').width * 0.035
 const SIZE_BASE = Dimensions.get('screen').width * 0.06
-const SIZE_MARGIN = Dimensions.get('screen').width * 0.03
+const SIZE_MARGIN = Dimensions.get('screen').width * 0.13
+const SIZE_LISTMARGIN = Dimensions.get('screen').width * 0.03
 const SIZE_ITEM = Dimensions.get('screen').width * 0.05
 
 const styles = StyleSheet.create({
@@ -17,7 +18,8 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       flexDirection: "row",
       backgroundColor: '#fff',
-      marginBottom: SIZE_MARGIN
+      marginBottom: SIZE_MARGIN,
+      marginTop: SIZE_MARGIN
     },
     logoMain: {
       margin: 5,
@@ -41,10 +43,10 @@ const styles = StyleSheet.create({
       height: SIZE_ICON
     },
     listMain: {
-      margin: SIZE_MARGIN
+      margin: SIZE_LISTMARGIN
     },
     listSub: {
-      margin: SIZE_MARGIN,
+      margin: SIZE_LISTMARGIN,
     },
     item: {
       marginBottom: SIZE_ITEM

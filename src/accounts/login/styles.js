@@ -25,7 +25,22 @@ const styles = StyleSheet.create({
     devSub: {
         fontSize: SIZE_WARNING + 5,
         margin: 10,
-    }
+    },
+    register: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width:'100%',
+        marginTop: 10,
+    },
+    loginButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        backgroundColor: '#006eee',
+        elevation: 6,
+        height: SIZE_TITLE + 10,
+    },
 });
 
 export default styles;
