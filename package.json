@@ -1,16 +1,14 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject"
+    "postinstall": "rndebugger-open"
   },
   "dependencies": {
+    "@babel/runtime": "^7.15.4",
     "@expo/vector-icons": "^12.0.3",
     "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/cameraroll": "^4.0.4",
+    "@react-native-community/datetimepicker": "^3.5.2",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-picker/picker": "^1.9.2",
     "axios": "^0.21.1",
@@ -43,17 +41,26 @@
     "react-native-reanimated": "^1.13.2",
     "react-native-screens": "^2.15.2",
     "react-native-signature-canvas-fixed": "^1.0.1",
-    "react-native-svg": "^12.1.0",
+    "react-native-svg": "12.1.0",
     "react-native-view-shot": "^3.1.2",
     "react-native-web": "~0.13.12",
+    "react-native-webview": "^11.6.6",
     "react-navigation": "^4.4.3",
     "react-navigation-drawer": "^2.6.0",
     "react-navigation-stack": "^2.10.2",
     "react-navigation-tabs": "^2.10.1",
-    "rn-fetch-blob": "^0.12.0"
+    "react-redux": "^7.2.4",
+    "redux": "^4.1.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0",
+    "rn-fetch-blob": "^0.12.0",
+    "victory-native": "^35.5.5"
   },
   "devDependencies": {
-    "@babel/core": "~7.9.0"
+    "@babel/core": "~7.9.0",
+    "react-native-debugger-open": "^0.3.25",
+    "xxxxx": "^1.0.3"
   },
   "private": true
 }
