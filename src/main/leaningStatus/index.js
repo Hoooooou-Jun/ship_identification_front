@@ -137,7 +137,7 @@ const LeaningStatus = (props) => {
                                         height={SIZE_PIECHART}
                                         colorScale={["tomato", "orange", "gold", "cyan", "#3a86ff", "#2dc653", "#b5179e"]}
                                         data={AIDATA}
-                                        labels={({ datum }) => modelAI && `${(datum.y / (modelAI.['97-1'] + modelAI.['97-2'] + modelAI.['98-1'] + modelAI.['98-2'] + modelAI.['98-3'])).toFixed(2) * 100}%`}
+                                        labels={({ datum }) => modelAI && `${(datum.y / (modelAI['97-1'] + modelAI['97-2'] + modelAI['98-1'] + modelAI['98-2'] + modelAI['98-3'])).toFixed(2) * 100}%`}
                                     />
                                     <base.Form style={{alignItems: 'center', marginBottom: SIZE_DOTMARGIN}}>
                                         <base.Text style={{fontWeight: 'bold'}}>AI 학습모델 탑재 현황</base.Text>
@@ -147,23 +147,23 @@ const LeaningStatus = (props) => {
                                 <base.Card style={{flexDirection: 'column'}}>
                                 <base.CardItem>
                                         <base.Form style={{backgroundColor: 'tomato', marginRight: SIZE_DOTMARGIN, width: SIZE_DOT, height: SIZE_DOT, borderRadius: 100}} />
-                                        <base.Text>제97보병여단 1대대 : {modelAI && modelAI.['97-1']}척</base.Text>
+                                        <base.Text>제97보병여단 1대대 : {modelAI && modelAI['97-1']}척</base.Text>
                                     </base.CardItem>
                                     <base.CardItem>
                                         <base.Form style={{backgroundColor: 'orange', marginRight: SIZE_DOTMARGIN, width: SIZE_DOT, height: SIZE_DOT, borderRadius: 100}} />
-                                        <base.Text>제97보병여단 2대대 : {modelAI && modelAI.['97-2']}척</base.Text>
+                                        <base.Text>제97보병여단 2대대 : {modelAI && modelAI['97-2']}척</base.Text>
                                     </base.CardItem>
                                     <base.CardItem>
                                         <base.Form style={{backgroundColor: 'gold', marginRight: SIZE_DOTMARGIN, width: SIZE_DOT, height: SIZE_DOT, borderRadius: 100}} />
-                                        <base.Text>제98보병여단 1대대 : {modelAI && modelAI.['98-1']}척</base.Text>
+                                        <base.Text>제98보병여단 1대대 : {modelAI && modelAI['98-1']}척</base.Text>
                                     </base.CardItem>
                                     <base.CardItem>
                                         <base.Form style={{backgroundColor: 'cyan', marginRight: SIZE_DOTMARGIN, width: SIZE_DOT, height: SIZE_DOT, borderRadius: 100}} />
-                                        <base.Text>제98보병여단 2대대 : {modelAI && modelAI.['98-2']}척</base.Text>
+                                        <base.Text>제98보병여단 2대대 : {modelAI && modelAI['98-2']}척</base.Text>
                                     </base.CardItem>
                                     <base.CardItem>
                                         <base.Form style={{backgroundColor: '#3a86ff', marginRight: SIZE_DOTMARGIN, width: SIZE_DOT, height: SIZE_DOT, borderRadius: 100}} />
-                                        <base.Text>제98보병여단 3대대 : {modelAI && modelAI.['98-3']}척</base.Text>
+                                        <base.Text>제98보병여단 3대대 : {modelAI && modelAI['98-3']}척</base.Text>
                                     </base.CardItem>
                                     <base.CardItem>
                                         <base.Text style={{color: 'grey'}}>본 수치는 실제 서버에 탑재된 AI 학습모델을 실시간으로 반영한 것입니다.</base.Text>

@@ -99,7 +99,7 @@ const Login = (props) => {
 				else if(msg == 'Not connected 3months Blocked user') {
 					Alert.alert(
 						'선박확인체계 알림',
-						'장기간 미접속하여 접속 승인되지 않은 계정입니다',
+						'장기간 미접속으로 정지된 계정입니다.',
 					)
 				}
 				else if(msg == 'Login fail Blocked user') {
@@ -108,12 +108,12 @@ const Login = (props) => {
 						'정지된 계정입니다',
 					)
 				}
-				else if(msg == 'Device mismatch') {
-					Alert.alert(
-						'선박확인체계 알림',
-						'해당 계정과 일치하지 않은 단말기입니다',
-					)
-				}
+				// else if(msg == 'Device mismatch') {
+				// 	Alert.alert(
+				// 		'선박확인체계 알림',
+				// 		'해당 계정과 일치하지 않은 단말기입니다',
+				// 	)
+				// }
 				else if(msg == 'Incorrect password') {
 					Alert.alert(
 						'선박확인체계 알림',
@@ -129,7 +129,8 @@ const Login = (props) => {
 		loadData()
 	}, []);
 
-	
+	// 서버 점검 중 처리 필요
+
 	if(font_load == true && server_mount) {
 		if(server_status == UnderInspection) {
 			return (
@@ -142,7 +143,7 @@ const Login = (props) => {
 						</base.Form>
 						<base.Form style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center',}}>
 							<base.Text style={styles.title}>선박확인체계</base.Text>
-							<base.Text style={styles.sub}>Ship_Identification {this.state.version}</base.Text>
+							<base.Text style={styles.sub}>Ship_Identification {version}</base.Text>
 						</base.Form>
 					</base.Form>
 					<base.Form style={{justifyContent: 'center', alignItems: 'center', margin: 20, flexDirection: 'column'}}>
@@ -152,13 +153,13 @@ const Login = (props) => {
 						<base.Text style ={{fontSize: SIZE_WARNING, margin: 10, fontWeight: 'bold'}}>담당자 연락처</base.Text>
 						<base.Form style={{alignItems: 'flex-end', backgroundColor: 'white', elevation: 6, borderRadius: 20,}}>
 							<base.Text style={styles.devTitle}>제32보병사단 정보통신대대 선박확인체계 개발TF</base.Text>
-							<base.Text style={styles.devSub}>042-832-7681</base.Text>
+							<base.Text style={styles.devSub}>042-832-7691</base.Text>
 						</base.Form>
 					</base.Form>
 				</base.Form>
 			);
 		}
-		else if(!(version == version_server)) {
+		else if(version != version_server) {
 			return (
 				<base.Form style={{flex: 1, justifyContent: 'center', alignItems: 'center',}}>
 					<base.Form style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center',}}>

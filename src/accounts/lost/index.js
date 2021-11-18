@@ -116,6 +116,7 @@ const Lost = (props) => {
 								placeholderStyle={{fontFamily:'Nanum'}} />
 						</base.Item>
 					</base.Form>
+					<base.Text style={{fontFamily: 'Nanum', color: 'grey'}}>* 회원가입 시 등록했던 기기가 다를 경우(휴대폰을 변경했을 경우) 042-832-7691로 문의해주시기 바랍니다.</base.Text>
 					<base.Button block style={{backgroundColor: '#006eee', marginTop: 10,}} onPress={getPassword}>
 						<base.Text style={{fontFamily: 'Nanum'}}>비밀번호 초기화</base.Text>
 					</base.Button>
