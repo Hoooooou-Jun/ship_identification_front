@@ -35,16 +35,18 @@ const MapWastedShip = (props) => {
 
 	const requestLocation = () => {
         set_loadingVisible_dataAll(true)
-        requestWastedShipLocation(props.token).then((response) => {
+        requestWastedShipLocation(props.token)
+        .then((response) => {
             set_dataAll(response.data.data)
             set_loadingVisible_dataAll(false)
         })
 	}
 	const requestLocationDetail = () => {
         set_loadingVisible_data(true)
-        Location.getCurrentPositionAsync().then((location)=>{
-            requestWastedShipLocationDetail(props.token, 
-                parseFloat(location.coords['latitude']), parseFloat(location.coords['longitude'])).then((response) => {
+        Location.getCurrentPositionAsync().then((location) => {
+            requestWastedShipLocationDetail(props.token, parseFloat(location.coords['latitude']), parseFloat(location.coords['longitude']))
+            .then((response) => {
+                console.log(response.data.data)
                 set_data(response.data.data)
                 set_loadingVisible_data(false)
             })
@@ -115,7 +117,7 @@ const MapWastedShip = (props) => {
                         <base.Text>{searchAll ? '주변 탐색' : '전체 탐색'}</base.Text>
                     </base.Button>
                 </base.Form>
-                <base.Form style={{flex: 1,}}>
+                <base.Form style={{flex: 4}}>
                     <MapView
                         ref = {mapView}
                         provider={PROVIDER_GOOGLE}
@@ -130,6 +132,9 @@ const MapWastedShip = (props) => {
                         >
                         { requestMarker(searchAll ? dataAll : data) }
                     </MapView>
+                </base.Form>
+                <base.Form style={{flex: 1}}>
+                    <base.Text>asdfasd</base.Text>
                 </base.Form>
             </base.Content>
         </base.Container>

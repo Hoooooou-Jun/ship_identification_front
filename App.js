@@ -33,6 +33,7 @@ import LeaningStatus from './src/main/leaningStatus';
 import MapSelection from './src/main/mapSelection';
 import MapCommonShip from './src/main/mapCommonShip';
 import MapWastedShip from './src/main/mapWastedShip';
+import SearchUnitCommonShip from './src/main/searchUnitCommonShip';
 
 import Notice from './src/main/notice';
 import NoticeList from './src/main/noticeList';
@@ -79,6 +80,7 @@ const homeStackNav = createStackNavigator(
 	MapSelection: {screen: MapSelection, navigationOptions: { headerShown: false }},
 	MapCommonShip: {screen: MapCommonShip, navigationOptions: { headerShown: false }},
 	MapWastedShip: {screen: MapWastedShip, navigationOptions: { headerShown: false }},
+	SearchUnitCommonShip: {screen: SearchUnitCommonShip, navigationOptions: {headerShown: false}},
 	
 	RegisterShipOwner: {screen: RegisterShipOwner, navigationOptions: { headerShown: false }},
 	CheckShipOwnerConsent: {screen: CheckShipOwnerConsent, navigationOptions: { headerShown: false }},

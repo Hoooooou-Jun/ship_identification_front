@@ -173,7 +173,7 @@ const Home = (props) => {
 								<base.Form style={styles.baseIcon}>
 									<AntDesign name="search1" size={SIZE_SUBICON} color="#006eee"/>
 								</base.Form>
-								<base.Text style={styles.baseItemText}>통합검색</base.Text>
+								<base.Text style={styles.baseItemText}>통합 검색</base.Text>
 							</base.CardItem>
 							<base.CardItem button style={styles.baseDirection} onPress={()=>props.navigation.navigate('SearchAI')}>
 								<base.Form style={styles.baseIcon}>
@@ -184,9 +184,9 @@ const Home = (props) => {
 							</base.CardItem>
 							<base.CardItem button style={styles.baseDirection} onPress={()=>props.navigation.navigate('MapSelection')}>
 								<base.Form style={styles.baseIcon}>
-									<Feather name="map" size={SIZE_SUBICON} color="#006eee"/>
+									<Feather name="map-pin" size={SIZE_SUBICON} color="#006eee"/>
 								</base.Form>
-								<base.Text style={styles.baseItemText}>지도검색</base.Text>
+								<base.Text style={styles.baseItemText}>지역 검색</base.Text>
 							</base.CardItem>
 						</base.Form>
 					</base.Form>
@@ -212,7 +212,7 @@ const Home = (props) => {
 								<base.Form style={styles.baseIcon}>
 									<AntDesign name="addfile" size={SIZE_SUBICON} color="#006eee"/>
 								</base.Form>
-								<base.Text style={styles.baseItemText}>선박등록</base.Text>
+								<base.Text style={styles.baseItemText}>선박 등록</base.Text>
 							</base.CardItem>
 						</base.Form>
 					</base.Form>
