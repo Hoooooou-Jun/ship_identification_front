@@ -1,14 +1,28 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 const SIZE_FONT = Dimensions.get('screen').width * 0.035
-const SIZE_LAYOUT = Dimensions.get('screen').width * 0.2
+const SIZE_LAYOUT = Dimensions.get('screen').width * 1
 
 const styles = StyleSheet.create({
 	contentContainer: {
-		// flex: 1,
+		flex: 1,
 		alignItems: 'center', 
 		justifyContent:'center',
 	},
+	map: {
+		flex: 1,
+		width: SIZE_LAYOUT,
+		height: SIZE_LAYOUT
+	},
+	shipCardView: {
+		alignItems: 'center', 
+		justifyContent:'center',
+		width: 200,
+		height: 250,
+		margin: 20,
+		backgroundColor: 'white',
+		elevation: 5,
+	}
 	// cardButton: {
 	// 	flex: 1,
 	// 	flexDirection: 'column', 
