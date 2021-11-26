@@ -7,6 +7,9 @@ import { requestCommonShipLocationUnit } from '../../utils/shipInfoRequest';
 import AntDesign from '@expo/vector-icons/AntDesign'
 import styles from './styles'
 import { connect } from 'react-redux';
+import Loading from '../../utils/loading';
+import Animated from 'react-native-reanimated';
+import ShipCard from './shipCard';
 
 const SearchUnitCommonShip = (props) => {
 	const [latitude, set_latitude] = useState('');
@@ -15,11 +18,13 @@ const SearchUnitCommonShip = (props) => {
 	const [click, set_click] = useState(1);
 	const [data, set_data] = useState([]);
 	const [load, set_load] = useState(false);
+	const [loadingVisible, set_loadingVisible] = useState(true);
 	
 	const mapView = useRef();
+	const scrollView = useRef();
 
 	let UNIT_BUTTONS = [
-		{ text: "전체", icon: "arrow-forward", iconColor: "grey",},
+		{ text: "직할대", icon: "arrow-forward", iconColor: "grey",},
 		{ text: "97여단 1대대", icon: "arrow-forward", iconColor: "grey",},
 		{ text: "97여단 2대대", icon: "arrow-forward", iconColor: "grey" },
 		{ text: "97여단 3대대", icon: "arrow-forward", iconColor: "grey" },
@@ -32,69 +37,74 @@ const SearchUnitCommonShip = (props) => {
 	let UNIT_DESTRUCTIVE_INDEX = 8;
 	let UNIT_CANCEL_INDEX = 8;
 
-	// const _handleCheck = () => {
-
-	// 	if(click == 8) {
-	// 	}
-	// 	else {
-	// 		switch(click) {
-	// 			case 0: {
-	// 				set_unit('all')
-	// 				break;
-	// 			}
-	// 			case 1: {
-	// 				set_unit('97-1')
-	// 				break;
-	// 			}
-	// 			case 2: {
-	// 				set_unit('97-2')
-	// 				break;
-	// 			}
-	// 			case 3: {
-	// 				set_unit('97-3')
-	// 				break;
-	// 			}
-	// 			case 4: {
-	// 				set_unit('98-1')
-	// 				break;
-	// 			}
-	// 			case 5: {
-	// 				set_unit('98-2')
-	// 				break;
-	// 			}
-	// 			case 6: {
-	// 				set_unit('98-3')
-	// 				break;
-	// 			}
-	// 			case 7: {
-	// 				set_unit('98-4')
-	// 				break;
-	// 			}
-	// 	}
-	// }
-
 	useEffect(() => {
 		_getLocation()
 	}, [])
-
+	
 	useEffect(() => {
 		_getData()
 	}, [unit])
+
+	const _handleUnit = (Index) => {
+		set_loadingVisible(true)
+		if(click == 8) {
+			console.log('취소')
+		}
+		else {
+			switch(Index) {
+				case 0: {
+					set_unit('직할대')
+					break;
+				}
+				case 1: {
+					set_unit('97-1')
+					break;
+				}
+				case 2: {
+					set_unit('97-2')
+					break;
+				}
+				case 3: {
+					set_unit('97-3')
+					break;
+				}
+				case 4: {
+					set_unit('98-1')
+					break;
+				}
+				case 5: {
+					set_unit('98-2')
+					break;
+				}
+				case 6: {
+					set_unit('98-3')
+					break;
+				}
+				case 7: {
+					set_unit('98-4')
+					break;
+				}
+			}
+		}
+	}
 
 	const _getLocation = async () => {
 		await Location.requestPermissionsAsync()
 		Location.getCurrentPositionAsync().then((response) => {
 			set_latitude(response.coords.latitude);
 			set_longitude(response.coords.longitude);
+			_getData();
 		}).catch((error) => {
 			console.log(error)
 		})
 	}
 
 	const _getData = () => {
+		console.log('_getData')
 		requestCommonShipLocationUnit(props.userInfo.token, unit).then((response) => {
 			set_data(response.data.data)
 			set_load(true)
+			set_loadingVisible(false)
 		}).catch((error) => {
 			console.log(error)
 		})
@@ -111,7 +121,7 @@ const SearchUnitCommonShip = (props) => {
 						longitude: parseFloat(ship.lon)
 					}}
 				>
-	        		<Callout onPress={() => props.navigation.navigate('DetailWastedShip', {id: ship.id})}>
+	        		<Callout onPress={() => props.navigation.navigate('DetailCommonShip', {id: ship.id})}>
                         <base.Form style={{width: 250}}>
 							<base.Text style={{fontFamily:'Nanum',}}>선박명 : {ship.name}</base.Text>
                             <base.Text style={{fontFamily:'Nanum',}}>등록일자 : {ship.regit_date}</base.Text>
@@ -128,6 +138,7 @@ const SearchUnitCommonShip = (props) => {
 		<base.Root>
 			<base.Container>
 				<StatusBar hidden/>
+				<Loading visible={loadingVisible} initialRoute={false} onPress={() => props.navigation.goBack()}/>
 				<base.Header style={{backgroundColor: 'white'}}>
 					<base.Left>
 						<base.Button transparent onPress={() => props.navigation.goBack()}>
@@ -142,25 +153,47 @@ const SearchUnitCommonShip = (props) => {
 										destructiveButtonIndex: UNIT_DESTRUCTIVE_INDEX,
 										title: "관리 부대"
 									},
-									buttonIndex => {console.log(buttonIndex)}
+									buttonIndex => {_handleUnit(buttonIndex)}
 							)}>
 							<AntDesign name="filter" size={25} color="black" />
 						</base.Button>
 					</base.Right>
 				</base.Header>
 				<base.Content contentContainerStyle={styles.contentContainer}>
-					<base.Form style={{flex: 1, width: '100%', height: 400}}>
+					<base.View style={{width: '100%', height: '100%'}}>
 						<MapView
 							ref={mapView}
 							provider={PROVIDER_GOOGLE}
-							style={{flex: 1}}
+							style={styles.map}
 							showsUserLocation={true}
+							initialRegion={{
+                                latitude: parseFloat(latitude),
+                                longitude: parseFloat(longitude),
+                                latitudeDelta: 0.05,
+                                longitudeDelta: 0.05,
+                            }}
 						>
 							{ load ? _Marker(data) : null }
 						</MapView>
-					</base.Form>
-					<base.Form style={{flex: 1, backgroundColor: 'skyblue', width: 100, height: 100}}>
-					</base.Form>
+						<base.Text style={{position: 'absolute'}}>선박 정보</base.Text>
+						<Animated.ScrollView
+							ref={scrollView}
+							horizontal
+							scrollEventThrottle={1}
+							showsHorizontalScrollIndicator={false}
+							style={{position: 'absolute', bottom: 40}}
+						>
+							{ data.map((ship) => {
+								return (
+									<ShipCard shipName={ship.name} key={ship.id} shipRegitDate={ship.regit_date} shipMainImg={ship.main_img} />
+								)
+							}) 
+							}
+						</Animated.ScrollView>
+					</base.View>
+
+					{/* <base.Form style={{flex: 1, backgroundColor: 'skyblue', width: 100, height: 100}}>
+					</base.Form> */}
 				</base.Content>
 			</base.Container>
 		</base.Root>
