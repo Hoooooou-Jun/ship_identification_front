@@ -22,6 +22,14 @@ const styles = StyleSheet.create({
 		margin: 20,
 		backgroundColor: 'white',
 		elevation: 5,
+	},
+	shipImage: {
+		width: 120, 
+		height: 120,
+		margin: 10, 
+		borderRadius: 100, 
+		backgroundColor: 'lightgrey',
+		elevation: 5
 	}
 	// cardButton: {
 	// 	flex: 1,

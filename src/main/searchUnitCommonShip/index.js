@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
+import { Dimensions } from 'react-native';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
 import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -10,6 +11,9 @@ import { connect } from 'react-redux';
 import Loading from '../../utils/loading';
 import Animated from 'react-native-reanimated';
 import ShipCard from './shipCard';
+
+const CARDSPACE = Dimensions.get('screen').width * 0.2
+const CARDWIDTH = Dimensions.get('window').width * 0.561
 
 const SearchUnitCommonShip = (props) => {
 	const [latitude, set_latitude] = useState('');
@@ -36,6 +40,36 @@ const SearchUnitCommonShip = (props) => {
 	];
 	let UNIT_DESTRUCTIVE_INDEX = 8;
 	let UNIT_CANCEL_INDEX = 8;
+
+	let mapIndex = 0;
+	let mapAnimation = new Animated.Value(0)
+
+	useEffect(() => {
+		mapAnimation.addListener(({ value }) => {
+			let index = Math.floor(value / CARDWIDTH + 0.3);
+			if (index >= data.length) { 
+				index = data.length - 1;
+			}
+			if (index <= 0) {
+				index = 0;
+			}
+			clearTimeout(regionTimeout)
+			const regionTimeout = setTimeout(() => {
+				if( mapIndex ===! index) {
+					mapIndex = index;
+					const { coordinate } = data[index];
+					mapView.current.AnimatedToRegion(
+						{
+							...coordinate,
+							latitudeDelta: 0.05,
+							longitudeDelta: 0.05
+						},
+						350
+					)
+				}
+			}, 10)
+		})
+	})
 
 	useEffect(() => {
 		_getLocation()
@@ -182,6 +216,24 @@ const SearchUnitCommonShip = (props) => {
 							scrollEventThrottle={1}
 							showsHorizontalScrollIndicator={false}
 							style={{position: 'absolute', bottom: 40}}
+							pagingEnabled
+							snapToInterval={CARDWIDTH + 20}
+							snapToAlignment="center"
+							contentContainerStyle={{
+								paddingHorizontal: CARDSPACE
+							}}
+							onScroll={Animated.event(
+								[
+									{
+										nativeEvent: {
+											contentOffset: {
+												x: mapAnimation,
+											}
+										},
+									},
+								],
+								{useNativeDriver: true}
+							)}
 						>
 							{ data.map((ship) => {
 								return (

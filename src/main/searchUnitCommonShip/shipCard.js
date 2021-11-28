@@ -7,7 +7,7 @@ import { requestDomain } from  '../../utils/domain';
 const ShipCard = (props) => {
 	return (
 		<base.View style={styles.shipCardView}>
-			<Image resizeMode='cover' source={{uri: requestDomain + props.shipMainImg}} style={{width: 120, height: 120, margin: 10, borderRadius: 100, backgroundColor: 'lightgrey'}}/>
+			<Image resizeMode='cover' source={{uri: requestDomain + props.shipMainImg}} style={styles.shipImage}/>
 			<base.Text>{props.shipName}</base.Text>
 			<base.Text>{props.shipRegitDate}</base.Text>
 			<base.Form style={{margin: 10}}>
