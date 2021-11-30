@@ -1,21 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Animated } from 'react-native';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
-import MapView, { Marker, Callout, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { requestCommonShipLocationUnit } from '../../utils/shipInfoRequest'; 
 import AntDesign from '@expo/vector-icons/AntDesign'
 import styles from './styles'
 import { connect } from 'react-redux';
 import Loading from '../../utils/loading';
-import Animated from 'react-native-reanimated';
 import ShipCard from './shipCard';
 
 const CARDSPACE = Dimensions.get('screen').width * 0.2
 const CARDWIDTH = Dimensions.get('window').width * 0.561
 
-const SearchUnitCommonShip = (props) => {
+const CommonShip = (props) => {
+	const [flag, set_flag] = useState('Normal');
 	const [latitude, set_latitude] = useState('');
 	const [longitude, set_longitude] = useState('');
 	const [unit, set_unit] = useState(props.userInfo.unit);
@@ -24,8 +24,11 @@ const SearchUnitCommonShip = (props) => {
 	const [load, set_load] = useState(false);
 	const [loadingVisible, set_loadingVisible] = useState(true);
 	
-	const mapView = useRef();
+	const mapView = React.useRef(null)
 	const scrollView = useRef();
+	
+	let mapIndex = 0;
+	let mapAnimation = new Animated.Value(0);
 
 	let UNIT_BUTTONS = [
 		{ text: "직할대", icon: "arrow-forward", iconColor: "grey",},
@@ -38,27 +41,32 @@ const SearchUnitCommonShip = (props) => {
 		{ text: "98여단 4대대", icon: "arrow-forward", iconColor: "grey" },
 		{ text: "취소", icon: "close", iconColor: "grey" }
 	];
+
 	let UNIT_DESTRUCTIVE_INDEX = 8;
 	let UNIT_CANCEL_INDEX = 8;
 
-	let mapIndex = 0;
-	let mapAnimation = new Animated.Value(0)
-
+	// animateToRegion
 	useEffect(() => {
 		mapAnimation.addListener(({ value }) => {
 			let index = Math.floor(value / CARDWIDTH + 0.3);
-			if (index >= data.length) { 
+			if (index >= data.length) {
 				index = data.length - 1;
 			}
 			if (index <= 0) {
 				index = 0;
 			}
-			clearTimeout(regionTimeout)
+
+			clearTimeout(regionTimeout);
+
 			const regionTimeout = setTimeout(() => {
-				if( mapIndex ===! index) {
+				if (mapIndex !== index) {
 					mapIndex = index;
-					const { coordinate } = data[index];
-					mapView.current.AnimatedToRegion(
+					let latitude = data[index].lat
+					let longitude = data[index].lon
+					const coordinate = { latitude, longitude }
+					console.log('lat', data[index].lat)
+					console.log('lat', data[index].lon)
+					mapView.current.animateToRegion(
 						{
 							...coordinate,
 							latitudeDelta: 0.05,
@@ -67,14 +75,16 @@ const SearchUnitCommonShip = (props) => {
 						350
 					)
 				}
-			}, 10)
-		})
-	})
+			} , 10);
+		});
+	});
 
+	// getLocation
 	useEffect(() => {
 		_getLocation()
 	}, [])
 	
+	// getData
 	useEffect(() => {
 		_getData()
 	}, [unit])
@@ -155,14 +165,6 @@ const SearchUnitCommonShip = (props) => {
 						longitude: parseFloat(ship.lon)
 					}}
 				>
-	        		<Callout onPress={() => props.navigation.navigate('DetailCommonShip', {id: ship.id})}>
-                        <base.Form style={{width: 250}}>
-							<base.Text style={{fontFamily:'Nanum',}}>선박명 : {ship.name}</base.Text>
-                            <base.Text style={{fontFamily:'Nanum',}}>등록일자 : {ship.regit_date}</base.Text>
-                            <base.Text style={{fontFamily:'Nanum',}}>위도 : {ship.lat}</base.Text>
-                            <base.Text style={{fontFamily:'Nanum',}}>경도 : {ship.lon}</base.Text>
-                        </base.Form>
-                    </Callout>
 				</Marker>
 			)
 		})
@@ -209,13 +211,20 @@ const SearchUnitCommonShip = (props) => {
 						>
 							{ load ? _Marker(data) : null }
 						</MapView>
-						<base.Text style={{position: 'absolute'}}>선박 정보</base.Text>
+						<base.Segment style={styles.segment}>
+							<base.Button first active={flag == 'Normal'} onPress={() => set_flag('Normal')}>
+								<base.Text style={styles.segmentText}>일반선박</base.Text>
+							</base.Button>
+							<base.Button last active={flag == 'Wasted'} onPress={() => set_flag('Wasted')}>
+								<base.Text style={styles.segmentText}>유기선박</base.Text>
+							</base.Button>
+						</base.Segment>
 						<Animated.ScrollView
 							ref={scrollView}
 							horizontal
 							scrollEventThrottle={1}
 							showsHorizontalScrollIndicator={false}
-							style={{position: 'absolute', bottom: 40}}
+							style={{position: 'absolute', bottom: 20}}
 							pagingEnabled
 							snapToInterval={CARDWIDTH + 20}
 							snapToAlignment="center"
@@ -235,17 +244,15 @@ const SearchUnitCommonShip = (props) => {
 								{useNativeDriver: true}
 							)}
 						>
-							{ data.map((ship) => {
-								return (
-									<ShipCard shipName={ship.name} key={ship.id} shipRegitDate={ship.regit_date} shipMainImg={ship.main_img} />
-								)
-							}) 
+							{ 
+								data.map((ship) => {
+									return (
+										<ShipCard shipName={ship.name} key={ship.id} shipRegitDate={ship.regit_date} shipMainImg={ship.main_img} />
+									)
+								}) 
 							}
 						</Animated.ScrollView>
 					</base.View>
-
-					{/* <base.Form style={{flex: 1, backgroundColor: 'skyblue', width: 100, height: 100}}>
-					</base.Form> */}
 				</base.Content>
 			</base.Container>
 		</base.Root>
@@ -258,4 +265,4 @@ const mapStateToProps = (state) => {
 	}
 }
 
-export default connect(mapStateToProps)(SearchUnitCommonShip);
+export default connect(mapStateToProps)(CommonShip);

@@ -1,7 +1,8 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-const SIZE_FONT = Dimensions.get('screen').width * 0.035
+const SIZE_FONT = Dimensions.get('screen').width * 0.027
 const SIZE_LAYOUT = Dimensions.get('screen').width * 1
+const SEGMENT_MARGIN = Dimensions.get('screen').width * 0.02
 
 const styles = StyleSheet.create({
 	contentContainer: {
@@ -30,7 +31,19 @@ const styles = StyleSheet.create({
 		borderRadius: 100, 
 		backgroundColor: 'lightgrey',
 		elevation: 5
+	},
+	segment: {
+		position: 'absolute',
+		backgroundColor: '#006eee',
+		borderRadius: 10,
+		width: '40%',
+		margin: SEGMENT_MARGIN
+	}, 
+	segmentText: {
+		fontFamily:'Nanum',
+		fontSize: SIZE_FONT,
 	}
+
 	// cardButton: {
 	// 	flex: 1,
 	// 	flexDirection: 'column', 

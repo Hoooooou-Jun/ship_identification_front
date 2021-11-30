@@ -182,7 +182,7 @@ const Home = (props) => {
 								<base.Text style={styles.baseItemText}>AI 검색
 								</base.Text>
 							</base.CardItem>
-							<base.CardItem button style={styles.baseDirection} onPress={()=>props.navigation.navigate('MapSelection')}>
+							<base.CardItem button style={styles.baseDirection} onPress={()=>props.navigation.navigate('SearchUnitCommonShip')}>
 								<base.Form style={styles.baseIcon}>
 									<Feather name="map-pin" size={SIZE_SUBICON} color="#006eee"/>
 								</base.Form>
