@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect, useRef } from 'react';
-import { Dimensions, Animated } from 'react-native';
+import { Dimensions, Animated, Alert } from 'react-native';
 import * as base from 'native-base';
 import * as Location from 'expo-location';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -13,6 +13,8 @@ import ShipCard from './shipCard';
 
 const CARDSPACE = Dimensions.get('screen').width * 0.2
 const CARDWIDTH = Dimensions.get('window').width * 0.561
+
+// 유기선박 기능은 백에서 따로 만들어줘야되는데 시간이 없어서 못만듬. 일반선박만 완료된 상태. 나중에 프로젝트 잡으면 유기선박은 따로 버전 올려서 업데이트 하기 바람.
 
 const CommonShip = (props) => {
 	const [flag, set_flag] = useState('Normal');
@@ -32,12 +34,12 @@ const CommonShip = (props) => {
 
 	let UNIT_BUTTONS = [
 		{ text: "직할대", icon: "arrow-forward", iconColor: "grey",},
-		{ text: "97여단 1대대", icon: "arrow-forward", iconColor: "grey",},
-		{ text: "97여단 2대대", icon: "arrow-forward", iconColor: "grey" },
+		{ text: "서천 (97여단 1대대)", icon: "arrow-forward", iconColor: "grey",},
+		{ text: "보령 (97여단 2대대)", icon: "arrow-forward", iconColor: "grey" },
 		{ text: "97여단 3대대", icon: "arrow-forward", iconColor: "grey" },
-		{ text: "98여단 1대대", icon: "arrow-forward", iconColor: "grey",},
-		{ text: "98여단 2대대", icon: "arrow-forward", iconColor: "grey" },
-		{ text: "98여단 3대대", icon: "arrow-forward", iconColor: "grey" },
+		{ text: "서산 (98여단 1대대)", icon: "arrow-forward", iconColor: "grey",},
+		{ text: "당진 (98여단 2대대)", icon: "arrow-forward", iconColor: "grey" },
+		{ text: "태안 (98여단 3대대)", icon: "arrow-forward", iconColor: "grey" },
 		{ text: "98여단 4대대", icon: "arrow-forward", iconColor: "grey" },
 		{ text: "취소", icon: "close", iconColor: "grey" }
 	];
@@ -80,9 +82,9 @@ const CommonShip = (props) => {
 	});
 
 	// getLocation
-	useEffect(() => {
-		_getLocation()
-	}, [])
+	// useEffect(() => {
+	// 	_getLocation()
+	// }, [])
 	
 	// getData
 	useEffect(() => {
@@ -132,21 +134,23 @@ const CommonShip = (props) => {
 		}
 	}
 
-	const _getLocation = async () => {
-		await Location.requestPermissionsAsync()
-		Location.getCurrentPositionAsync().then((response) => {
-			set_latitude(response.coords.latitude);
-			set_longitude(response.coords.longitude);
-			_getData();
-		}).catch((error) => {
-			console.log(error)
-		})
-	}
+	// 현재 위치를 불러올 필요가 굳이 필요 없기 떄문에 주석처리함. 필요하면 useEffect랑 사용하길 바람.
+	// const _getLocation = async () => {
+	// 	await Location.requestPermissionsAsync()
+	// 	Location.getCurrentPositionAsync().then((response) => {
+	// 		set_latitude(response.coords.latitude);
+	// 		set_longitude(response.coords.longitude);
+	// 		_getData();
+	// 	}).catch((error) => {
+	// 		console.log(error)
+	// 	})
+	// }
 
 	const _getData = () => {
-		console.log('_getData')
 		requestCommonShipLocationUnit(props.userInfo.token, unit).then((response) => {
 			set_data(response.data.data)
+			set_latitude(response.data.data[0].lat)
+			set_longitude(response.data.data[0].lon)
 			set_load(true)
 			set_loadingVisible(false)
 		}).catch((error) => {
@@ -187,7 +191,7 @@ const CommonShip = (props) => {
 										options: UNIT_BUTTONS,
 										cancelButtonIndex: UNIT_CANCEL_INDEX,
 										destructiveButtonIndex: UNIT_DESTRUCTIVE_INDEX,
-										title: "관리 부대"
+										title: "지역 선택"
 									},
 									buttonIndex => {_handleUnit(buttonIndex)}
 							)}>
@@ -215,7 +219,7 @@ const CommonShip = (props) => {
 							<base.Button first active={flag == 'Normal'} onPress={() => set_flag('Normal')}>
 								<base.Text style={styles.segmentText}>일반선박</base.Text>
 							</base.Button>
-							<base.Button last active={flag == 'Wasted'} onPress={() => set_flag('Wasted')}>
+							<base.Button last active={flag == 'Wasted'} onPress={() => Alert.alert('선박확인체계 알림', '지원하지 않은 기능입니다.')}>
 								<base.Text style={styles.segmentText}>유기선박</base.Text>
 							</base.Button>
 						</base.Segment>
