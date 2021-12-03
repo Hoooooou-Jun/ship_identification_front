@@ -8,7 +8,6 @@ const SIZE_FONT = Dimensions.get('screen').height * 0.015
 const SIZE_IMG = Dimensions.get('screen').height * 0.175
 
 const ShowShip = (props) => {
-	console.log(props)
 	const detailCommonShip = () => {
 		let Train_Btn
 		if(props.ship.is_train){ Train_Btn =

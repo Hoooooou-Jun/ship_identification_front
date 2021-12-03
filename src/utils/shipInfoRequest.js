@@ -258,6 +258,17 @@ export const requestCommonShipLocationDetail = (token, latitude, longitude) =>
         'Content-Type': 'application/json',
 }})
 
+export const requestCommonShipLocationUnit = (token, unit) => {
+    return (
+        request.get('/Ships/ship/normal/location/' + `?unit=${unit}`, {
+        headers: {
+            'AUTHORIZATION': 'jwt ' + token,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+    }})
+    )
+}
+
 export const requestWastedShipLocation = (token) =>
     request.get('/Ships/ship/waste/location/', {
     headers: {
